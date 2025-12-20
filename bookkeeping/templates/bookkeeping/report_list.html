@@ -1,0 +1,112 @@
+{% extends 'home/base.html' %}
+{% load i18n %}
+{% load bookkeeping_extras %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div>
+      <a href="{% url 'bookkeeping:transaction_list' %}" class="btn btn-sm mr-1 mb-1 btn-secondary">{% trans 'Transactions' %}</a>
+      <a href="{% url 'bookkeeping:partner_list' %}" class="btn btn-sm mr-1 mb-1 btn-secondary">{% trans 'Partners' %}</a>
+      <a href="{% url 'bookkeeping:category_list' %}" class="btn btn-sm mr-1 mb-1 btn-secondary">{% trans 'Categories' %}</a>
+      <a href="{% url 'bookkeeping:report_list' %}" class="btn btn-sm mr-1 mb-1 btn-primary">{% trans 'Reports' %}</a>
+    </div>
+  </div>
+  
+  <!-- Year selector -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="yearSelect">{% trans 'Select Year' %}:</label>
+        <select id="yearSelect" class="form-control">
+          {% for available_year in available_years %}
+            <option value="{{ available_year }}" {% if available_year == year %}selected{% endif %}>
+              {{ available_year }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for year selection -->
+  <script>
+    document.getElementById('yearSelect').addEventListener('change', function() {
+      const selectedYear = this.value;
+      window.location.href = "{% url 'bookkeeping:report_list' %}?year=" + selectedYear;
+    });
+  </script>
+
+  <div class="row">
+    <!-- Category Movement Summary Table for Selected Year -->
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">{% trans 'Summary' %} ({{ year }})</h3>
+        </div>
+        <div class="card-body">
+          {% if category_movements %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{% trans 'Category' %}</th>
+                  <th class="text-right">{% trans 'Sum' %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for category, movement in category_movements.items %}
+                  <tr>
+                    <td>{{ category|default:"—" }}</td>
+                    <td class="text-right {% if movement.net > 0 %}text-success{% elif movement.net < 0 %}text-danger{% endif %}">
+                      {{ movement.net|floatformat:2 }}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <div class="alert alert-info">
+              {% trans 'No records found.' %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- All Years Category Movement Summary Table -->
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">{% trans 'All Years Summary' %}</h3>
+        </div>
+        <div class="card-body">
+          {% if all_years_category_movements %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{% trans 'Category' %}</th>
+                  <th class="text-right">{% trans 'Sum' %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for category, movement in all_years_category_movements.items %}
+                  <tr>
+                    <td>{{ category|default:"—" }}</td>
+                    <td class="text-right {% if movement.net > 0 %}text-success{% elif movement.net < 0 %}text-danger{% endif %}">
+                      {{ movement.net|floatformat:2 }}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <div class="alert alert-info">
+              {% trans 'No records found.' %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

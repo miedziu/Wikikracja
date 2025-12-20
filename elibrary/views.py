@@ -1,22 +1,24 @@
+from django.http import HttpRequest
 from elibrary.forms import UpdateBookForm
 from elibrary.models import Book
 from django.shortcuts import render
 from django.shortcuts import redirect
-from django.views.generic import FormView, CreateView, UpdateView, DeleteView, DetailView, ListView
+# from django.views.generic import FormView, CreateView, 
+from django.views.generic import UpdateView, DeleteView, DetailView, ListView
 from django.urls import reverse_lazy
-from django.views import generic
+# from django.views import generic
 from django.contrib.auth.models import User
 # from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
 from PIL import Image
-import os
+# import os
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404
 
 
 @login_required
-def add(request):
+def add(request: HttpRequest):
     if request.method == 'POST':
         form = UpdateBookForm(request.POST, request.FILES)
         if form.is_valid():
@@ -25,7 +27,7 @@ def add(request):
             obj.save()
 
             image = Image.open(obj.cover)
-            image = image.resize((200, 300), Image.ANTIALIAS)
+            image = image.resize((200, 300), Image.LANCZOS)
             # upload_file_name = obj.cover.file.name
             # print(upload_file_name)
             image.save('media/elibrary/' + str(obj.id) + '.png')
@@ -33,7 +35,7 @@ def add(request):
             # form.save_m2m()  # taggit
             # os.remove(upload_file_name)  # delete original file
             obj.save()
-            return redirect('elibrary:book-list')
+            return redirect('elibrary:book_list')
     else:
         form = UpdateBookForm()
     return render(request, 'elibrary/add.html', {'form': form})
@@ -48,9 +50,16 @@ class BookList(LoginRequiredMixin, ListView):
 
 class BookDeleteView(LoginRequiredMixin, DeleteView):
     model = Book
-    # print(request.object.id)
+    template_name = 'elibrary/book_confirm_delete.html'
     # Files are not physicaly deleted. This needs to be changed
-    success_url = reverse_lazy('elibrary:book-list')
+    success_url = reverse_lazy('elibrary:book_list')
+    
+    def dispatch(self, request, *args, **kwargs):
+        # Ensure only the uploader can delete their own book
+        obj = self.get_object()
+        if obj.uploader != request.user:
+            return redirect('elibrary:book_list')
+        return super().dispatch(request, *args, **kwargs)
 
 
 class BookDetailView(LoginRequiredMixin, DetailView):
@@ -84,7 +93,7 @@ class BookDetailView(LoginRequiredMixin, DetailView):
 
 class BookUpdateView(LoginRequiredMixin, UpdateView):
     model = Book
-    fields = ['title', 'author', 'cover', 'file_epub', 'file_mobi', 'file_pdf']
+    fields = ['title', 'author', 'abstract', 'cover', 'file_epub', 'file_mobi', 'file_pdf']
 
     def form_valid(self, form):
         if form.instance.cover == "":

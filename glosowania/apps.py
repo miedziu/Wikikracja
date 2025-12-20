@@ -2,4 +2,7 @@ from django.apps import AppConfig
 
 
 class VotingConfig(AppConfig):
-    name = 'voting'
+    name = 'glosowania'
+    
+    def ready(self):
+        import glosowania.signals  # noqa

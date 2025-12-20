@@ -1,16 +1,16 @@
 from django.db import models
-import os
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator
-from taggit.managers import TaggableManager
+# from taggit.managers import TaggableManager
 from django.urls import reverse
-# base_dir = os.path.abspath('.')
+from datetime import datetime
 
 
 class Book(models.Model):
     title = models.CharField(null=True, blank=True, max_length=200, verbose_name=_('Title'))
     author = models.CharField(null=True, blank=True, max_length=200, verbose_name=_('Author'))
+    abstract = models.TextField(null=True, blank=True, max_length=5000, verbose_name=_('Abstract'))
     cover = models.ImageField(null=True, blank=True, upload_to='elibrary',
                               default='elibrary/default.png', verbose_name=_('Cover'),
                               help_text=_('Cover proportions should be 2/3. I.E. width x 1.5 = height')  # doesnt work and I don't know why...
@@ -18,7 +18,8 @@ class Book(models.Model):
     file_epub = models.FileField(null=True, blank=True, upload_to='elibrary', verbose_name=_('epub'), validators=[FileExtensionValidator(['epub'])])
     file_mobi = models.FileField(null=True, blank=True, upload_to='elibrary', verbose_name=_('mobi'), validators=[FileExtensionValidator(['mobi'])])
     file_pdf = models.FileField(null=True, blank=True, upload_to='elibrary', verbose_name=_('pdf'), validators=[FileExtensionValidator(['pdf'])])
-    uploader = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    uploader = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    uploaded = models.DateTimeField(_('Uploaded'), default=datetime.now, editable=False)
     
     # https://django-taggit.readthedocs.io/en/latest/forms.html
     # tag = TaggableManager(blank=True,
@@ -36,4 +37,3 @@ class Book(models.Model):
     class Meta:
         verbose_name_plural = "eBooks"
         ordering = ("id", )
-

@@ -5,36 +5,38 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.messages import success, error
-from django.db.models import Avg, Sum
+from django.db.models import Sum
+from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
-from django.utils.timezone import now as dzis
-from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
+from datetime import timedelta as td
+from django.utils.translation import gettext_lazy as _
 from random import choice
 from string import ascii_letters, digits
-from math import log, floor
-import logging as l
+import logging
 from obywatele.forms import UserForm, ProfileForm, EmailChangeForm, NameChangeForm, UsernameChangeForm
 from obywatele.models import Uzytkownik, Rate
-from django.contrib.auth.models import Group
-from PIL import Image
-import os
 from django.utils import translation
 from django.core.mail import EmailMessage
 import threading
-from django.views.generic import ListView
 from obywatele.tables import UzytkownikTable
 from obywatele.filters import UzytkownikFilter
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
-from django_tables2 import RequestConfig
 # from django_tables2.export import TableExport
+from allauth.account.signals import user_signed_up
+from django.dispatch import receiver
+from chat import signals
+from django.contrib.auth.models import Group, Permission
+from zzz.utils import get_site_domain
 
+HOST = get_site_domain()
 
-l.basicConfig(filename='wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=l.INFO)
+# l.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=l.INFO)
+l = logging.getLogger(__name__)
 
-HOST = s.ALLOWED_HOSTS[0]
 
 def population():
     try:
@@ -45,15 +47,35 @@ def population():
 
 
 def required_reputation():
-    # return round(log(population()) * s.ACCEPTANCE_MULTIPLIER)
-    # -2 is needed because first 3 users needs to be accepted without explicit action from introducer and second user. Without -2 second user is banned automatically.
-    # floor is used to further lower required reputation lewel at the group start.
-    result = floor(log(population() * s.ACCEPTANCE_MULTIPLIER + 1))-2
-    return result
+    if population() <= s.ACCEPTANCE*2:
+        return population()-s.ACCEPTANCE
+    if population() > s.ACCEPTANCE*2:
+        return s.ACCEPTANCE
+    '''
+    Liczba Próg
+    L    L-P
+    1 -> 1-3=-2
+    2 -> 2-3=-1
+    3 -> 3-3=+0
+    4 -> 4-3=+1
+    5 -> 5-3=+2
+    6 -> 6-3=+3
+    7 -> 7-3=+3
+    8 -> 8-3=+3
+    '''
+
+
+@login_required
+def parameters(request: HttpRequest):
+    return render(request, 'obywatele/parameters.html', {
+        'population': population(),
+        'acceptance': s.ACCEPTANCE,
+        'delete_inactive_user_after': s.DELETE_INACTIVE_USER_AFTER,
+    })
 
 
 @login_required() 
-def change_email(request):
+def change_email(request: HttpRequest):
     form = EmailChangeForm(request.user)
     if request.method=='POST':
         form = EmailChangeForm(request.user, request.POST)
@@ -71,7 +93,7 @@ def change_email(request):
 
 
 @login_required() 
-def change_name(request):
+def change_name(request: HttpRequest):
     form = NameChangeForm(request.POST)
     if request.method=='POST':
         # form = NameChangeForm(request.POST, request.user)
@@ -90,7 +112,7 @@ def change_name(request):
 
 
 @login_required() 
-def change_username(request):  # not in use for now. Unintendet consequence is that private chat names are not updated.
+def change_username(request: HttpRequest):
     form = UsernameChangeForm(request.POST)
     if request.method=='POST':
         form = UsernameChangeForm(request.user, request.POST)
@@ -108,31 +130,44 @@ def change_username(request):  # not in use for now. Unintendet consequence is t
 
 
 @login_required
-def obywatele(request):
-    zliczaj_obywateli(request)
-    uid = User.objects.filter(is_active=True)
+def obywatele(request: HttpRequest):
+    # zliczaj_obywateli(request)
+    uid = User.objects.filter(is_active=True).order_by('date_joined').reverse()
+    # uid = User.objects.filter(is_active=True).order_by('-uzytkownik__reputation')  # SzamanRA grupaperu
     return render(request, 'obywatele/start.html', {
-        'uid': uid,
-        'population': population(),
-        'acceptance': s.ACCEPTANCE_MULTIPLIER,
-        'required_reputation': required_reputation(),
+        'uid': uid,  # Don't change to 'user' - it will break menu
         })
 
 
 @login_required
-def poczekalnia(request):
-    zliczaj_obywateli(request)
+def poczekalnia(request: HttpRequest):
+    # zliczaj_obywateli(request)
     uid = User.objects.filter(is_active=False)
+    
+    # Get the current user's profile
+    citizen_profile = Uzytkownik.objects.get(uid=request.user)
+    
+    # Get ratings from the current user for all candidates
+    # Process users and add rating directly to each user object for easy access in template
+    users_with_ratings = []
+    for user in uid:
+        candidate_profile = Uzytkownik.objects.get(uid=user)
+        rate, created = Rate.objects.get_or_create(kandydat=candidate_profile, obywatel=citizen_profile)
+        # Add rating directly to user object as a custom attribute
+        user.rating = rate.rate
+        users_with_ratings.append(user)
+        
     return render(request, 'obywatele/poczekalnia.html', {
-        'uid': uid,
+        'uid': users_with_ratings,  # Users with ratings attached
         'population': population(),
-        'acceptance': s.ACCEPTANCE_MULTIPLIER,
+        'acceptance': s.ACCEPTANCE,
+        'delete_inactive_user_after': s.DELETE_INACTIVE_USER_AFTER,
         'required_reputation': required_reputation(),
         })
 
 
 @login_required
-def dodaj(request):
+def dodaj(request: HttpRequest):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
         profile_form = ProfileForm(request.POST, request.FILES)
@@ -203,7 +238,7 @@ def dodaj(request):
 
 
 @login_required
-def my_profile(request):
+def my_profile(request: HttpRequest):
     pk=request.user.id
     profile = Uzytkownik.objects.get(pk=pk)
     user = User.objects.get(pk=pk)
@@ -214,7 +249,7 @@ def my_profile(request):
 
 
 @login_required
-def my_assets(request):
+def my_assets(request: HttpRequest):
     pk=request.user.id
     profile = Uzytkownik.objects.get(pk=pk)
     user = User.objects.get(pk=pk)
@@ -222,10 +257,6 @@ def my_assets(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            # if form.cleaned_data['foto'] == False:
-            #     profile.foto = 'obywatele/anonymous.png'
-            # else:
-            #     profile.foto = form.cleaned_data['foto']
             profile.phone = form.cleaned_data['phone']
             profile.responsibilities = form.cleaned_data['responsibilities']
             profile.city = form.cleaned_data['city']
@@ -242,19 +273,6 @@ def my_assets(request):
             profile.gift = form.cleaned_data['gift']
             profile.other = form.cleaned_data['other']
             profile.save()
-
-            # if form.cleaned_data['foto']:
-            #     image = Image.open(profile.foto)
-            #     width, height = image.width, image.height
-            #     dest_height = 200
-            #     factor = height / dest_height
-            #     new_height = round(height / factor)
-            #     new_width = round(width / factor)
-            #     image = image.resize((new_width, new_height), Image.ANTIALIAS)
-            #     image.save('media/obywatele/' + str(user.id) + '.png')
-            #     profile.foto.name = 'obywatele/' + str(user.id) + '.png'
-            #     os.remove(profile.foto.file.name)  # delete original file
-            #     profile.save()
 
             return render(
                 request,
@@ -280,7 +298,6 @@ def my_assets(request):
             )
     else:  # request.method != 'POST':
         form = ProfileForm(initial={  # pre-populate fields from database
-            # 'foto': profile.foto,
             'phone': profile.phone,
             'responsibilities': profile.responsibilities,
             'city': profile.city,
@@ -309,6 +326,7 @@ def my_assets(request):
         )
 
 
+# @login_required  # for some reason this decorator breaks urls.py
 class AssetListView(SingleTableMixin, FilterView):
     # https://stackoverflow.com/questions/59094917/employeefilterset-resolved-field-emp-photo-with-exact-lookup-to-an-unrecogni
     
@@ -322,7 +340,7 @@ class AssetListView(SingleTableMixin, FilterView):
 
 
 @login_required
-def obywatele_szczegoly(request, pk):
+def obywatele_szczegoly(request: HttpRequest, pk: int):
     '''
     -[x] There has to be a table relating user and new person. This table is needed because vote for person may be withdrawn at some point. So there are 3 states:
       1. Candidate is positive
@@ -335,8 +353,7 @@ def obywatele_szczegoly(request, pk):
     -[x] Counter should NOT be zeroed out if person drop below required reputation.
     -[x] New person increase population so also increase reputation requirements for existing citizens. Therefore every time new person is accepted - every other old member should have his reputation increased autmatically. And vice versa - if somebody is banned - everyone else should loose one point of reputation from banned person.
     '''
-
-    zliczaj_obywateli(request)  # run reputation counting because a lot can change in the meanwhile
+    # zliczaj_obywateli(request)  # run reputation counting because a lot can change in the meanwhile
 
     candidate_profile = get_object_or_404(Uzytkownik, pk=pk)
     candidate_user = User.objects.get(pk=pk)
@@ -369,7 +386,8 @@ def obywatele_szczegoly(request, pk):
 
     # Previous and Next
     obj = get_object_or_404(User, pk=pk)
-    # kandydaci czy obywatele? Na razie wszyscy
+    # kandydaci czy obywatele? Na razie wszyscy.
+    # TODO: Zrobić tak żeby przewijanie było tylko po Kandydatach albo tylko po Obywatelach
     prev = User.objects.filter(pk__lt=obj.pk, is_active=obj.is_active).order_by('-pk').first()
     next = User.objects.filter(pk__gt=obj.pk, is_active=obj.is_active).order_by('pk').first()
   
@@ -389,89 +407,36 @@ def obywatele_szczegoly(request, pk):
         })
 
 
-# TODO: zamienić na obiekt z metodą: "podaj obecną populację":
-def zliczaj_obywateli(request):
-    '''
-    -[ ] Count everyones reputation from Rate model and put it in to Uzytkownik
-    -[ ] Calculate population and required reputation
-    -[ ] Run through all user and check if somebody jumped above or below threshold:
-        -[ ] If jumped above - enable user and add 1 reputation to all other users
-        -[ ] If jumped bellow - disable user and remove 1 reputation from all other users
-
-    Acceptance simulator: scripts/acceptance_simulator.py
-    '''
-
-    # Count everyones reputation from Rate model and put it in to Uzytkownik
-    for i in Uzytkownik.objects.all():
-        if Rate.objects.filter(kandydat=i).exists():
-            reputation = Rate.objects.filter(kandydat=i).aggregate(Sum('rate'))
-            i.reputation = list(reputation.values())[0]
-            # l.info(f'Candidate: {i.uid.id}; Reputation: {list(reputation.values())[0]};')
-            i.save()
-
-    # Włącz użytkowników z odpowiednio wysoką reputacją
-    for i in Uzytkownik.objects.all():
-        if i.reputation > required_reputation() and not i.uid.is_active:
-            i.uid.is_active = True  # Uzytkownik.uid -> User
-
-            i.uid.is_staff = True
-            # Add to Editor group
-            editor = Group.objects.get(name='Editor')
-            editor.user_set.add(i.uid)
-
-            password = password_generator()
-            i.uid.set_password(password)
-            i.data_przyjecia = dzis()
-            i.uid.save()
-            l.info(f'Activating user {i.uid}')
-            i.save()
-            
-            # New person accepts automatically every other active user
-            for k in Uzytkownik.objects.filter(uid__is_active=True):
-                if i == k:    # but not yourself
-                    continue
-                obj, created = Rate.objects.update_or_create(obywatel = i, kandydat = k, defaults={'rate': '1'})
-                obj.save()
-
-            subject = request.get_host() + ' - Twoje konto zostało włączone'
-            uname = str(i.uid.username)
-            uhost = str(request.get_host())
-            # TODO: Tłumaczenie na angielski
-            message = f'Witaj {uname}\nTwoje konto na {uhost} zostało włączone.\n\nTwój login to: {uname}\nTwoje hasło to: {password}\n\nZaloguj się tutaj: {uhost}/login/\n\nHasło możesz zmienić tutaj: {uhost}/haslo/'
-            
-            send_mail(subject, message, s.DEFAULT_FROM_EMAIL, [i.uid.email], fail_silently=False)
-
-    # Blokuj użytkowników ze zbyt niską reputacją
-    for i in Uzytkownik.objects.all():
-        # l.info(f'Uzytkownik {i.id} reputation: {i.reputation}')
-        if i.reputation < required_reputation() and i.uid.is_active:
-            i.uid.is_active = False  # Uzytkownik.uid -> User
-            i.uid.save()
-            l.info(f'Blocking user {i.uid}')
-            i.save()
-
-            # Banned person takes back all acceptance from everyone
-            Rate.objects.filter(obywatel=i.id).update(rate=0)
-
-            send_mail(
-                f'{str(request.get_host())} - ' + str(_('Your account has been blocked')),
-                str(_('Welcome')) + f' {i.uid.username}\n' + str(_('Your account on page')) + f' {str(request.get_host())} ' + str(_('has been blocked.')),
-                str(s.DEFAULT_FROM_EMAIL),
-                [i.uid.email],
-                fail_silently=False,
-            )
-            # We are not deleting user bacuse he may come back.
-
-            SendEmailToAll(
-                        _('Citizen has been banned'),
-                        str(_('Account')) + f' {i.uid.username} ' + str(_('has been blocked.'))
-            )
-
-    # l.info(f'Population: {POPULATION}. Required reputation: {REQUIRED_REPUTATION}')
+def zliczaj_obywateli(request: HttpRequest):  # TODO: Remove this function if everything works
+    """
+    View that runs the count_citizens management command to process user reputation
+    and activate/deactivate users based on reputation thresholds.
+    
+    The logic has been moved to a management command for better maintainability
+    and to allow scheduling via cron.
+    """
+    from django.core.management import call_command
+    from io import StringIO
+    
+    # Capture command output
+    stdout = StringIO()
+    stderr = StringIO()
+    
+    try:
+        # Run the management command with the current request host for context
+        call_command('count_citizens', stdout=stdout, stderr=stderr)
+        if stdout.getvalue():
+            l.info(stdout.getvalue())
+        if stderr.getvalue():
+            l.error(stderr.getvalue())
+    except Exception as e:
+        l.error(f"Error running count_citizens command: {str(e)}")
+    
+    return redirect('obywatele:poczekalnia')
 
 
 @login_required
-def change_password(request):
+def change_password(request: HttpRequest):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -500,14 +465,21 @@ def SendEmailToAll(subject, message):
     email_message = EmailMessage(
         from_email=str(s.DEFAULT_FROM_EMAIL),
         bcc = list(User.objects.filter(is_active=True).values_list('email', flat=True)),
-        subject=f'{HOST} - {subject}',
-        body=message,
+        subject=f'[{HOST}] {subject}',
+        body=message + "\n\n" + _("Why you received this email? Here is explanation: https://wikikracja.pl/powiadomienia-email/"),
         )
-    # l.warning(f'subject: {subject} \n message: {message}')
+    # l.info(f'subject: {subject} \n message: {message}')
     
     t = threading.Thread(
                          target=email_message.send,
-                         args=("fail_silently=False",)
+                         kwargs={"fail_silently": False,}
                         )
     t.setDaemon(True)
     t.start()
+
+
+@receiver(user_signed_up)
+def DeactivateNewUser(sender, **kwargs):
+    u = User.objects.get(username=kwargs['user'])
+    u.is_active=False
+    u.save()

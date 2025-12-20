@@ -1,7 +1,7 @@
 import django_filters
 # from django.core.validators import RegexValidator
 # from django.db import models
-# from django.utils.translation import ugettext_lazy as _
+# from django.utils.translation import gettext_lazy as _
 from obywatele.models import Uzytkownik
 
 # https://django-filter.readthedocs.io/en/main/guide/usage.html

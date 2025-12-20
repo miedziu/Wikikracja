@@ -1,0 +1,48 @@
+{% extends 'obywatele/menu.html' %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% bootstrap_messages %}
+{% load static %}
+{% load i18n %}
+
+{% block citizens %}
+
+	<ul class="list-group">
+		<li class="list-group-item d-flex justify-content-between align-items-center">
+			{% trans "Population" %}
+			<span class="badge badge-primary badge-pill">{{ population }}</span>
+		</li>
+		<li class="list-group-item d-flex justify-content-between align-items-center">
+			{% trans "Acceptance threshold" %}
+			<span class="badge badge-primary badge-pill">{{ acceptance }}</span>
+		</li>
+
+		<li class="list-group-item d-flex justify-content-between align-items-center">
+			{% trans "Candidate removal after" %}
+			<span class="badge badge-primary badge-pill">{{ delete_inactive_user_after }} {% trans "days" %}</span>
+		</li>
+		<li class="list-group-item text-left align-items-center font-weight-bold">
+			<p>
+				{% trans "New person will be accepted above" %}
+					<span class="badge badge-primary badge-pill">{{ acceptance }}</span> 
+				{% trans "threshold." %} <br>
+				
+				{% trans "Existing person will be banned bellow" %}
+					<span class="badge badge-primary badge-pill">{{ acceptance }}</span>
+				{% trans "threshold." %} <br>
+				
+				{% trans "You can check your reputation in your" %}
+				<a href="{% url 'obywatele:my_profile' %}">
+					{% trans "profile" %}
+				</a> <br>
+				
+				{% trans "The granting and receiving of reputation points is anonymous." %} <br>
+				
+				{% trans "If you want to change Acceptance threshold - create referendum." %}
+			</p>
+			<a href="https://wikikracja.pl/obrona-przed-wrogim-przejeciem/" target="_blank" >{% trans "Read explanation for this mechanism" %}</a>
+		</li>
+	</ul>
+
+{% endblock citizens %}

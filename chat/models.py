@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 class Room(models.Model):
@@ -24,6 +25,9 @@ class Room(models.Model):
     # List of users who disabled notifications
     muted_by = models.ManyToManyField(User, related_name='muted_rooms')
 
+    # Last activity timestamp
+    last_activity = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.title
 
@@ -34,9 +38,14 @@ class Room(models.Model):
     # Name that user will see in chats list
     def displayed_name(self, user):
         if self.public:
-            return self.title
+            # Clip public room names to 20 characters for display
+            return self.title[:20] if len(self.title) > 20 else self.title
+        if self.get_other(user) is not None:
+            username = self.get_other(user).username
+            # Clip long usernames to match room title length
+            return username[:20] if len(username) > 20 else username
         else:
-            return self.get_other(user).username
+            return ("--")
 
     @property  # adds 'getter', 'setter' and 'deleter' methods
     def group_name(self):
@@ -76,10 +85,11 @@ class Room(models.Model):
 
 
 class Message(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    # 'sender' must be 'null=True' for anonymouse messages in email (search for 'if m.anonymous:').
+    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     time = models.DateTimeField(auto_now=True)
     text = models.TextField()
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, related_name="messages")
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="messages")
     anonymous = models.BooleanField(default=False)
     # TODO: revisions (editMessage(), deleteMessage())
 

@@ -10,4 +10,3 @@ class UzytkownikTable(tables.Table):
         # template_name = "django_tables2/bootstrap.html"
         # template_name = "django_tables2/bootstrap-responsive.html"
         # export_formats = ['csv', 'xlsx']
-        # exclude = ('id', 'polecajacy', 'data_przyjecia', 'foto', 'phone', 'reputation')

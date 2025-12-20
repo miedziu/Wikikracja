@@ -2,34 +2,29 @@ from datetime import datetime, timedelta
 from glosowania.models import Decyzja, ZebranePodpisy, KtoJuzGlosowal, VoteCode
 from glosowania.forms import DecyzjaForm
 from django.shortcuts import get_object_or_404
-from django.db import IntegrityError
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpRequest
 from django.contrib.auth.decorators import login_required
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 from django.core.mail import EmailMessage
 from django.conf import settings as s
 from django.contrib.auth.models import User
-from django.template.loader import get_template
-from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import redirect
-import logging as l
+import logging
 from django.utils import translation
 import threading
 import random
-import re
+from chat.models import Room
+from zzz.utils import get_site_domain
 
+l = logging.getLogger(__name__)
 
-l.basicConfig(filename='wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=l.INFO)
+HOST = get_site_domain()
 
-HOST = s.ALLOWED_HOSTS[0]
-# ROOT = s.BASE_DIR
-
-# Dodaj nową propozycję przepisu:
 @login_required
-def dodaj(request):
+def dodaj(request: HttpRequest):
+    # Dodaj nową propozycję przepisu:
     # nowy = DecyzjaForm(request.POST or None)
     if request.method == 'POST':
         form = DecyzjaForm(request.POST)
@@ -37,19 +32,24 @@ def dodaj(request):
             form = form.save(commit=False)
             form.author = request.user
             form.data_powstania = datetime.today()
-            form.ile_osob_podpisalo += 1
+            # form.ile_osob_podpisalo += 1
+            form.status = 1
+            form.path = _("Proposition")
             form.save()
-            signed = ZebranePodpisy.objects.create(projekt=form, podpis_uzytkownika = request.user)
+            # signed = ZebranePodpisy.objects.create(projekt=form, podpis_uzytkownika = request.user)
             
-            # l.warning(f"{form.author} _('added new law proposal:' form.tresc)")
+            l.info(f"New proposal {form.id} added by {form.author}")
             message = _("New proposal has been saved.")
             messages.success(request, (message))
 
             SendEmail(
                 _('New law proposal'),
-                f'{request.user.username.capitalize()} ' + str(_('added new law proposal\nYou can read it here:')) + f' http://{HOST}/glosowania/details/{str(form.id)}'
+                _('{user} added new law proposal\nYou can read it here: {url}').format(
+                    user=request.user.username.capitalize(),
+                    url=f'http://{HOST}/glosowania/details/{str(form.id)}'
                 )
-            return redirect('glosowania:status', 1)
+            )
+            return redirect('glosowania:proposition')
         else:
             return render(request, 'glosowania/dodaj.html', {'form': form})
     else:
@@ -58,13 +58,13 @@ def dodaj(request):
 
 
 @login_required
-def edit(request, pk):
+def edit(request: HttpRequest, pk: int):
     decision = Decyzja.objects.get(pk=pk)
 
     if request.method == 'POST':
         form = DecyzjaForm(request.POST)
         if form.is_valid():
-            decision.author = request.user
+            decision.author = request.user # type: ignore
             decision.title = form.cleaned_data['title']
             decision.tresc = form.cleaned_data['tresc']
             decision.kara = form.cleaned_data['kara']
@@ -77,10 +77,13 @@ def edit(request, pk):
             messages.success(request, (message))
 
             SendEmail(
-                str(_('Proposal')) + f' {str(decision.id)}' + str(_(' has been modified')),
-                f'{request.user.username.capitalize()} ' + str(_('modified proposal\nYou can read new version here:')) + f' http://{HOST}/glosowania/details/{str(decision.id)}'
+                _("Proposal no. {} has been modified").format(decision.id),
+                _('{user} modified proposal\nYou can read new version here: {url}').format(
+                    user=request.user.username.capitalize(),
+                    url=f'http://{HOST}/glosowania/details/{str(decision.id)}'
                 )
-            return redirect('glosowania:status', 1)
+            )
+            return redirect('glosowania:proposition')
     else:  # request.method != 'POST':
         form = DecyzjaForm(initial={
             'author': decision.author,
@@ -91,38 +94,19 @@ def edit(request, pk):
             'args_for': decision.args_for,
             'args_against': decision.args_against,
             'znosi': decision.znosi,
-        }
-        )
+        })
+        
+    # l.info(f"Proposal {decision.id} modified by {request.user}") # Can't log that because it kicks in on form open (not on save)
     return render(request, 'glosowania/edit.html', {'form': form})
 
 
-# Wyświetl głosowania:
-@login_required
-def status(request, pk):
-    filtered_glosowania = Decyzja.objects.filter(status=pk)
-    lang = get_language()
-
-    zliczaj_wszystko()
-    return render(request, 'glosowania/status.html', {
-        'filtered_glosowania': filtered_glosowania,
-        'lang': lang[0:2],  # just en instead of en-us
-        'signatures': s.WYMAGANYCH_PODPISOW,
-        'signatures_span': timedelta(days=s.CZAS_NA_ZEBRANIE_PODPISOW).days,
-        'queue_span': timedelta(days=s.KOLEJKA).days,
-        'referendum_span': timedelta(days=s.CZAS_TRWANIA_REFERENDUM).days,
-        'vacatio_legis_span': timedelta(days=s.VACATIO_LEGIS).days,
-    })
-
-
 def generate_code():
-    return''.join([random.SystemRandom().choice('abcdefghjkmnoprstuvwxyz23456789') for i in range(6)])
+    return''.join([random.SystemRandom().choice('abcdefghjkmnoprstuvwxyz23456789') for i in range(5)])
 
 
-# Pokaż szczegóły przepisu
 @login_required
-def details(request, pk):
-
-    zliczaj_wszystko()  # when link from email is used - this is only place Referendum status can be recounted.
+def details(request:HttpRequest, pk: int):
+    # Pokaż szczegóły przepisu
 
     szczegoly = get_object_or_404(Decyzja, pk=pk)
 
@@ -171,7 +155,7 @@ def details(request, pk):
         message1 = str(_('Your vote has been saved. You voted Yes.'))
         messages.success(request, (message1))
 
-        message2 = str(_('Your verification code is:') + f' {code} ')
+        message2 = f"{_('Your verification code is:')} {code}"
         messages.error(request, (message2))
 
         message3 = str(_('Write down your code or create screenshot to verify it when the referendum is over. This code will be presented just once and will be not related to you.'))
@@ -199,7 +183,7 @@ def details(request, pk):
         message1 = str(_('Your vote has been saved. You voted No.'))
         messages.success(request, (message1))
 
-        message2 = str(_('Your verification code is:') + f' {code} ')
+        message2 = f"{_('Your verification code is:')} {code}"
         messages.error(request, (message2))
 
         message3 = str(_('Write down your code or create screenshot to verify it when the referendum is over. This code will be presented just once and will be not related to you.'))
@@ -216,162 +200,37 @@ def details(request, pk):
     # Report
     report = VoteCode.objects.filter(project_id=pk).order_by('vote', 'code')
 
-    # State dictionary
-    state = {1: _('Proposal'), 2: _('Rejected'), 3: _('Queued'), 4: _('Referendum'), 5: _('Rejected'), 6: _('Vacatio Legis'), 7: _('Governing Law'), }
+    # List of voters
+    voters = KtoJuzGlosowal.objects.filter(projekt=pk).select_related('ktory_uzytkownik_juz_zaglosowal').order_by('ktory_uzytkownik_juz_zaglosowal__username')
 
-    # Corrected data_referendum_stop
-    corrected_data_referendum_stop = None
-    if szczegoly.data_referendum_stop:
-        corrected_data_referendum_stop = szczegoly.data_referendum_stop - timedelta(days=1)
+    # State dictionary
+    state = {1: _('Proposition'), 2: _('Discussion'), 3: _('Referendum'), 4: _('Rejected'), 5: _('Approved'), }
 
     # Previous and Next
     obj = get_object_or_404(Decyzja, pk=pk)
     prev = Decyzja.objects.filter(pk__lt=obj.pk, status = szczegoly.status).order_by('-pk').first()
     next = Decyzja.objects.filter(pk__gt=obj.pk, status = szczegoly.status).order_by('pk').first()
     
+    # Find associated chat room
+    room_title = f"#{szczegoly.pk}:{szczegoly.title[:20]}"
+
+    chat_room = Room.objects.filter(title=room_title).first()
+    
     return render(request, 'glosowania/szczegoly.html', {'id': szczegoly,
                                                          'signed': signed,
                                                          'voted': voted,
                                                          'report': report,
+                                                         'voters': voters,
                                                          'current_user': request.user,
                                                          'state': state[szczegoly.status],
-                                                         'corrected_data_referendum_stop': corrected_data_referendum_stop,
+                                                         'data_referendum_stop': szczegoly.data_referendum_stop,
                                                          'prev': prev,
                                                          'next': next,
+                                                         'chat_room': chat_room,
                                                          })
 
 
-def zliczaj_wszystko():
-    '''Jeśli propozycja zostanie zatwierdzona w niedzielę
-    to głosowanie odbędzie się za 2 tygodnie'''
-
-    propozycja = 1
-    brak_poparcia = 2
-    w_kolejce = 3
-    referendum = 4
-    odrzucone = 5
-    zatwierdzone = 6  # Vacatio Legis
-    obowiazuje = 7
-
-    dzisiaj = datetime.today().date()
-
-    decyzje = Decyzja.objects.all()
-    for i in decyzje:
-        if i.status != brak_poparcia and i.status != odrzucone and i.status != obowiazuje:
-            # Jeśli nie jest w jakiś sposób zatwierdzone/odrzucone to procesujemy:
-
-            # FROM PROPOSITION TO QUEUE
-            if i.status == propozycja and i.ile_osob_podpisalo >= s.WYMAGANYCH_PODPISOW:
-                i.status = w_kolejce
-                i.data_zebrania_podpisow = dzisiaj
-
-                # TODO: Referendum rozpocznie się za 1 tydzień w poniedziałek
-                # 0 = monday, 1 = tuesday, ..., 6 = sunday
-                i.data_referendum_start = i.data_zebrania_podpisow + timedelta(days=s.KOLEJKA) + timedelta(days=-dzisiaj.weekday()+0, weeks=1)
-                i.data_referendum_stop = i.data_referendum_start + timedelta(days=s.CZAS_TRWANIA_REFERENDUM)
-                i.save()
-                l.info('Proposition ' + str(i.id) + ' changed status from PROPOSITION to QUEUE".')
-                SendEmail(
-                    str(_("Proposal no.")) + " " + str(i.id) + " " + str(_("is approved for referendum")),
-                    str(_("Proposal no.")) + " " + str(i.id) + " " +
-                    str(_("gathered required amount of signatures and will be voted from")) + " " +
-                    str(i.data_referendum_start) + " " + str(_('to')) + " " + str(i.data_referendum_stop) +
-                    '\n' + str(_("Click here to read proposal: http://")) +
-                    f"{HOST}/glosowania/details/{str(i.id)}"
-                )
-                continue
-
-            # FROM PROPOSITION TO NOT_INTRESTED
-            if i.status == propozycja and i.data_powstania + timedelta(days=s.CZAS_NA_ZEBRANIE_PODPISOW) <= dzisiaj:
-                i.status = brak_poparcia
-                i.save()
-                l.info('Proposition ' + str(i.id) + ' changed status from PROPOSITION to NOT_INTRESTED.')
-                SendEmail(
-                    # _(f"Proposal {str(i.id)} didn't gathered required amount of signatures"),  # translation doesn't work this way
-                    str(_("Proposal no.")) + " " + str(i.id) + " " + str(_("didn't gathered required amount of signatures")),
-                    str(_("Proposal no.")) + " " + str(i.id) + " " +
-                    str(_("didn't gathered required amount of signatures")) + " " + str(_("and was removed from queue.")) + " " +
-                    str(_("Feel free to improve it and send it again.")) +
-                    '\n' + str(_("Click here to read proposal: http://")) +
-                    f"{HOST}/glosowania/details/{str(i.id)}"
-                )
-                continue
-
-            # FROM QUEUE TO REFERENDUM
-            if i.status == w_kolejce and i.data_referendum_start <= dzisiaj:
-                i.status = referendum
-                i.save()
-                l.info('Proposition ' + str(i.id) + ' changed status from QUEUE to REFERENDUM.')
-                SendEmail(
-                    str(_("Referendum on proposal no.")) + " " + str(i.id) + " " + str(_("is starting now")),
-                    str(_("It is time to vote on proposal no.")) + " " + str(i.id) + '\n' +
-                    str(_("Referendum ends at")) + " " +
-                    str(i.data_referendum_stop) + '\n' +
-                    str(_("Click here to vote: http://")) + 
-                    f"{HOST}/glosowania/details/{str(i.id)}"
-                )
-                continue
-
-            # FROM REFERENDUM TO VACATIO_LEGIS OR NOT_APPROVED
-            if i.status == referendum and i.data_referendum_stop <= dzisiaj:
-                if i.za > i.przeciw:
-                    i.status = zatwierdzone
-                    i.data_zatwierdzenia = i.data_referendum_stop
-                    i.data_obowiazuje_od = i.data_referendum_stop + timedelta(days=s.VACATIO_LEGIS)
-                    i.save()
-                    l.info('Proposition ' + str(i.id) + ' changed status from REFERENDUM to VACATIO_LEGIS.')
-
-                    SendEmail(
-                    str(_("Proposal no.")) + " " + str(i.id) + str(_("was approved")),
-                    str(_("Proposal no.")) + " " + str(i.id) + " " +
-                    str(_("was approved in referendum and is now in Vacatio Legis period")) + '.\n' +
-                    str(_("The law will take effect on")) + " " + 
-                    str(i.data_obowiazuje_od) + '\n' + str(_("Click here to read proposal: http://")) + 
-                    f"{HOST}/glosowania/details/{str(i.id)}"
-                    )
-                    continue
-                else:
-                    i.status = odrzucone
-                    i.save()
-                    l.info('Proposition ' + str(i.id) + ' changed status from REFERENDUM to REJECTED.')
-
-                    SendEmail(
-                    str(_("Proposal no.")) + " " + str(i.id) + str(_("was rejected")),
-                    str(_("Proposal no.")) + " " + str(i.id) + " " +
-                    str(_("was rejected in referendum.")) + '\n' + 
-                    str(_("Feel free to improve it and send it again.")) +
-                    '\n' + str(_("Click here to read proposal: http://")) + 
-                    f"{HOST}/glosowania/details/{str(i.id)}"
-                    )
-                    continue
-
-            # FROM VACATIO_LEGIS TO LAW
-            if i.status == zatwierdzone and i.data_obowiazuje_od <= dzisiaj:
-                i.status = obowiazuje
-                l.info('Proposition ' + str(i.id) + ' changed status from VACATIO_LEGIS to VALID.')
-                                
-                # Reject bills
-                if i.znosi:
-                    separated = re.split('\W+', i.znosi)
-                    for z in separated:
-                        abolish = Decyzja.objects.get(pk=str(z))
-                        abolish.status = 5
-                        abolish.save()
-                        l.info('Proposition ' + str(z.id) + ' was rejected by ' + str(i.id))
-                i.save()
-
-
-
-                SendEmail(
-                str(_("Proposal no.")) + " " + str(i.id) + " " + str(_("is in efect from today")),
-                str(_("Proposal no.")) + " " + str(i.id) + " " + str(_("became abiding law today")) + '.\n' + 
-                str(_("Click here to read it: http://")) + 
-                f"{HOST}/glosowania/details/{str(i.id)}"
-                )
-                continue
-
-
-def SendEmail(subject, message):
+def SendEmail(subject: str, message: str):
     # bcc: all active users
     # subject: Custom
     # message: Custom
@@ -380,14 +239,60 @@ def SendEmail(subject, message):
     email_message = EmailMessage(
         from_email=str(s.DEFAULT_FROM_EMAIL),
         bcc = list(User.objects.filter(is_active=True).values_list('email', flat=True)),
-        subject=f'{HOST} - {subject}',
-        body=message,
+        subject=f'[{HOST}] {subject}',
+        body=message + "\n\n" + _("Why you received this email? Here is explanation: https://wikikracja.pl/powiadomienia-email/"),
         )
-    # l.warning(f'subject: {subject} \n message: {message}')
+    # l.info(f'subject: {subject} \n message: {message}')
     
     t = threading.Thread(
-                         target=email_message.send,
-                         args=("fail_silently=False",)
-                        )
+        target=email_message.send,
+        kwargs={"fail_silently": False,}
+    )
     t.setDaemon(True)
     t.start()
+
+# proposition = 1
+# discussion = 2
+# referendum = 3
+# rejected = 4
+# approved = 5
+
+
+@login_required
+def parameters(request: HttpRequest):
+    return render(request, 'glosowania/parameters.html', {
+        'signatures': s.WYMAGANYCH_PODPISOW,
+        'signatures_span': timedelta(days=s.CZAS_NA_ZEBRANIE_PODPISOW).days,
+        'queue_span': timedelta(days=s.DYSKUSJA).days,
+        'referendum_span': timedelta(days=s.CZAS_TRWANIA_REFERENDUM).days,
+    })
+
+
+@login_required
+def rejected(request: HttpRequest):
+    votings = Decyzja.objects.filter(status=4).order_by('id')
+    return render(request, 'glosowania/rejected.html', {'votings': votings})
+
+
+@login_required
+def proposition(request: HttpRequest):
+    votings = Decyzja.objects.filter(status=1).order_by('data_referendum_start')
+    return render(request, 'glosowania/proposition.html', {'votings': votings})
+
+
+@login_required
+def discussion(request: HttpRequest):
+    votings = Decyzja.objects.filter(status=2).order_by('data_referendum_start')
+    return render(request, 'glosowania/discussion.html', {'votings': votings})
+
+
+@login_required
+def referendum(request: HttpRequest):
+    votings = Decyzja.objects.filter(status=3).order_by('data_referendum_start')
+    return render(request, 'glosowania/referendum.html', {'votings': votings})
+
+
+@login_required
+def approved(request: HttpRequest):
+    votings = Decyzja.objects.filter(status=5).order_by('data_referendum_start')
+    return render(request, 'glosowania/approved.html', {'votings': votings})

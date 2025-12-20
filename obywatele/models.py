@@ -4,7 +4,10 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
+from django.utils.timezone import make_aware
+from datetime import datetime
+import pytz
 
 
 class Uzytkownik(models.Model):
@@ -19,7 +22,6 @@ class Uzytkownik(models.Model):
     polecajacy = models.CharField(editable=False, null=True, max_length=64)
     data_przyjecia = models.DateField(null=True, editable=False)
     
-    foto = models.ImageField(upload_to='obywatele', default='obywatele/anonymous.png', null=True, blank=True, verbose_name=_('Foto'))
     phone = models.CharField(null=True, blank=True, max_length=72, help_text=_('Phone number i.e. +48 123 456 789'), verbose_name=_('Phone number'))
     city = models.CharField(null=True, blank=True, max_length=72, help_text=_('Where one spend most of their time'), verbose_name=_('City'))
     responsibilities = models.CharField(null=True, blank=True, max_length=622, help_text=_('Tasks performed in our group'), verbose_name=_('Responsibilities'))
@@ -35,7 +37,11 @@ class Uzytkownik(models.Model):
     job = models.CharField(null=True, blank=True, max_length=622, help_text=_('Profession'), verbose_name=_('Job'))
     gift = models.CharField(null=True, blank=True, max_length=622, help_text=_('What gift would you like to receive'), verbose_name=_('Gift'))
     other = models.CharField(null=True, blank=True, max_length=622, help_text=_('Other things worth mentioning'), verbose_name=_('Other'))
-    # i_know_personally_those_important_people = models.CharField(null=True, blank=True, max_length=500)
+    why = models.CharField(null=True, blank=True, max_length=662, help_text=_("In your own words please explain why do you want join our group"), verbose_name=_("Why do you want to join?"))
+
+    # Last broadcast time
+    last_broadcast = models.DateTimeField(default=make_aware(datetime(1900,1,1)))
+
     class Meta:
         verbose_name = _("Citizen")
         verbose_name_plural = _("Citizens")

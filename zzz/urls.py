@@ -1,35 +1,55 @@
-from django.contrib import admin
 from home import views as hv
 from obywatele import views as ov
-from django.conf.urls import include
-from django.contrib.auth import views as auth_views
 from django.urls import path
-from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib import admin
+from django.conf.urls import include
+from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 from filebrowser.sites import site
 from django.views.generic import RedirectView
 
-urlpatterns = [
-    path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/login/'}, name='logout'),
+from typing import List
+from django.urls import URLPattern, URLResolver
+
+urlpatterns: List[URLPattern | URLResolver] = [
     path('', include('home.urls')),
+    path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/login/'}, name='logout'),
     path('login/', auth_views.LoginView.as_view(template_name='home/login.html'), name='login'),
     path('haslo/', hv.haslo, name='haslo'),
-    path('glosowania/', include('glosowania.urls', namespace='glosowania')),
-    path('elibrary/', include('elibrary.urls', namespace='elibrary')),
-    path('chat/', include('chat.urls', namespace='chat')),
-    path('obywatele/', include('obywatele.urls', namespace='obywatele')),
     path('change_email/', ov.change_email, name='change_email'),
     path('accounts/', include('allauth.urls')),
-    path('blog/', include('article.urls')),
-    path('tinymce/', include('tinymce.urls')),
-    path('admin/filebrowser/', site.urls),
-    path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
-    path('favicon.ico',RedirectView.as_view(url='/static/home/images/favicon.ico')),
+    path('admin/filebrowser/', site.urls),
+    # path('grappelli/', include('grappelli.urls')), # only needed for django-filebrowser but it is actually breaking admin panel
+    path('tinymce/', include('tinymce.urls')),
+    path('favicon.ico',RedirectView.as_view(url='/static/home/images/favicon.ico')),  # TODO: robots.txt this way?
+    path('captcha/', include('captcha.urls')),
+
+    path('glosowania/',     include('glosowania.urls', namespace='glosowania')),
+    path('obywatele/',      include('obywatele.urls', namespace='obywatele')),
+    path('elibrary/',       include('elibrary.urls', namespace='elibrary')),
+    path('chat/',           include('chat.urls', namespace='chat')),
+    path('bookkeeping/',    include('bookkeeping.urls', namespace='bookkeeping')),
+    path('board/',          include('board.urls', namespace='board')),
+    path('events/',         include('events.urls', namespace='events')),
 ]
 
+# Serve static files only in DEBUG mode (WhiteNoise handles this in production)
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# Media files (user uploads) - must be served in all environments
+# In production, Django will serve these (inefficient but works)
+# TODO: Consider adding nginx sidecar for better performance
+from django.views.static import serve
+from django.urls import re_path
+
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {
+        'document_root': settings.MEDIA_ROOT,
+    }),
+]
 
 '''
 allauth:

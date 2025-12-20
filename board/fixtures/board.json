@@ -1,0 +1,62 @@
+[
+    {
+        "model": "board.post",
+        "pk": 1,
+        "fields": {
+            "title": "Artykuł prywatny",
+            "subtitle": "Widoczny tylko dla osób zalogowanych",
+            "text": "<p>Treść.</p>",
+            "author": 1,
+            "created": "2025-04-29T20:11:22.679Z",
+            "updated": "2025-09-03T17:18:38.759Z",
+            "is_public": false,
+            "is_archived": false,
+            "is_important": false
+        }
+    },
+    {
+        "model": "board.post",
+        "pk": 2,
+        "fields": {
+            "title": "Footer",
+            "subtitle": "Stopka widoczna na każdej stronie",
+            "text": "<p>&nbsp;</p>\r\n<p style=\"text-align: center;\"><a href=\"https://wikikracja.pl/kontakt/\" target=\"_blank\" rel=\"noopener\">zgłoś problem</a>&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"https://www.facebook.com/groups/demokracjabezposrednia\" target=\"_blank\" rel=\"noopener\">facebook</a>&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;<a href=\"https://discord.gg/JWSJM64\" target=\"_blank\" rel=\"noopener\">discord</a>&nbsp; &nbsp; &nbsp; &nbsp; <a href=\"https://www.youtube.com/@wikikracja\" target=\"_blank\" rel=\"noopener\">youtube</a>&nbsp;</p>\r\n<p style=\"text-align: center;\">Demokrację Bezpośrednią gwarantuje <span style=\"text-decoration: underline;\"><a href=\"https://wikikracja.pl/category/opis-systemu/\" target=\"_blank\" rel=\"noopener\">Wikikracja</a></span></p>",
+            "author": 1,
+            "created": "2025-09-03T17:14:51.104Z",
+            "updated": "2025-09-03T17:33:19.228Z",
+            "is_public": false,
+            "is_archived": true,
+            "is_important": false
+        }
+    },
+    {
+        "model": "board.post",
+        "pk": 3,
+        "fields": {
+            "title": "Start",
+            "subtitle": "To jest strona startowa",
+            "text": "<h1 style=\"text-align: center;\">Możemy tu umieścić wszystko co chcemy</h1>\r\n<p style=\"text-align: center;\"><strong>Ta strona jest widoczna dla os&oacute;b z zewnątrz (przed zalogowaniem).</strong></p>",
+            "author": 1,
+            "created": "2025-09-03T17:17:00.436Z",
+            "updated": "2025-09-03T17:21:32.209Z",
+            "is_public": false,
+            "is_archived": true,
+            "is_important": false
+        }
+    },
+    {
+        "model": "board.post",
+        "pk": 4,
+        "fields": {
+            "title": "Przykładowy artykuł",
+            "subtitle": "Artykuł publiczny",
+            "text": "<p>To jest publicznie dostępny artykuł.</p>\r\n<p>Tego typu wpisy mogą służyć jak nasz blog widoczny dla os&oacute;b niezalogoweanych.</p>",
+            "author": 1,
+            "created": "2025-09-03T17:19:25.181Z",
+            "updated": "2025-09-03T17:19:25.181Z",
+            "is_public": true,
+            "is_archived": false,
+            "is_important": false
+        }
+    }
+]

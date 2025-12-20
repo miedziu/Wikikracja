@@ -15,10 +15,10 @@
           {{ form.tresc|as_crispy_field }}
         </div>
         <div class="col-md-3">
-          {{ form.kara|as_crispy_field }}
+          {{ form.uzasadnienie|as_crispy_field }}
         </div>
         <div class="col-md-3">
-          {{ form.uzasadnienie|as_crispy_field }}
+          {{ form.kara|as_crispy_field }}
         </div>
         <div class="col-md-3">
           {{ form.args_for|as_crispy_field }}
@@ -30,7 +30,7 @@
           {{ form.znosi|as_crispy_field }}
         </div>
     </div>
-    <button type="submit" class="btn btn-danger btn-sm">{% trans 'Save' %}</button>
+    <button type="submit" class="btn btn-primary btn-sm">{% trans 'Save' %}</button>
     <button onclick="window.history.back();" class="btn btn-warning btn-sm" type="button">{% trans 'Back' %}</button>
 </form>
 {% endblock %}

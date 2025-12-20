@@ -10,20 +10,19 @@
 <p class="font-weight-bold">{% trans "Last name" %}: {{ request.user.last_name }}</p>
 
 <form class="post-form" method="post" action="{% url 'obywatele:change_name' %}">{% csrf_token %}
-    <div class="row">
-        <div class="col-md-3">
-            {{ form.first_name|as_crispy_field }}
-        </div>
+  <div class="row">
+    <div class="col-md-3">
+      {{ form.first_name|as_crispy_field }}
     </div>
-    <div class="row">
-        <div class="col-md-3">
-            {{ form.last_name|as_crispy_field }}
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      {{ form.last_name|as_crispy_field }}
     </div>
+  </div>
 
-    <button type="submit" class="btn btn-danger btn-sm">{% trans 'Save' %}</button>
-    <a href="{% url 'obywatele:my_profile' %}" class="btn btn-warning btn-sm">{% trans 'Cancel' %}</a>
-
+  <button type="submit" class="btn btn-primary btn-sm">{% trans 'Save' %}</button>
+  <a href="{% url 'obywatele:my_profile' %}" class="btn btn-warning btn-sm">{% trans 'Cancel' %}</a>
 </form>
 
 {% endblock %}

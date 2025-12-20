@@ -20,29 +20,27 @@ node_modules/
 .project
 .vscode/
 .idea/
+.env
+.python-version
 
 $RECYCLE.BIN/
 Desktop.ini
 ehthumbs.db
 config.py
 Thumbs.db
-notatki.md
-create_database.sh
 testy.py
 setup.cfg
+nlooks.md
 wiki.log
-gen_users_out.txt
-gen_users.txt
-django.mo
 
 ### Django ###
 *.log
 *.pot
 *.pyc
 __pycache__/
-db.sqlite3*
-zzz/settings_custom.py
+*.sqlite3*
 package-lock.json
 package.json
-db-default.sqlite3
-db-bractwo.sqlite3
+notatki.md
+out.sql
+out.csv

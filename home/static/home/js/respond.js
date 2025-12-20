@@ -42,8 +42,6 @@ window.matchMedia = window.matchMedia || (function(doc, undefined){
 })(document);
 
 
-
-
 /*! Respond.js v1.2.0: min/max-width media query polyfill. (c) Scott Jehl. MIT/GPLv2 Lic. j.mp/respondjs  */
 (function( win ){
 	//exposed namespace

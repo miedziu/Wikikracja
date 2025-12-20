@@ -7,7 +7,7 @@
 
 {% block citizens %}
 
-	<form action="" method="get" class="form">
+	{% comment %}<form action="" method="get" class="form">
 		<div class="row">
 			{% for obj in filter.form  %}
 				<div class="col-lg-3 col-sm-12">
@@ -17,7 +17,7 @@
 		</div>
 	<div class="row">
 		<button type="submit" class="btn btn-secondary">{% trans 'Filter' %}</button>
-	</div>
+	</div>{% endcomment %}
 	</form>
 		{% render_table table 'django_tables2/bootstrap-responsive.html' %}
 

@@ -3,23 +3,61 @@
 {% load i18n %}
 
 {% block citizens %}
+<link rel="stylesheet" href="{% static 'obywatele/css/citizens_list.css' %}">
 
-	<ul class="list-group-flush">
-		{% for i in uid %}
-			<li class="list-group-item"><a href="{{ i.pk }}">{{ i.username }} | {{ i.email }} | {% trans 'proposed at' %}: {{ i.date_joined|date:"Y-m-d" }}</a></li>
-		{% endfor %}
-	</ul>
-	
-	<div class="container">
-		<div class="row">
-			<div class="col text-center">
-				<p>
-					<button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-					{% trans "System parameters" %}</button>
-				</p>
-			</div>
-		</div>
-	</div>
+<p>
+  {% trans "New person will be accepted above" %}
+  <span class="badge badge-primary badge-pill">{{ acceptance }}</span>
+  {% trans "threshold." %}
+</p>
+
+{% if uid %}
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">{% trans 'Nick' %}</th>
+				<!-- <th scope="col">{% trans 'Email' %}</th> -->
+				<th scope="col">{% trans 'First name' %}</th>
+				<!-- <th scope="col">{% trans 'Last name' %}</th> -->
+				<th scope="col">{% trans 'Candidate since' %}</th>
+				<th scope="col">{% trans 'Last login' %}</th>
+				<th scope="col">{% trans 'Recommended by' %}</th>
+			  </tr>
+		</thead>
+		<tbody>
+			{% for i in uid|dictsortreversed:"date_joined" %}
+				<tr class="user-row" data-user-id="{{ i.pk }}">
+					<td>
+						<span class="d-flex align-items-center">
+							{% if i.rating == 1 %}
+							<i class="fas fa-check-circle text-success mr-2" title="{% trans 'You accepted this candidate' %}"></i>
+							{% elif i.rating == -1 %}
+							<i class="fas fa-times-circle text-danger mr-2" title="{% trans 'You rejected this candidate' %}"></i>
+							{% else %}
+							<i class="fas fa-circle text-secondary mr-2" title="{% trans 'You are neutral about this candidate' %}"></i>
+							{% endif %}
+							{{ i.username }}
+						</span>
+					</td>
+					<!-- <td class="email-cell">
+						{{ i.email }}
+						<button class="btn btn-sm btn-light copy-btn" data-email="{{ i.email }}" title="{% trans 'Copy email' %}">
+							<i class="fas fa-copy"></i>
+						</button>
+					</td> -->
+					<td>{{ i.first_name }}</td>
+					<!-- <td>{{ i.last_name }}</td> -->
+					<td>{{ i.date_joined|date:"Y-m-d" }}</td>
+					<td>{{ i.last_login|date:"Y-m-d" }}</td>
+      		<td>{% if i.uzytkownik.polecajacy %} {{ i.uzytkownik.polecajacy }} {% else %} -- {% endif %}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+		<div class="alert alert-dark">({% trans 'None' %})</div>
+{% endif %}
+
+<script src="{% static 'obywatele/js/citizens_list.js' %}"></script>
 
 {% endblock citizens %}
-

@@ -2,7 +2,7 @@ from django.contrib import admin
 from glosowania.models import Decyzja
 
 
-class NoweGlosowanie(admin.ModelAdmin):
+class NoweGlosowanie(admin.ModelAdmin): # type: ignore
     pass
     # fields = ('tresc',)
     # inlines = [CommentInline]

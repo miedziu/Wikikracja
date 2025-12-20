@@ -1,0 +1,29 @@
+{% extends "home/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% bootstrap_messages %}
+
+
+{% block content %}
+<div class="font-weight-bold">
+<p>{% blocktrans %}Account is created in 2 steps:{% endblocktrans %}</p>
+<p>1. {% blocktrans %}Right after filling out below form you need to confirm your email. Click the link from email you will receive.{% endblocktrans %}</p>
+<p>2. {% blocktrans %}Then you have to wait until group approve your application. When this happens you will be notified by email.{% endblocktrans %}</p>
+<p> {% blocktrans %} Somebody may contact you to ask about your interests and expectations. {% endblocktrans %}</p>
+</div>
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+
+  {{ form.email|as_crispy_field }}
+  {{ form.captcha }}
+
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button type="submit" class="btn btn-info btn-block m-2 btn-sm">{% trans "Sign Up" %}</button>
+</form>
+{% endblock %}

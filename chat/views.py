@@ -6,124 +6,107 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.db import IntegrityError
 
 from .models import Room, Message
 from django.contrib.auth.models import User
 from chat.forms import RoomForm
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 from datetime import timedelta as td
 from django.utils import timezone
 from django.shortcuts import redirect
 from django.conf import settings as s
-import logging as l
-import time
+import logging
+# import time
+# from allauth.account.signals import user_signed_up
+from django.dispatch import receiver
+# import django.dispatch
+from chat.signals import user_accepted, user_deleted
+from django.utils.translation import gettext_lazy as _
+from chat.models import Room
 
-from django.utils.translation import gettext as _
-
-l.basicConfig(filename='wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=l.INFO)
-
-
-def timeit(method):
-    def timed(*args, **kw):
-        ts = time.time()
-        result = method(*args, **kw)
-        te = time.time()
-        if 'log_time' in kw:
-            name = kw.get('log_name', method.__name__.upper())
-            kw['log_time'][name] = int((te - ts) * 1000)
-        else:
-            print(f'%r  %2.2f ms' % (method.__name__, (te - ts) * 1000))
-            l.warning(f'%r  %2.2f ms' % (method.__name__, (te - ts) * 1000))
-        return result
-    return timed
-
+logger = logging.getLogger(__name__)
 
 @login_required
-def add_room(request):
+def add_room(request: HttpRequest):
     """
     Add public chat room
     """
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
-            room = form.save()
+            room = form.save(commit=False)
+            room.last_activity = timezone.now()
+            room.save()
+
+            # Allow active user access to new public rooms
+            active_users = User.objects.filter(is_active=True)
+            public_rooms = Room.objects.filter(public=True)
+            for i in public_rooms:
+                i.allowed.set(active_users)
+
             return redirect(f"{reverse('chat:chat')}#room_id={room.id}")
     else:
         form = RoomForm()
     return render(request, 'chat/add.html', {'form': form})
 
+
 @login_required
-# @timeit
-def chat(request):
+def chat(request: HttpRequest):
     """
     Root page view. This is essentially a single-page app, if you ignore the
     login and admin parts.
     """
-    # Create all 1to1 rooms
-    active_users = User.objects.filter(is_active=True)
-    # for i in active_users:
-    i = request.user
-    for j in active_users:
-        # User A will not talk to user A
-        if i == j:  
-            continue
-        # Avoid A-B B-A because it is the same thing
-        t = sorted([i.username, j.username])
-        title = '-'.join(t)
-        existing_room = Room.find_with_users(i, j)
+    # TODO: This can be optimized with Signals or CRON
 
-        # check if room for user i and j exists, if so make sure room name is correct
-        if existing_room is not None:
-            existing_room.title = title
-            existing_room.save()
-        # if not, create room
-        else:
-            r = Room.objects.create(title=title, public=False)
-            r.allowed.set((i, j,))
-
-    # Add all active_users to public_rooms.
-    # It is done here because it is needed when:
-    # 1. new public room is created
-    # 2. new user is activated
+    # Allow active user access to all public rooms
     public_rooms = Room.objects.filter(public=True)
-    for i in public_rooms:
-        i.allowed.set(active_users)
+    private_rooms = Room.objects.filter(public=False)
+    active_users = User.objects.filter(is_active=True)
+
+    for p in public_rooms:
+        p.allowed.set(active_users)
+    
+    # create_one2one_rooms(user_accepted)  # use it if there is no private rooms
 
     # Archive/Delete old public chat rooms
-    all_public_rooms = Room.objects.filter(public=True)
-    for i in all_public_rooms:
+    for room in public_rooms:
         try:
-            last_message = Message.objects.filter(room_id=i.id).latest('time')
+            last_message = Message.objects.filter(room_id=room.id).latest('time')
         except Message.DoesNotExist:
+            # logger.info(f'Message.DoesNotExist1 in {room}')
             continue
-        if last_message.time < (timezone.now() - td(days=s.ARCHIVE_CHAT_ROOM)):  # archive after 3 months
-            l.info(f'Chat room {i.title} archived.')
-            i.archived = True  # archive
-            i.save()
-        elif last_message.time > (timezone.now() - td(days=s.ARCHIVE_CHAT_ROOM)):  # unarchive
-            i.archived = False  # unarchive
-            i.save()
-        if last_message.time < (timezone.now() - td(days=s.DELETE_CHAT_ROOM)):  # delete after 1 year
-            l.info(f'Chat room {i.title} deleted.')
-            i.delete()  # delete
+        if last_message.time < (timezone.now() - td(days=s.ARCHIVE_PUBLIC_CHAT_ROOM)):  # archive public after 3 months
+            logger.info(f'Chat room {room.title} archived.')
+            room.archived = True  # archive
+            room.save()
+        elif last_message.time > (timezone.now() - td(days=s.ARCHIVE_PUBLIC_CHAT_ROOM)):  # unarchive
+            room.archived = False  # unarchive
+            room.save()
+        if last_message.time < (timezone.now() - td(days=s.DELETE_PUBLIC_CHAT_ROOM)):  # delete after 1 year
+            logger.info(f'Chat room {room.title} deleted.')
+            room.delete()  # delete
+            room.save()
 
+    # TODO: Should be a Cron Job. Now it is called with every refresh.
     # Archive/Delete old private chat room
-    all_private_rooms = Room.objects.filter(public=False).filter(allowed=request.user)
-    for i in all_private_rooms:
-        for user in i.allowed.all():
+    for room in private_rooms:
+        for user in room.allowed.all():
             if not user.is_active:
-                i.archived = True
-                i.save()
+                room.archived = True
+                room.save()
                 try:
-                    last_message = Message.objects.filter(room_id=i.id).latest('time')
+                    last_message = Message.objects.filter(room_id=room.id).latest('time')
                 except Message.DoesNotExist:
+                    # TODO This happens only for rooms without messages so not really needed
+                    # logger.info(f'Message.DoesNotExist2 in {room}')
                     continue
-                if last_message.time < (timezone.now() - td(days=s.DELETE_CHAT_ROOM)):  # delete after 1 year
-                    l.info(f'Chat room {i.title} deleted.')
-                    i.delete()  # delete
+                if last_message.time < (timezone.now() - td(days=s.DELETE_INACTIVE_USER_AFTER)):  # delete inactive users private room
+                    logger.info(f'Chat room {room.title} deleted.')
+                    room.delete()  # delete
             elif user.is_active:
-                i.archived = False
-                i.save()
+                room.archived = False
+                room.save()
 
     # Get a list of rooms, ordered alphabetically
     allowed_rooms = Room.objects.filter(allowed=request.user.id).order_by("title")
@@ -145,13 +128,12 @@ def chat(request):
         'private_archived': allowed_rooms.filter(public=False, archived=True),
 
         'user': request.user,
-        'ARCHIVE_CHAT_ROOM': td(days=s.ARCHIVE_CHAT_ROOM).days,
-        'DELETE_CHAT_ROOM': td(days=s.DELETE_CHAT_ROOM).days,
-    })
+        'ARCHIVE_PUBLIC_CHAT_ROOM': td(days=s.ARCHIVE_PUBLIC_CHAT_ROOM).days,
+        'DELETE_PUBLIC_CHAT_ROOM': td(days=s.DELETE_PUBLIC_CHAT_ROOM).days,})
 
 
 @csrf_exempt
-def upload_image(request):
+def upload_image(request: HttpRequest):
     filenames = []
     for image in request.FILES.getlist('images'):
 
@@ -174,11 +156,10 @@ def upload_image(request):
 
 
 def get_translations():
-    _("Browser notifications are disabled"),
+    _("Click here to enable notifications"),
     _("Today"),
     _("Yesterday"),
     _("Anonymous"),
-    _("Slow-mode %dsec"),
     _("Enable Notifications"),
     _("Chat works better with notifications. You can allow them to see new messages even beyond chat room."),
     _("Do you want to receive notifications?"),
@@ -196,11 +177,10 @@ def get_translations():
     _("Jan"), _("Feb"), _("Mar"), _("Apr"), _("May"), _("Jun"), _("Jul"), _("Aug"), _("Sep"), _("Oct"), _("Nov"), _("Dec"),
 
     strings = [
-        "Browser notifications are disabled",
+        "Click here to enable notifications",
         "Today",
         "Yesterday",
         "Anonymous",
-        "Slow-mode %dsec",
         "Enable Notifications",
         "Chat works better with notifications. You can allow them to see new messages even beyond chat room.",
         "Do you want to receive notifications?",
@@ -223,3 +203,39 @@ def get_translations():
     return translation
 
 
+@receiver(user_accepted)
+def create_one2one_rooms(sender, **kwargs):
+    # Create all 1to1 rooms
+    active_users = User.objects.filter(is_active=True)
+    # i = request.user
+    # i = kwargs['user']
+    for i in active_users:
+        for j in active_users:
+            # User A will not talk to user A
+            if i == j:  
+                continue
+            # Avoid A-B B-A because it is the same thing
+            t = sorted([i.username, j.username])
+            title = '-'.join(t)
+            existing_room = Room.find_with_users(i, j)
+
+            # check if room for user i and j exists, if so make sure room name is correct
+            if existing_room is not None:
+                existing_room.title = title
+                existing_room.save()
+            # if not - create new room
+            else:
+                try:
+                    r = Room.objects.create(title=title, public=False)
+                except IntegrityError:
+                    r = Room.objects.get(title=title)
+                    r.allowed.set((i, j,))
+
+
+@receiver(user_deleted)
+def delete_one2one_rooms(sender, user, **kwargs):
+    private_rooms = Room.objects.filter(public=False)
+    for room in private_rooms:
+        if user.username in room.title:  # TODO: If Public room have name of the user in it - it will be deleted
+            logger.info(f'Room {room} deleted.')
+            room.delete()

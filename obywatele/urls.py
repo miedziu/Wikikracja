@@ -1,6 +1,6 @@
 from obywatele import views as v
 from django.urls import path
-from obywatele.models import Uzytkownik
+# from obywatele.models import Uzytkownik
 from django.contrib.auth.decorators import login_required
 
 app_name = 'obywatele'
@@ -15,5 +15,6 @@ urlpatterns = (
     path('nowy/', v.dodaj, name='zaproponuj_osobe'),
     path('change_name/', v.change_name, name='change_name'),
     path('change_username/', v.change_username, name='change_username'),
-    path("assets/", login_required(v.AssetListView.as_view()), name='assets')
+    path("assets/", login_required(v.AssetListView.as_view()), name='assets'),
+    path('parameters/', v.parameters, name='parameters'),
 )

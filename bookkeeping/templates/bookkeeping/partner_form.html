@@ -1,0 +1,69 @@
+{% extends 'home/base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-12">
+  <div class="row mb-12">
+    <div>
+      <a href="{% url 'bookkeeping:transaction_list' %}" class="btn btn-sm mr-1 mb-1 btn-secondary">{% trans 'Transactions' %}</a>
+      <a href="{% url 'bookkeeping:partner_list' %}" class="btn btn-sm mr-1 mb-1 btn-primary">{% trans 'Partners' %}</a>
+      <a href="{% url 'bookkeeping:category_list' %}" class="btn btn-sm mr-1 mb-1 btn-secondary">{% trans 'Categories' %}</a>
+      <a href="{% url 'bookkeeping:report_list' %}" class="btn btn-sm mr-1 mb-1 btn-secondary">{% trans 'Reports' %}</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        
+        <div class="card mb-3">
+          <div class="card-header bg-info text-white">
+            <h4>{% if form.instance.pk %} {% trans "Update Partner" %} {% else %} {% trans "New Partner" %} {% endif %}</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                {{ form.name|as_crispy_field }}
+              </div>
+              <div class="col-md-6">
+                {{ form.email|as_crispy_field }}
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                {{ form.phone|as_crispy_field }}
+              </div>
+              <div class="col-md-6">
+                {{ form.web_page|as_crispy_field }}
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                {{ form.address|as_crispy_field }}
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                {{ form.city|as_crispy_field }}
+              </div>
+              <div class="col-md-6">
+                {{ form.country|as_crispy_field }}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">{% trans "Save Partner" %}</button>
+          <a href="{% url 'bookkeeping:partner_list' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

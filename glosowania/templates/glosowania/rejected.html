@@ -1,0 +1,25 @@
+{% extends 'glosowania/menu.html' %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% bootstrap_messages %}
+{% load static %}
+{% load i18n %}
+
+{% block glosowania %}
+
+<div class="container mt-4">
+	<p>
+		{% if votings %}
+			{% for i in votings %}
+				<h5>
+					{{ i.pk }}. <a href="{% url 'glosowania:details' pk=i.pk %}">{{ i.title }}</a>
+				</h5>
+			{% endfor %}
+		{% else %}
+			<div class="alert alert-dark">({% trans 'There is no proposal with this status' %})</div>
+		{% endif %}
+	</p>
+</div>
+
+{% endblock glosowania %}

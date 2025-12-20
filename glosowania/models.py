@@ -1,8 +1,8 @@
 import os
 from django.db import models
-import datetime
+# import datetime
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_comma_separated_integer_list
 import re
@@ -19,76 +19,68 @@ def does_it_exist(value):
     return True
 
 class Decyzja(models.Model):
-    author = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
+    author = models.ForeignKey(
+        'auth.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True)
     title = models.TextField(
     max_length=200,
     null=True,
     verbose_name=_('Title'),
-    help_text=_('Enter short title describing new law.')
-    )
+    help_text=_('Enter short title describing new law.'))
     tresc = models.TextField(
-        max_length=500,
+        max_length=1000,
         null=True,
         verbose_name=_('Law text'),
-        help_text=_('Enter the exact wording of the law as it is to be applied.')
-        )
+        help_text=_('Enter the exact wording of the law as it is to be applied.'))
     kara = models.TextField(
         max_length=500,
         null=True,
-        verbose_name=_('Penalty'),
-        help_text=_('What is the penalty for non-compliance with this rule. This can be, for example: "Banishment for 3 months", "Banishment forever", etc.')
-        )
+        verbose_name=_('Penalty for non-compliance'),
+        help_text=_('What is the penalty for non-compliance with this rule. This can be, for example: "Banishment for 3 months", "Banishment forever", etc.'))
     uzasadnienie = models.TextField(
         max_length=1500,
         null=True,
         verbose_name=_('Reasoning'),
-        help_text=_('What events inspired this bill? What are we going to achieve with it?')
-        )
+        help_text=_('What events or thoughts inspired this bill? What are the expected results?'))
     args_for = models.TextField(
+        # TODO: This field should be filled out by anyone - like comments or chat:
         max_length=1500,
         null=True,
         verbose_name=_('Positive Aspects of the Idea'),
-        help_text=_('Enter the benefits for the group, environment, economy, etc. resulting from the introduction of the idea.')
-        )
-    # TODO: This field should be filled out by anyone:
+        help_text=_('Enter the benefits for the group, environment, economy, etc. resulting from the introduction of the idea.'))
     args_against = models.TextField(
+        # TODO: This field should be filled out by anyone - like comments or chat:
         max_length=1500,
         null=True,
         verbose_name=_('Negative Aspects of the Idea'),
-        help_text=_('Enter the potential threat associated with the proposal.')
-        )
-    
+        help_text=_('Enter the potential threat associated with the proposal.'))
     znosi = models.CharField(
         max_length=50,
         null=True,
         blank=True,
         verbose_name=_('Abolishes the rules'),
         help_text=_('If the proposed law supersedes other bills, enter their comma separated numbers here.'),
-        validators=[validate_comma_separated_integer_list, does_it_exist],
-        # validators=[validate_comma_separated_integer_list],
-        )
-
+        validators=[validate_comma_separated_integer_list, does_it_exist])
+    path = models.CharField(
+        max_length= 1000,
+        null=True,
+        verbose_name=_('The path this bill took.'))
     ile_osob_podpisalo = models.SmallIntegerField(editable=False, default=0)
-    data_powstania = models.DateField(auto_now_add=True,
-                                      editable=False,
-                                      null=True)
+    data_powstania = models.DateField(auto_now_add=True, editable=False, null=True)
     data_zebrania_podpisow = models.DateField(editable=False, null=True)
     data_referendum_start = models.DateField(editable=False, null=True)
     data_referendum_stop = models.DateField(editable=False, null=True)
-    data_zatwierdzenia = models.DateField(editable=False, null=True)
-    data_obowiazuje_od = models.DateField(editable=False, null=True)
     za = models.SmallIntegerField(default=0, editable=False)
     przeciw = models.SmallIntegerField(default=0, editable=False)
     status = models.SmallIntegerField(default=1, editable=False)
 
-    # 1.Propozycja
-    # 2.Brak poparcia
-    # 3.W kolejce
-    # 4.Referendum
-    # 5.Odrzucone
-    # 6.Zatwierdzone/Vacatio Legis
-    # 7.Obowiązuje
-
+    # 1.Proposition
+    # 2.Discussion
+    # 3.Referendum
+    # 4.Reject
+    # 5.Approved
 
     def __str__(self):
         return '%s: %s on %s' % (self.pk, self.tresc, self.status)
@@ -98,10 +90,10 @@ class Decyzja(models.Model):
 
 class ZebranePodpisy(models.Model):
     '''Lista podpisów pod wnioskiem o referendum'''
-    projekt = models.ForeignKey(Decyzja, on_delete=models.CASCADE)
+    projekt = models.ForeignKey(Decyzja, on_delete=models.SET_NULL, null=True)
 
     # Lets note who signed proposal:
-    podpis_uzytkownika = models.ForeignKey(User, on_delete=models.CASCADE)
+    podpis_uzytkownika = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         unique_together = ('projekt', 'podpis_uzytkownika')

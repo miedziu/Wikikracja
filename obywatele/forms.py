@@ -1,9 +1,18 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.utils.safestring import mark_safe
+from django.http import HttpRequest
 from obywatele.models import Uzytkownik
-from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
+from allauth.account.forms import SignupForm
+from django.utils.translation import gettext_lazy as _
+from django.utils import translation
+from django.conf import settings as s
+from django.core.mail import EmailMessage
+import threading
+from captcha.fields import CaptchaField
+import logging as l
+from zzz.utils import get_site_domain
 
+l.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=l.INFO)
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -45,16 +54,6 @@ class UsernameChangeForm(forms.ModelForm):
         if commit:
             self.user.save()
         return self.user
-
-
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = Uzytkownik
-        # fields = ('foto', 'phone', 'responsibilities', 'city', 'hobby',
-        fields = ('phone', 'responsibilities', 'city', 'hobby',
-                  'to_give_away', 'to_borrow', 'for_sale', 'i_need',
-                  'skills', 'knowledge', 'want_to_learn', 'business',
-                  'job', 'gift', 'other')
 
 
 class EmailChangeForm(forms.Form):
@@ -109,3 +108,91 @@ class EmailChangeForm(forms.Form):
         if commit:
             self.user.save()
         return self.user
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Uzytkownik
+        fields = ('phone', 'responsibilities', 'city', 'hobby',
+                  'to_give_away', 'to_borrow', 'for_sale', 'i_need',
+                  'skills', 'knowledge', 'want_to_learn', 'business',
+                  'job', 'gift', 'other', 'why')
+
+
+class CustomSignupForm(SignupForm):
+    email = forms.CharField(max_length=100, label='Email', required=True)
+    captcha = CaptchaField()
+
+    def __init__(self, *args, **kwargs):
+        super(CustomSignupForm, self).__init__(*args, **kwargs)
+        self.fields.pop('password1')
+ 
+    def save(self, request: HttpRequest):
+        user = super(CustomSignupForm, self).save(request)
+        user.email = self.cleaned_data['email']
+        if not User.objects.filter(username=user.username).exists():
+            user.set_unusable_password()
+        user.save()
+    
+        HOST = get_site_domain()
+        SendEmailToAll(
+            _('New person requested membership'),
+            _('User %(username)s just requested membership') % {'username': user.username} + '\n' + f'http://{HOST}/obywatele/poczekalnia/'
+        )
+        return user
+
+
+def SendEmailToAll(subject, message):
+    # bcc: all active users
+    # subject: Custom
+    # message: Custom
+    translation.activate(s.LANGUAGE_CODE)
+    HOST = get_site_domain()
+
+    email_message = EmailMessage(
+        from_email=str(s.DEFAULT_FROM_EMAIL),
+        bcc = list(User.objects.filter(is_active=True).values_list('email', flat=True)),
+        subject=f'[{HOST}] {subject}',
+        body=f"{message}\n\n{_('Why you received this email? Here is explanation: https://wikikracja.pl/powiadomienia-email/')}",
+        )
+    l.info(f'subject: {subject} message: {message}')
+    
+    t = threading.Thread(
+                         target=email_message.send,
+                         kwargs={"fail_silently": False,}
+                        )
+    t.setDaemon(True)
+    t.start()
+
+
+
+'''
+class SignupForm(forms.ModelForm):
+    # https://stackoverflow.com/questions/35580077/django-allauth-signup-without-password
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+        exclude = ('password',)
+
+    username = forms.CharField(label=_("username"))
+    email = forms.CharField(label=_("email"))
+
+    def signup(self, request, user):
+        user.username = self.cleaned_data['username']
+        user.email = self.cleaned_data['email']
+        user.set_unusable_password()
+        user.save()
+'''
+
+'''
+from django.contrib.auth.forms import AuthenticationForm
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label="Username", max_length=30,
+                               widget=forms.TextInput(attrs={
+                                   'class': 'form-control', 'name': 'username'
+                                   }))
+    password = forms.CharField(label="Password", max_length=30,
+                               widget=forms.TextInput(attrs={
+                                   'class': 'form-control', 'name': 'password'
+                                   }))
+'''

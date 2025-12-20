@@ -5,68 +5,56 @@
 
 {% block glosowania %}
 
-	{% if prev %} <a href="{% url 'glosowania:details' pk=prev.id %}"><< {% trans 'prev' %}</a> {% else %} << {% trans 'prev' %} {% endif %}
-	{% if next %} <a href="{% url 'glosowania:details' pk=next.id %}">{% trans 'next' %} >></a> {% else %} {% trans 'next' %} >> {% endif %}
+	{% if prev %} <a href="{% url 'glosowania:details' pk=prev.id %}"> << </a> {% else %} << {% endif %} |
+	{% if next %} <a href="{% url 'glosowania:details' pk=next.id %}"> >> </a> {% else %} >> {% endif %}
+
+	{% if chat_room %}
+		<div class="alert alert-info mb-3">
+			<i class="fas fa-comments"></i> 
+			<a href="{% url 'chat:chat' %}#room_id={{ chat_room.id }}" class="alert-link">
+				{% trans 'Discuss this proposal in the chat room' %} "{{ chat_room.title }}"
+			</a>
+		</div>
+	{% endif %}
 
 	<div>
-		<h5>{% trans 'Bill number' %}: <b>{{ id.id }}</b></h5>
-		<h5>{% trans 'Bill title' %}: <b>{{ id.title }}</b></h5>
-		<h5>{% trans 'Bill state' %}: <b>{{ state }}</b></h5>
-		<h5>{% trans 'Bill text' %}: <b>{{ id.tresc }}</b></h5>
-		<h5>{% trans 'Penalty for non-compliance' %}: <b>{{ id.kara }}</b></h5>
-		<h5>{% trans 'Reason' %}: <b>{{ id.uzasadnienie }}</b></h5>
-		<h5>{% trans 'Positives' %}: <b>{{ id.args_for|default_if_none:"--" }}</b></h5>
-		<h5>{% trans 'Negatives' %}: <b>{{ id.args_against|default_if_none:"--" }}</b></h5>
-        <h5>{% trans 'This law supersedes the following bills' %}: <b>{{ id.znosi|default_if_none:"--" }}</b></h5>
-			<p>
-				{% trans 'Author' %}: {{ id.author|default_if_none:"--" }} | {% trans 'Number of people signed the motion for a referendum' %}: {{ id.ile_osob_podpisalo }}
-				{% if id.status >= 5 %} | {% trans 'For' %}: {{ id.za }} | {% trans 'Against' %}: {{ id.przeciw }} {% endif %}
-				
-				<br><small>
-				{% if id.data_powstania %} {% trans 'Date created' %}: {{ id.data_powstania }} {% endif %}
-				{% if id.data_zebrania_podpisow %} | {% trans 'Date of collecting signatures' %}: {{ id.data_zebrania_podpisow }} {% endif %}
-				{% if id.data_referendum_start %} | {% trans 'Start referendum' %}: {{ id.data_referendum_start }} {% endif %}
-				{% if id.data_referendum_stop %} | {% trans 'End referendum' %}: {{ corrected_data_referendum_stop }} {% endif %}
-				{% if id.data_obowiazuje_od %} <br> <b>{% trans 'The rule applies from' %}: {{ id.data_obowiazuje_od }}</b> {% endif %}
-				</small>
-				{% comment %} Status: {{ id.status }} {% endcomment %}
-			</p>
+		<h5><u><b>{% trans 'Bill number' %}</b></u> {{ id.id }}</h5>
+		<h5><u><b>{% trans 'Bill title' %}</b></u> {{ id.title }}</h5>
+		<h5><u><b>{% trans 'Bill state' %}</b></u> {{ state }}</h5>
+		<h5><u><b>{% trans 'Bill text' %}</b></u> {{ id.tresc|linebreaks }}</h5>
+		<h5><u><b>{% trans 'Penalty for non-compliance' %}</b></u> {{ id.kara|linebreaks }}</h5>
+		<h5><u><b>{% trans 'Reason' %}</b></u> {{ id.uzasadnienie|linebreaks }}</h5>
+		<h5><u><b>{% trans 'Positives' %}</b></u> {{ id.args_for|linebreaks|default_if_none:"--" }}</h5>
+		<h5><u><b>{% trans 'Negatives' %}</b></u> {{ id.args_against|linebreaks|default_if_none:"--" }}</h5>
+    <h5><u><b>{% trans 'This law supersedes the following bills' %}</b></u> {{ id.znosi|default_if_none:"--" }}</h5>
 
-		{% if id.status == 5 or id.status == 6 or id.status == 7 %}
-			<p>
-				<h5>{% trans 'Protocol' %}:</h5>
-				{% for i in report %}
-					{% if i.vote %}
-						{% trans "Yes" %}
-					{% else %}
-						{% trans "No" %}
-					{% endif %}
-					{{ i.code }}
-					<br>
-				{% endfor %}
-			</p>
-		{% endif %}
-	</div>
+{% comment %} COMMON FIELDS ENDS HERE {% endcomment %}
 
+	{% comment %} PROPOSITION {% endcomment %}
 	{% if id.status == 1 %}
+	<hr>
 		{% if not signed %}
-			<form action="#" method="get">
+			<form action="#" method="get" style="display: inline-block;">
 				<p><u><h5>{% trans 'Do you want a referendum on this law?' %}</h5></u></p>
 				<input class="btn btn-primary btn-sm" type="submit" name="sign" value="{% trans "Yes, I sign" %}"/>
 			</form>
 		{% elif signed %}
 			<p><u><h5>{% trans 'You already signed this proposal.' %}</h5></u></p>
-			<form action="#" method="get">
+			<form action="#" method="get" style="display: inline-block;">
 				<input class="btn btn-danger btn-sm" type="submit" name="withdraw" value="{% trans "Withdraw your sign" %}"/>
 			</form>
 		{% endif %}
 
 		{% if id.author == None or id.author == current_user %}
-			<a class="btn btn-primary btn-sm" href="{% url 'glosowania:edit' id.pk %}">{% trans 'Edit' %}</a>
+			<a class="btn btn-warning btn-sm" href="{% url 'glosowania:edit' id.pk %}">{% trans 'Edit' %}</a>
 		{% endif %}
 	{% endif %}
 
-	{% if id.status == 4 %}
+
+
+	{% comment %} REFERENDUM {% endcomment %}
+	{% if id.status == 3 %}
+	<hr>
 		{% if not voted %}
 			<form action="#" method="get">
 				<p><u><h5>{% trans 'Do you want to implement this law?' %}</h5></u></p>
@@ -78,7 +66,52 @@
 		{% endif %}
 	{% endif %}
 
-	{% comment %} {% if id.status == 2 or id.status == 3 or id.status >= 5 %}
-	{% endif %} {% endcomment %}
 
+	{% comment %} PROTOCOL SO ONLY APPROVED OR REJECTED {% endcomment %}
+		{% if id.status == 4 or id.status == 5 %}
+		<hr>
+		<p>
+			<h5><b>{% trans 'Result' %}</b></h5>
+			{% trans 'For' %} {{ id.za }} | {% trans 'Against' %} {{ id.przeciw }}
+		</p>
+		<p>
+			<h5><b>{% trans 'Protocol' %}</b></h5>
+			{% for i in report %}
+				{% if i.vote %}
+					{% trans "Yes" %}
+				{% else %}
+					{% trans "No" %}
+				{% endif %}
+				{{ i.code }}
+				<br>
+			{% endfor %}
+		</p>
+		<p>
+			<h5><b>{% trans 'List of people who voted' %}</b></h5>
+			{% if voters %}
+				{% for voter in voters %}{{ voter.ktory_uzytkownik_juz_zaglosowal.username }}{% if not forloop.last %}, {% endif %}{% endfor %}
+			{% else %}
+				<em>{% trans 'No votes recorded yet.' %}</em>
+			{% endif %}
+		</p>
+	{% endif %}
+
+
+{% comment %} FOOTER {% endcomment %}
+				<p>
+				<small>
+				<hr>
+				<b>{% trans 'Number of people signed the motion for a referendum' %}</b> {{ id.ile_osob_podpisalo }}
+				<br>
+				<b>{% trans 'Author' %}</b> {{ id.author|default_if_none:"--" }}
+				<br>
+				<b>{% trans 'History' %}</b> {{ id.path }}
+				<br>
+				<b>{% trans 'Date created' %}</b> {{ id.data_powstania }} | 
+				<b>{% trans 'Date of collecting signatures' %}</b> {{ id.data_zebrania_podpisow|default_if_none:"--" }} |
+				<b>{% trans 'Start referendum' %}</b> {{ id.data_referendum_start|default_if_none:"--" }} |
+				{% comment %} {% trans 'End referendum' %}: {{ corrected_data_referendum_stop|default_if_none:"--" }} {% endcomment %}
+				<b>{% trans 'End referendum' %}</b> {{ data_referendum_stop|default_if_none:"--" }}
+				</small>
+				</p>
 {% endblock %}

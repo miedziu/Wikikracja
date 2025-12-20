@@ -1,10 +1,12 @@
+from datetime import datetime
+
 def format_chat_message(
-        room_id, user_id,
-        anonymous,
-        message, message_id,
-        upvotes, downvotes,
-        new, edited,
-        date, latest_date,
+        room_id: int, user_id: int,
+        anonymous: bool,
+        message: str, message_id: int,
+        upvotes: int, downvotes: int,
+        new: bool, edited: bool,
+        date: datetime, latest_date: datetime,
         attachments: dict):
     """
     Return formatted dict with message data.

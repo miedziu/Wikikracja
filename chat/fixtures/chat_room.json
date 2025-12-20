@@ -1,0 +1,14 @@
+[
+    {
+        "model": "chat.room",
+        "pk": 1,
+        "fields": {
+            "public": true,
+            "archived": false,
+            "title": "start",
+            "allowed": [],
+            "seen_by": [],
+            "muted_by": []
+        }
+    }
+]

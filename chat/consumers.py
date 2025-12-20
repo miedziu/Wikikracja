@@ -1,20 +1,15 @@
-import base64
-import datetime
-import imghdr
-import io
 import os
-import uuid
+import logging
+logger = logging.getLogger(__name__)
 
 from django.conf import settings
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from .exceptions import ClientError
-from .utils import get_room_or_error, get_slow_mode_delay, OnlineUserRegistry, RoomRegistry, HandledMessage, Handlers, \
-    helper_method
+from .utils import get_room_or_error, OnlineUserRegistry, RoomRegistry, HandledMessage, Handlers, helper_method
 from .models import Message, Room, MessageVote, MessageHistory, MessageHistoryEntry, MessageAttachment
 from datetime import datetime as dt
 from django.contrib.auth.models import User
 from channels.db import database_sync_to_async
-from django.db import IntegrityError
 from django.utils.html import escape
 
 from .group_messages import format_chat_message
@@ -173,22 +168,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name,  # specific.BZcPrnWw!vvvelNWGEgbE
         )
 
-        time_now = datetime.datetime.now()
-        last_message_by_user = await self.get_own_latest_message(room)
-        delay = get_slow_mode_delay(room)
-
-        cooldown = 0
-        if last_message_by_user is not None \
-                and delay is not None \
-                and time_now.timestamp() - last_message_by_user.time.timestamp() < delay:
-            cooldown = delay - int(time_now.timestamp() - last_message_by_user.time.timestamp())
-
         # Instruct their client to finish opening the room
         proxy.send_json({
             "join": str(room.id),  # 1
             "title": room.title,   # "Room 1"
-            "slow_mode_delay": get_slow_mode_delay(room),  # delay in seconds or None if slow mode is disabled
-            "cooldown": cooldown,
             "public": room.public,
             "notifications": not await self.has_muted_room(room.id)
         })
@@ -208,7 +191,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             # t=str(message['time'])[0:19]
             data = format_chat_message(
                 room_id=room_id,
-                user_id=u.id,
+                user_id=u.id if u else None,
                 anonymous=message['anonymous'],
                 message=message['text'],
                 message_id=message['id'],
@@ -267,16 +250,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # impossible to send anonymous messages in private chat
         if not room.public and is_anonymous:
             raise ClientError("ANONYMOUS_IN_PRIVATE")
-
-        # make sure enough time has passed if slow mode enabled in it
-        time_now = datetime.datetime.now()
-        last_message_by_user = await self.get_own_latest_message(room)
-        delay = get_slow_mode_delay(room)
-
-        if last_message_by_user is not None \
-            and delay is not None \
-                and time_now.timestamp() - last_message_by_user.time.timestamp() < delay:
-            raise ClientError("SLOW_MODE")
 
         # Save message to DB
         u = await self.get_user_by_name(self.scope["user"].username)  # ???
@@ -348,7 +321,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             user = await self.get_user_by_id(online_user_id)
             private_chat = await self.find_room_with(user, self.scope['user'])
             online_data.append({
-                'user_id': user.id,
+                'user_id': user.id if user else None,
                 'room_id': private_chat.id,
                 'online': True,
             })
@@ -552,7 +525,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         return {
             **event_copy,  # copy event
             # Override some of fields based on receiver
-            'username': 'Anonymous User' if event["anonymous"] else user.username,
+            'username': 'Anonymous User' if event["anonymous"] else user.username if user else None,
             "new": event["new"] if self.scope['user'] != user else False,
             "your_vote": vote.vote if vote is not None else None, "own": self.scope['user'] == user
         }
@@ -630,8 +603,11 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def get_user_by_id(self, id):
-        u = User.objects.get(id=id)
-        return u
+        try:
+            return User.objects.get(id=id)
+        except User.DoesNotExist:
+            logger.error(f"User with ID {id} does not exist")
+            return None
 
     @database_sync_to_async
     def get_user_by_name(self, user):
