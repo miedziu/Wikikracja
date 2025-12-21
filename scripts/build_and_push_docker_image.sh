@@ -11,7 +11,7 @@ if ! command -v git >/dev/null 2>&1; then
     exit 1
 fi
 
-REGISTRY_IMAGE_DEFAULT="ghcr.io/wikikracja/wikikracja"
+REGISTRY_IMAGE_DEFAULT="ghcr.io/soma115/wikikracja"
 REGISTRY_IMAGE="${REGISTRY_IMAGE:-$REGISTRY_IMAGE_DEFAULT}"
 
 CONFIRM_OFFICIAL_PUSH="${CONFIRM_OFFICIAL_PUSH:-0}"

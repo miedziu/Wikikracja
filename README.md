@@ -1,6 +1,6 @@
 # Wikikracja
 
-**Democratic wiki platform for collaborative decision-making and community building.**
+**Democratic platform for collaborative decision-making and community building.**
 
 [![Build Docker Image](https://github.com/wikikracja/wikikracja/actions/workflows/docker-build.yml/badge.svg)](https://github.com/wikikracja/wikikracja/actions/workflows/docker-build.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
