@@ -21,17 +21,13 @@ A comprehensive community platform with the following modules:
 
 Try the live demo: **https://demo.wikikracja.pl/**
 
-Production instances:
-- https://w1.wikikracja.pl/
-- https://w2.wikikracja.pl/
-
 ## Tech Stack
 
 - **Backend**: Django 5.1, Django Channels, Python 3.11
 - **Frontend**: Bootstrap 4, TinyMCE, Crispy Forms
 - **Database**: SQLite (development), PostgreSQL (production ready)
 - **Cache/Channels**: Redis
-- **Deployment**: Docker, Kubernetes (with Flux CD GitOps)
+- **Deployment**: Docker, Linux
 - **Authentication**: django-allauth with email verification
 - **Security**: CSRF protection, reCAPTCHA, secure password policies
 
@@ -83,7 +79,6 @@ Production instances:
 
 6. **Access the application**
    - Web: http://localhost:8000
-   - Admin: http://localhost:8000/admin
 
 ### Docker Development
 
@@ -161,7 +156,7 @@ See `.github/workflows/docker-build.yml` for details.
 
 All configuration is done via environment variables. See `.env.example` for all available options.
 
-### Essential Settings
+### Essential Settings in .env
 
 ```bash
 # Security (REQUIRED in production)
@@ -232,15 +227,10 @@ We welcome contributions! Here's how you can help:
 
 See `docker-compose.yml` for a production-ready setup with Redis.
 
-### Kubernetes Deployment
-
-Example Kubernetes manifests are available in the deployment documentation. The official instances use Flux CD for GitOps-based deployment.
-
 **Key features:**
 - Automatic Site domain configuration via initContainer
 - Node selectors for specific node placement
 - PersistentVolumeClaims for data storage
-- Traefik IngressRoutes with Let's Encrypt SSL
 - CronJobs for scheduled tasks
 
 ## Architecture
@@ -250,11 +240,6 @@ Example Kubernetes manifests are available in the deployment documentation. The 
 │  Web Browser (User)                             │
 └────────────────┬────────────────────────────────┘
                  │ HTTPS
-                 ▼
-┌─────────────────────────────────────────────────┐
-│  Traefik (Reverse Proxy + SSL)                  │
-└────────────────┬────────────────────────────────┘
-                 │
                  ▼
 ┌─────────────────────────────────────────────────┐
 │  Django Application (Daphne ASGI Server)        │
@@ -278,13 +263,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 - **Documentation**: See `/docs` folder (if available)
-- **Issues**: [GitHub Issues](https://github.com/wikikracja/wikikracja/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/wikikracja/wikikracja/discussions)
+- **Issues**: [GitHub Issues](https://github.com/soma115/wikikracja/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/soma115/wikikracja/discussions)
 - **Demo**: https://demo.wikikracja.pl/
-
-## Acknowledgments
-
-Built with Django and the amazing Django ecosystem. Special thanks to all contributors!
 
 ---
 
