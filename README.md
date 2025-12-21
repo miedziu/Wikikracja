@@ -2,8 +2,11 @@
 
 **Democratic platform for collaborative decision-making and community building.**
 
-[![Build Docker Image](https://github.com/wikikracja/wikikracja/actions/workflows/docker-build.yml/badge.svg)](https://github.com/wikikracja/wikikracja/actions/workflows/docker-build.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![GitHub last commit](https://img.shields.io/github/last-commit/soma115/wikikracja)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fwikikracja.pl)](https://wikikracja.pl)
+[![Build Docker Image](https://github.com/soma115/wikikracja/actions/workflows/docker-build.yml/badge.svg)](https://github.com/soma115/wikikracja/actions/workflows/docker-build.yml)
+[![ghcr.io](https://img.shields.io/badge/ghcr.io-soma115%2Fwikikracja-blue?logo=docker)](https://github.com/soma115/wikikracja/pkgs/container/wikikracja)
 
 ## Features
 

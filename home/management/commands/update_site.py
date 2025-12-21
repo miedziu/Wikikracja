@@ -14,13 +14,6 @@ Why this exists:
 When it runs:
     Automatically on every container startup (see Dockerfile CMD).
     Can also be run manually: python manage.py update_site
-
-Usage in Kubernetes:
-    Environment variables are set via ConfigMap (e.g., wiki-prv-instance-1-config).
-    Each instance can have different SITE_DOMAIN and SITE_NAME values.
-    
-Manual execution:
-    kubectl exec -n wiki-prv deployment/wiki-prv-instance-1 -- python manage.py update_site
 """
 from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
