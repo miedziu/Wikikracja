@@ -1,4 +1,5 @@
 import os
+import sys
 from os import path
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
@@ -219,31 +220,31 @@ LOGGING = {
         },
     },
     'handlers': {
-        'file': {
+        'console': {
             'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'wiki.log',
-            'formatter': 'verbose'
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+            'stream': 'ext://sys.stdout',
         },
     },
     'loggers': {
         '': {
-            'handlers': ['file'],
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': True
         },
         # 'django': {
-        #     'handlers': ['file'],
+        #     'handlers': ['console'],
         #     'level': 'INFO',
         #     'propagate': True
         # },
         # 'glosowania': {
-        #     'handlers': ['file'],
+        #     'handlers': ['console'],
         #     'level': 'INFO',
         #     'propagate': True
         # },
         # 'obywatele': {
-        #     'handlers': ['file'],
+        #     'handlers': ['console'],
         #     'level': 'INFO',
         #     'propagate': True
         # },
