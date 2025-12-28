@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
 
@@ -16,10 +17,10 @@ from .models import Task, TaskEvaluation, TaskVote
 
 
 PRIORITY_LABELS = {
-    "critical": _("Critical"),
-    "important": _("Important"),
-    "beneficial": _("Beneficial"),
-    "rejected": _("Rejected"),
+    "critical": gettext_lazy("Critical"),
+    "important": gettext_lazy("Important"),
+    "beneficial": gettext_lazy("Beneficial"),
+    "rejected": gettext_lazy("Rejected"),
 }
 
 

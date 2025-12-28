@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 17:45+0100\n"
+"POT-Creation-Date: 2025-12-28 18:53+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -70,7 +70,7 @@ msgstr "Publiczne"
 msgid "Archived"
 msgstr "Zarchiwizowane"
 
-#: board/models.py:14 tasks/views.py:20
+#: board/models.py:14 tasks/views.py:21
 msgid "Important"
 msgstr "Ważne"
 
@@ -808,7 +808,7 @@ msgstr "Dodaj eBook"
 
 #: events/forms.py:24 events/models.py:79
 msgid "Week of month"
-msgstr ""
+msgstr "Tydzień miesiąca"
 
 #: events/forms.py:25
 msgid "Which occurrence in the month?"
@@ -979,7 +979,6 @@ msgid "Agenda"
 msgstr "Agenda"
 
 #: events/templates/events/event_detail.html:69
-#: tasks/templates/tasks/_task_cards.html:44
 #: tasks/templates/tasks/task_close.html:16
 #: tasks/templates/tasks/task_detail.html:31
 msgid "Status"
@@ -1169,16 +1168,15 @@ msgid "Approved"
 msgstr "Zatwierdzone"
 
 #: glosowania/management/commands/vote.py:162 glosowania/views.py:207
-#: tasks/templates/tasks/task_list.html:33 tasks/views.py:22
+#: tasks/templates/tasks/task_list.html:33 tasks/views.py:23
 msgid "Rejected"
 msgstr "Odrzucone"
 
 #: glosowania/management/commands/vote.py:178 glosowania/views.py:240
 #: obywatele/forms.py:153 obywatele/views.py:466
-#, fuzzy, python-brace-format
-#| msgid "Why you received this email? Here is explanation: https://wikikracja.pl/powiadomienia-email/"
+#, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
-msgstr "Dlaczego otrzymałeś ten e-mail? Tutaj jest wyjaśnienie: https://wikikracja.pl/powiadomienia-email/"
+msgstr "Dlaczego otrzymałeś ten e-mail? Tutaj jest wyjaśnienie: {url}"
 
 #: glosowania/models.py:18
 msgid "Enter only existing bill numbers here"
@@ -1243,18 +1241,14 @@ msgid "The path this bill took."
 msgstr "Historia propozycji"
 
 #: glosowania/signals.py:43
-#, fuzzy, python-brace-format
-#| msgid ""
-#| "This chat room has been created for project #{id}.\n"
-#| "View details: http://{host}/glosowania/details/{id}\n"
-#| "Discuss the proposal, share your thoughts, and ask questions here."
+#, python-brace-format
 msgid ""
 "This chat room has been created for project #{id}.\n"
 "View details: {details_url}\n"
 "Discuss the proposal, share your thoughts, and ask questions here."
 msgstr ""
 "Ten czat został stworzony dla projektu #{id}.\n"
-"Wyświetl szczegóły: http://{host}/glosowania/details/{id}\n"
+"Wyświetl szczegóły: {details_url}\n"
 "Dyskusja, dzielenie się opiniami, pytania."
 
 #: glosowania/templates/glosowania/approved.html:21
@@ -1551,7 +1545,7 @@ msgstr "Kalendarz"
 
 #: home/templates/home/base.html:63
 msgid "Tasks"
-msgstr ""
+msgstr "Zadania"
 
 #: home/templates/home/base.html:69 home/templates/home/home.html:14
 #: home/templates/home/login.html:4 home/templates/home/login.html:12
@@ -2269,52 +2263,52 @@ msgstr "Brak anulowanych zadań."
 msgid "No rejected tasks yet."
 msgstr "Brak odrzuconych zadań."
 
-#: tasks/views.py:19
+#: tasks/views.py:20
 msgid "Critical"
 msgstr "Krytyczne"
 
-#: tasks/views.py:21
+#: tasks/views.py:22
 msgid "Beneficial"
 msgstr "Korzystne"
 
-#: tasks/views.py:106
+#: tasks/views.py:107
 msgid "Task created."
 msgstr "Zadanie utworzone."
 
-#: tasks/views.py:118
+#: tasks/views.py:119
 #, python-format
 msgid "Task \"%(title)s\" assigned to you."
 msgstr "Zadanie \"%(title)s\" przypisane do Ciebie."
 
-#: tasks/views.py:178
+#: tasks/views.py:179
 msgid "Only the current owner can edit this task."
 msgstr "Tylko obecny właściciel może edytować to zadanie."
 
-#: tasks/views.py:183
+#: tasks/views.py:184
 msgid "Task updated."
 msgstr "Zadanie zaktualizowane."
 
-#: tasks/views.py:195
+#: tasks/views.py:196
 msgid "Only the current owner can close this task."
 msgstr "Tylko obecny właściciel może zamknąć to zadanie."
 
-#: tasks/views.py:200
+#: tasks/views.py:201
 msgid "Task closed."
 msgstr "Zadanie zamknięte."
 
-#: tasks/views.py:213
+#: tasks/views.py:214
 msgid "Invalid vote value."
 msgstr "Nieprawidłowa wartość głosu."
 
-#: tasks/views.py:224
+#: tasks/views.py:225
 msgid "Vote saved."
 msgstr "Głos zapisany."
 
-#: tasks/views.py:237
+#: tasks/views.py:238
 msgid "Invalid evaluation choice."
 msgstr "Nieprawidłowy wybór oceny."
 
-#: tasks/views.py:248
+#: tasks/views.py:249
 msgid "Evaluation saved."
 msgstr "Ocena zapisana."
 

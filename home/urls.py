@@ -1,11 +1,10 @@
-from django.urls import include, path
+from django.urls import path
 from django.views.generic import TemplateView
 from . import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('tasks/', include(('tasks.urls', 'tasks'), namespace='tasks')),
 
     # not in use at this point. Contact through https://wikikracja.pl/kontakt/
     # path('contact/', TemplateView.as_view(template_name="home/contact.html"), name='contact'),

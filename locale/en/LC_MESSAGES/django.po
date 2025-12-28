@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 17:45+0100\n"
+"POT-Creation-Date: 2025-12-28 18:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,7 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
-#: board/models.py:14 tasks/views.py:20
+#: board/models.py:14 tasks/views.py:21
 msgid "Important"
 msgstr ""
 
@@ -984,7 +984,6 @@ msgid "Agenda"
 msgstr ""
 
 #: events/templates/events/event_detail.html:69
-#: tasks/templates/tasks/_task_cards.html:44
 #: tasks/templates/tasks/task_close.html:16
 #: tasks/templates/tasks/task_detail.html:31
 msgid "Status"
@@ -1174,7 +1173,7 @@ msgid "Approved"
 msgstr ""
 
 #: glosowania/management/commands/vote.py:162 glosowania/views.py:207
-#: tasks/templates/tasks/task_list.html:33 tasks/views.py:22
+#: tasks/templates/tasks/task_list.html:33 tasks/views.py:23
 msgid "Rejected"
 msgstr ""
 
@@ -2274,56 +2273,56 @@ msgstr "No events yet"
 msgid "No rejected tasks yet."
 msgstr "No events yet"
 
-#: tasks/views.py:19
+#: tasks/views.py:20
 msgid "Critical"
 msgstr ""
 
-#: tasks/views.py:21
+#: tasks/views.py:22
 msgid "Beneficial"
 msgstr ""
 
-#: tasks/views.py:106
+#: tasks/views.py:107
 #, fuzzy
 #| msgid "Created"
 msgid "Task created."
 msgstr "Created"
 
-#: tasks/views.py:118
+#: tasks/views.py:119
 #, python-format
 msgid "Task \"%(title)s\" assigned to you."
 msgstr ""
 
-#: tasks/views.py:178
+#: tasks/views.py:179
 msgid "Only the current owner can edit this task."
 msgstr ""
 
-#: tasks/views.py:183
+#: tasks/views.py:184
 #, fuzzy
 #| msgid "Updated"
 msgid "Task updated."
 msgstr "Updated"
 
-#: tasks/views.py:195
+#: tasks/views.py:196
 msgid "Only the current owner can close this task."
 msgstr ""
 
-#: tasks/views.py:200
+#: tasks/views.py:201
 msgid "Task closed."
 msgstr ""
 
-#: tasks/views.py:213
+#: tasks/views.py:214
 msgid "Invalid vote value."
 msgstr ""
 
-#: tasks/views.py:224
+#: tasks/views.py:225
 msgid "Vote saved."
 msgstr ""
 
-#: tasks/views.py:237
+#: tasks/views.py:238
 msgid "Invalid evaluation choice."
 msgstr ""
 
-#: tasks/views.py:248
+#: tasks/views.py:249
 msgid "Evaluation saved."
 msgstr ""
 
