@@ -1,14 +1,25 @@
 # Build and run wikikracja locally with docker-compose (includes Redis)
 # Usage: 
-#   Start:   .\scripts\build_docker_localy_on_windows.ps1 [-Detached]
+#   Start:   .\scripts\build_docker_localy_on_windows.ps1 [-Detached] [-ResetDb]
 #   Stop:    .\scripts\build_docker_localy_on_windows.ps1 -Stop
 #   Restart: .\scripts\build_docker_localy_on_windows.ps1 -Restart
+#   Reset DB: .\scripts\build_docker_localy_on_windows.ps1 -ResetDb
+
+# Install Python 3.11 from python.org
+# Add it to PATH
+# Install venv like this:
+#   py -3.11 -m venv .venv
 
 param(
     [switch]$Detached,
     [switch]$Stop,
-    [switch]$Restart
+    [switch]$Restart,
+    [switch]$ResetDb
 )
+
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).ProviderPath
+$legacyDbFile = Join-Path $repoRoot "db\db.sqlite3"
+$dataDbPath = Join-Path $repoRoot "data\db"
 
 # Handle stop command
 if ($Stop) {
@@ -49,9 +60,33 @@ if (-not $?) {
 Write-Host "Stopping existing containers (if any)..." -ForegroundColor Cyan
 docker-compose down 2>$null
 
+if ($ResetDb) {
+    Write-Host "`nResetting local SQLite database..." -ForegroundColor Yellow
+
+    if (Test-Path $legacyDbFile) {
+        Remove-Item $legacyDbFile -Force
+        Write-Host "Deleted legacy database file: $legacyDbFile" -ForegroundColor Green
+    }
+
+    if (Test-Path $dataDbPath) {
+        Remove-Item $dataDbPath -Recurse -Force
+        Write-Host "Removed data volume directory: $dataDbPath" -ForegroundColor Green
+    }
+
+    New-Item -ItemType Directory -Path $dataDbPath -Force | Out-Null
+    Write-Host "Recreated empty database directory: $dataDbPath" -ForegroundColor Green
+}
+
 # Build and start services with docker-compose (web + Redis)
 Write-Host "`nBuilding and starting services (web + Redis)..." -ForegroundColor Green
 Write-Host "Application will be available at: http://localhost:8000" -ForegroundColor Cyan
+
+Write-Host "`nRunning docker-compose build --no-cache..." -ForegroundColor Yellow
+docker-compose build --no-cache
+if (-not $?) {
+    Write-Host "Build failed." -ForegroundColor Red
+    exit 1
+}
 
 if ($Detached) {
     Write-Host "`nRunning in detached mode (background)" -ForegroundColor Yellow

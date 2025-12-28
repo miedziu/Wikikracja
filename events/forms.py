@@ -57,7 +57,7 @@ class EventForm(forms.ModelForm):
             'start_date': DateTimeLocalInput(),
             'end_date': DateTimeLocalInput(),
             'description': forms.Textarea(attrs={'rows': 4}),
-            'link': forms.URLInput(attrs={'placeholder': _('https://example.com')}),
+            'link': forms.URLInput(attrs={'placeholder': 'https://example.com'}),
             'place': forms.TextInput(attrs={'placeholder': _('Event location or venue')}),
         }
 

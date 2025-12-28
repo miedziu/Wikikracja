@@ -57,6 +57,12 @@
 				{% else %} class="nav-item nav-link mx-1 px-2" 
 				{% endif %} href="{% url 'events:list' %}">{% trans "Calendar" %}</a>
 				
+				{% if user.is_authenticated %}
+				<a {% if request.resolver_match.namespace == 'tasks' %} class="nav-item nav-link active mx-1 px-2" 
+				{% else %} class="nav-item nav-link mx-1 px-2" 
+				{% endif %} href="{% url 'tasks:list' %}">{% trans "Tasks" %}</a>
+				{% endif %}
+				
 				{% if not user.is_authenticated %}
 					<a {% if request.resolver_match.url_name == 'login' %} class="nav-item nav-link active mx-1 px-2" 
 					{% else %} class="nav-item nav-link mx-1 px-2" 

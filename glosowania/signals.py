@@ -38,11 +38,12 @@ def create_chat_room_for_referendum(sender, instance, created, **kwargs):
                 
                 # Create initial welcome message in the room
                 HOST = get_site_domain()
+                details_url = f"http://{HOST}/glosowania/details/{instance.pk}"
                 welcome_message = _(
                     "This chat room has been created for project #{id}.\n"
-                    "View details: http://{host}/glosowania/details/{id}\n"
+                    "View details: {details_url}\n"
                     "Discuss the proposal, share your thoughts, and ask questions here."
-                ).format(id=instance.pk, host=HOST)
+                ).format(id=instance.pk, details_url=details_url)
                 
                 Message.objects.create(
                     room=room,

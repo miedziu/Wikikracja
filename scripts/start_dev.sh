@@ -63,6 +63,7 @@ pip install --no-cache-dir -q -r requirements.txt
 ./manage.py makemigrations bookkeeping
 ./manage.py makemigrations board
 ./manage.py makemigrations events
+./manage.py makemigrations tasks
 ./manage.py migrate
 ./manage.py makemessages -v 0 --no-wrap --no-obsolete -l 'en' --ignore=.git/* --ignore=static/* --ignore=.mypy_cache/*
 ./manage.py makemessages -v 0 --no-wrap --no-obsolete -l 'pl' --ignore=.git/* --ignore=static/* --ignore=.mypy_cache/*

@@ -1,3 +1,8 @@
+# This Dockerfile is tailored for local Windows development builds.
+# Use it manually with: `docker build -f Dockerfile.local_windows .`
+# It mirrors the main Dockerfile but keeps steps minimal (no collectstatic)
+# so Windows users can validate translations and dependencies quickly.
+
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -20,6 +25,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 RUN mkdir -p /app/db /app/media /app/static
+
+ENV DEBUG=True \
+    SECRET_KEY=build-time-insecure-secret-key
+
+RUN python manage.py compilemessages -v 0 --ignore=.git/* --ignore=static/* --ignore=.mypy_cache/*
 
 EXPOSE 8000
 

@@ -1,0 +1,26 @@
+{% extends "home/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container my-4">
+  <a href="{% url 'tasks:detail' form.instance.pk %}" class="btn btn-link px-0 mb-3">&larr; {% trans "Back to task" %}</a>
+
+  <div class="card">
+    <div class="card-body">
+      <h1 class="h4 mb-3">{% trans "Close task" %}: {{ form.instance.title }}</h1>
+      <p class="text-muted mb-4">{% trans "Choose final status for this task." %}</p>
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.status.id_for_label }}">{% trans "Status" %}</label>
+          {{ form.status }}
+          {{ form.status.errors }}
+        </div>
+        <button type="submit" class="btn btn-warning">{% trans "Confirm close" %}</button>
+        <a href="{% url 'tasks:detail' form.instance.pk %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

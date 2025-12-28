@@ -1,0 +1,52 @@
+{% load i18n %}
+{% if tasks %}
+  {% for task in tasks %}
+  <div class="card mb-3">
+    <div class="card-body py-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div>
+          <div class="small text-muted">{% trans "Title" %}</div>
+          <h3 class="h6 mb-0">
+            <a href="{% url 'tasks:detail' task.pk %}">{{ task.title }}</a>
+          </h3>
+        </div>
+        {% if task.priority_label %}
+          {% with task.priority_category as category %}
+            {% if category == "critical" %}
+              <span class="badge bg-danger text-uppercase">{{ task.priority_label }}</span>
+            {% elif category == "important" %}
+              <span class="badge bg-warning text-dark text-uppercase">{{ task.priority_label }}</span>
+            {% elif category == "beneficial" %}
+              <span class="badge bg-success text-uppercase">{{ task.priority_label }}</span>
+            {% elif category == "rejected" %}
+              <span class="badge bg-secondary text-uppercase">{{ task.priority_label }}</span>
+            {% else %}
+              <span class="badge bg-info text-dark text-uppercase">{{ task.priority_label }}</span>
+            {% endif %}
+          {% endwith %}
+        {% endif %}
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <p class="small text-muted mb-0 pe-3">{{ task.description|truncatewords:20 }}</p>
+        {% if show_take_button %}
+          <form method="post" action="{% url 'tasks:take' task.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button class="btn btn-sm btn-outline-primary" type="submit">{% trans "Take task" %}</button>
+          </form>
+        {% endif %}
+      </div>
+
+      <div class="d-flex flex-wrap gap-3 small text-muted border-top pt-2">
+        <span>{% trans "Votes" %}: {{ task.votes_score|default:0 }}</span> | <span>{% trans "Owner" %}: {{ task.assigned_to|default:_("n/a") }}</span>
+        {% if show_status %}
+          <span>{% trans "Status" %}: {{ task.get_status_display }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <p class="text-muted fst-italic">{{ empty_message }}</p>
+{% endif %}

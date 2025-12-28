@@ -28,6 +28,7 @@ __pycache__/
 *.pem
 *.key
 *.crt
+.venv
 
 # Temporary and local files
 tmp/

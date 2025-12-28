@@ -1,0 +1,34 @@
+{% extends "home/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container my-4">
+  <h1 class="h3 mb-4">
+    {% if form.instance.pk %}
+      {% trans "Edit task" %}
+    {% else %}
+      {% trans "Add new task" %}
+    {% endif %}
+  </h1>
+
+  <form method="post" class="card p-4">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="mb-3">
+      <label class="form-label" for="{{ form.title.id_for_label }}">{% trans "Title" %}</label>
+      {{ form.title }}
+      {{ form.title.errors }}
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="{{ form.description.id_for_label }}">{% trans "Description" %}</label>
+      {{ form.description }}
+      {{ form.description.errors }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+    <a href="{% url 'tasks:list' %}" class="btn btn-secondary">{% trans "Back" %}</a>
+  </form>
+</div>
+{% endblock %}

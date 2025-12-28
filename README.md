@@ -26,7 +26,7 @@ Try the live demo: **https://demo.wikikracja.pl/**
 
 ## Tech Stack
 
-- **Backend**: Django 5.1, Django Channels, Python 3.11
+- **Backend**: Django 5.1, Django Channels, Python 3.11.x (both Docker and local dev)
 - **Frontend**: Bootstrap 4, TinyMCE, Crispy Forms
 - **Database**: SQLite (development), PostgreSQL (production ready)
 - **Cache/Channels**: Redis
@@ -39,7 +39,7 @@ Try the live demo: **https://demo.wikikracja.pl/**
 ### Development Environment
 
 #### Prerequisites
-- Python 3.11+
+- Python 3.11.x (install from [python.org](https://www.python.org/downloads/release/python-3119/) on Windows; add to PATH)
 - Redis server (for Django Channels)
 - SMTP account (for sending emails)
 
@@ -51,15 +51,9 @@ Try the live demo: **https://demo.wikikracja.pl/**
    cd wikikracja
    ```
 
-2. **Create virtual environment**
+3. **Install dependencies (manual option)**
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
+   python -m pip install -r requirements.txt
    ```
 
 4. **Configure environment**
@@ -70,7 +64,8 @@ Try the live demo: **https://demo.wikikracja.pl/**
 
 5. **Run development server**
    ```bash
-   ./scripts/start_dev.sh
+   ./scripts/start_dev.sh                       # Linux / macOS
+   ./scripts/build_docker_localy_on_windows.ps1 # Windows
    ```
 
    Or manually:

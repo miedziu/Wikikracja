@@ -149,11 +149,14 @@ def SendEmailToAll(subject, message):
     translation.activate(s.LANGUAGE_CODE)
     HOST = get_site_domain()
 
+    info_url = "https://wikikracja.pl/powiadomienia-email/"
+    email_footer = _("Why you received this email? Here is explanation: {url}").format(url=info_url)
+
     email_message = EmailMessage(
         from_email=str(s.DEFAULT_FROM_EMAIL),
         bcc = list(User.objects.filter(is_active=True).values_list('email', flat=True)),
         subject=f'[{HOST}] {subject}',
-        body=f"{message}\n\n{_('Why you received this email? Here is explanation: https://wikikracja.pl/powiadomienia-email/')}",
+        body=f"{message}\n\n{email_footer}",
         )
     l.info(f'subject: {subject} message: {message}')
     

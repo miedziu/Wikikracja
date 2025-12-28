@@ -1,5 +1,6 @@
 # Folders
 venv/
+.venv/
 myvenv/
 backup/
 _inne_materialy/
