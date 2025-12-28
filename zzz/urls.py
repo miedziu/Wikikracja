@@ -33,6 +33,7 @@ urlpatterns: List[URLPattern | URLResolver] = [
     path('bookkeeping/',    include('bookkeeping.urls', namespace='bookkeeping')),
     path('board/',          include('board.urls', namespace='board')),
     path('events/',         include('events.urls', namespace='events')),
+    path('tasks/',          include('tasks.urls', namespace='tasks')),
 ]
 
 # Serve static files only in DEBUG mode (WhiteNoise handles this in production)
