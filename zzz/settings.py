@@ -37,6 +37,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 DEBUG = env_bool("DEBUG", False)
+SITE_PROTOCOL = "http" if DEBUG else "https"
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:

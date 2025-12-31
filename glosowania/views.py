@@ -16,7 +16,7 @@ from django.utils import translation
 import threading
 import random
 from chat.models import Room
-from zzz.utils import get_site_domain
+from zzz.utils import build_site_url, get_site_domain
 
 l = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ def dodaj(request: HttpRequest):
                 _('New law proposal'),
                 _('{user} added new law proposal\nYou can read it here: {url}').format(
                     user=request.user.username.capitalize(),
-                    url=f'http://{HOST}/glosowania/details/{str(form.id)}'
+                    url=build_site_url(f'/glosowania/details/{form.id}')
                 )
             )
             return redirect('glosowania:proposition')
@@ -80,7 +80,7 @@ def edit(request: HttpRequest, pk: int):
                 _("Proposal no. {} has been modified").format(decision.id),
                 _('{user} modified proposal\nYou can read new version here: {url}').format(
                     user=request.user.username.capitalize(),
-                    url=f'http://{HOST}/glosowania/details/{str(decision.id)}'
+                    url=build_site_url(f'/glosowania/details/{decision.id}')
                 )
             )
             return redirect('glosowania:proposition')

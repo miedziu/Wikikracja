@@ -10,7 +10,7 @@ from django.core.mail import EmailMessage
 import threading
 from captcha.fields import CaptchaField
 import logging as l
-from zzz.utils import get_site_domain
+from zzz.utils import build_site_url, get_site_domain
 
 l.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=l.INFO)
 
@@ -137,7 +137,7 @@ class CustomSignupForm(SignupForm):
         HOST = get_site_domain()
         SendEmailToAll(
             _('New person requested membership'),
-            _('User %(username)s just requested membership') % {'username': user.username} + '\n' + f'http://{HOST}/obywatele/poczekalnia/'
+            _('User %(username)s just requested membership') % {'username': user.username} + '\n' + build_site_url('/obywatele/poczekalnia/')
         )
         return user
 

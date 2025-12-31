@@ -30,7 +30,7 @@ from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from chat import signals
 from django.contrib.auth.models import Group, Permission
-from zzz.utils import get_site_domain
+from zzz.utils import build_site_url, get_site_domain
 
 HOST = get_site_domain()
 
@@ -222,7 +222,7 @@ def dodaj(request: HttpRequest):
 
                 SendEmailToAll(
                           _('New citizen has been proposed'),
-                          f'{request.user.username} ' + str(_('proposed new citizen\nYou can approve him/her here:')) + f' http://{HOST}/obywatele/poczekalnia/{str(candidate_profile.id)}'
+                          f'{request.user.username} ' + str(_('proposed new citizen\nYou can approve him/her here:')) + f' {build_site_url(f"/obywatele/poczekalnia/{candidate_profile.id}")}'
                 )
 
                 return redirect('obywatele:poczekalnia')
