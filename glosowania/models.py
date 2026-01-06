@@ -40,7 +40,7 @@ class Decyzja(models.Model):
         verbose_name=_('Penalty for non-compliance'),
         help_text=_('What is the penalty for non-compliance with this rule. This can be, for example: "Banishment for 3 months", "Banishment forever", etc.'))
     uzasadnienie = models.TextField(
-        max_length=1500,
+        max_length=2000,
         null=True,
         verbose_name=_('Reasoning'),
         help_text=_('What events or thoughts inspired this bill? What are the expected results?'))

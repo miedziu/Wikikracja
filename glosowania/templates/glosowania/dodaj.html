@@ -9,25 +9,33 @@
     {% csrf_token %}
     <!-- {{ form|crispy }} -->
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-12">
           {{ form.title|as_crispy_field }}
         </div>
-        <div class="col-md-3">
+    </div>
+    <div class="row">
+        <div class="col-12">
           {{ form.tresc|as_crispy_field }}
         </div>
-        <div class="col-md-3">
+    </div>
+    <div class="row">
+        <div class="col-12">
           {{ form.uzasadnienie|as_crispy_field }}
         </div>
-        <div class="col-md-3">
+    </div>
+    <div class="row">
+        <div class="col-md-4">
           {{ form.kara|as_crispy_field }}
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           {{ form.args_for|as_crispy_field }}
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           {{ form.args_against|as_crispy_field }}
         </div>
-        <div class="col-md-3">
+    </div>
+    <div class="row">
+        <div class="col-12">
           {{ form.znosi|as_crispy_field }}
         </div>
     </div>
