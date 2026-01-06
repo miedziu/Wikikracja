@@ -121,6 +121,25 @@ def take_task(request: HttpRequest, pk: int) -> HttpResponse:
     return redirect(request.POST.get("next") or "tasks:list")
 
 
+@require_POST
+@login_required
+def resign_task(request: HttpRequest, pk: int) -> HttpResponse:
+    task = get_object_or_404(Task, pk=pk)
+    next_url = request.POST.get("next")
+    if task.assigned_to != request.user:
+        messages.error(request, _("Only the current owner can resign from this task."))
+        if next_url:
+            return redirect(next_url)
+        return redirect("tasks:detail", pk=pk)
+
+    task.assigned_to = None
+    task.save(update_fields=["assigned_to", "updated_at"])
+    messages.success(request, _("You have resigned from this task."))
+    if next_url:
+        return redirect(next_url)
+    return redirect("tasks:list")
+
+
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
     template_name = "tasks/task_detail.html"
@@ -224,6 +243,26 @@ def vote_task(request: HttpRequest, pk: int) -> HttpResponse:
         vote.save(update_fields=["value", "updated_at"])
     messages.success(request, _("Vote saved."))
     return redirect(request.POST.get("next") or "tasks:list")
+
+
+@require_POST
+@login_required
+def reopen_task(request: HttpRequest, pk: int) -> HttpResponse:
+    task = get_object_or_404(Task, pk=pk)
+    next_url = request.POST.get("next")
+    if task.is_active:
+        messages.info(request, _("Task is already active."))
+        if next_url:
+            return redirect(next_url)
+        return redirect("tasks:detail", pk=pk)
+
+    TaskVote.objects.filter(task=task).delete()
+    task.status = Task.Status.ACTIVE
+    task.save(update_fields=["status", "updated_at"])
+    messages.success(request, _("Task reopened and votes reset."))
+    if next_url:
+        return redirect(next_url)
+    return redirect("tasks:list")
 
 
 @require_POST
