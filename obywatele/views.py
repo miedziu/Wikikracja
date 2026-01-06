@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.messages import success, error
-from django.db.models import Sum
+from django.db.models import Sum, Case, When, Value, IntegerField, Q
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -131,11 +131,108 @@ def change_username(request: HttpRequest):
 
 @login_required
 def obywatele(request: HttpRequest):
-    # zliczaj_obywateli(request)
-    uid = User.objects.filter(is_active=True).order_by('date_joined').reverse()
-    # uid = User.objects.filter(is_active=True).order_by('-uzytkownik__reputation')  # SzamanRA grupaperu
+    allowed_sort_fields = {
+        'username': 'username',
+        'email': 'email',
+        'last_login': 'last_login',
+        'city': 'uzytkownik__city',
+        'first_name': 'first_name',
+        'last_name': 'last_name',
+    }
+    blank_sort_fields = {
+        'username': 'username_is_blank',
+        'email': 'email_is_blank',
+        'last_login': 'last_login_is_blank',
+        'city': 'city_is_blank',
+        'first_name': 'first_name_is_blank',
+        'last_name': 'last_name_is_blank',
+    }
+    default_sort = '-last_login'
+    requested_sort = request.GET.get('sort', default_sort)
+    requested_field = requested_sort.lstrip('-')
+
+    if requested_field not in allowed_sort_fields:
+        requested_sort = default_sort
+        requested_field = default_sort.lstrip('-')
+
+    sort_expression = allowed_sort_fields[requested_field]
+    order_prefix = '-' if requested_sort.startswith('-') else ''
+
+    order_by_fields = []
+    blank_field = blank_sort_fields.get(requested_field)
+    if blank_field:
+        order_by_fields.append(blank_field)
+    order_by_fields.append(f'{order_prefix}{sort_expression}')
+    order_by_fields.append('id')
+
+    uid = (
+        User.objects.filter(is_active=True)
+        .select_related('uzytkownik')
+        .annotate(
+            username_is_blank=Case(
+                When(Q(username__isnull=True) | Q(username__exact=''), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+            email_is_blank=Case(
+                When(Q(email__isnull=True) | Q(email__exact=''), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+            last_login_is_blank=Case(
+                When(last_login__isnull=True, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+            city_is_blank=Case(
+                When(Q(uzytkownik__city__isnull=True) | Q(uzytkownik__city__exact=''), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+            first_name_is_blank=Case(
+                When(Q(first_name__isnull=True) | Q(first_name__exact=''), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+            last_name_is_blank=Case(
+                When(Q(last_name__isnull=True) | Q(last_name__exact=''), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+        )
+        .order_by(*order_by_fields)
+    )
+
+    default_directions = {
+        'username': 'asc',
+        'email': 'asc',
+        'last_login': 'desc',
+        'city': 'asc',
+        'first_name': 'asc',
+        'last_name': 'asc',
+    }
+
+    sort_meta = {}
+    for field in allowed_sort_fields:
+        is_current = requested_field == field
+        if is_current:
+            current_direction = 'desc' if requested_sort.startswith('-') else 'asc'
+            next_param = field if current_direction == 'desc' else f'-{field}'
+        else:
+            current_direction = None
+            default_direction = default_directions.get(field, 'asc')
+            next_param = f'-{field}' if default_direction == 'desc' else field
+
+        sort_meta[field] = {
+            'is_current': is_current,
+            'direction': current_direction,
+            'next_param': next_param,
+        }
+
     return render(request, 'obywatele/start.html', {
         'uid': uid,  # Don't change to 'user' - it will break menu
+        'sort_meta': sort_meta,
+        'current_sort': requested_sort,
         })
 
 
@@ -227,14 +324,28 @@ def dodaj(request: HttpRequest):
 
                 return redirect('obywatele:poczekalnia')
         else:
-            message = user_form.errors.get_json_data()['username'][0]['message']
+            error_messages = []
+
+            for form in (user_form, profile_form):
+                errors = form.errors.get_json_data()
+                for field_errors in errors.values():
+                    for err in field_errors:
+                        error_messages.append(err.get('message'))
+
+            message = error_messages[0] if error_messages else _('Please correct the highlighted errors.')
             error(request, (message))
-            return redirect('obywatele:zaproponuj_osobe')
+    else:
+        user_form = UserForm()
+        profile_form = ProfileForm()
 
-    user_form = UserForm()
-    profile_form = ProfileForm()
-
-    return render(request, 'obywatele/dodaj.html', {'user_form': user_form, 'profile_form': profile_form})
+    return render(
+        request,
+        'obywatele/dodaj.html',
+        {
+            'user_form': user_form,
+            'profile_form': profile_form,
+        },
+    )
 
 
 @login_required
