@@ -155,7 +155,7 @@ def details(request:HttpRequest, pk: int):
         message1 = str(_('Your vote has been saved. You voted Yes.'))
         messages.success(request, (message1))
 
-        message2 = f"{_('Your verification code is:')} {code}"
+        message2 = _('Your verification code is: %(code)s') % {'code': code}
         messages.error(request, (message2))
 
         message3 = str(_('Write down your code or create screenshot to verify it when the referendum is over. This code will be presented just once and will be not related to you.'))
@@ -183,7 +183,7 @@ def details(request:HttpRequest, pk: int):
         message1 = str(_('Your vote has been saved. You voted No.'))
         messages.success(request, (message1))
 
-        message2 = f"{_('Your verification code is:')} {code}"
+        message2 = _('Your verification code is: %(code)s') % {'code': code}
         messages.error(request, (message2))
 
         message3 = str(_('Write down your code or create screenshot to verify it when the referendum is over. This code will be presented just once and will be not related to you.'))
