@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 18:53+0100\n"
+"POT-Creation-Date: 2026-01-06 13:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,7 +120,7 @@ msgstr ""
 #: bookkeeping/forms.py:34 bookkeeping/forms.py:94
 #: chat/templates/chat/add.html:15 elibrary/templates/elibrary/add.html:33
 #: elibrary/templates/elibrary/book_form.html:29
-#: glosowania/templates/glosowania/dodaj.html:34
+#: glosowania/templates/glosowania/dodaj.html:42
 #: glosowania/templates/glosowania/edit.html:33
 #: home/templates/home/haslo.html:25
 #: obywatele/templates/obywatele/change_email.html:23
@@ -199,7 +199,7 @@ msgid "Edit"
 msgstr ""
 
 #: board/templates/board/post_detail.html:17 chat/templates/chat/add.html:16
-#: glosowania/templates/glosowania/dodaj.html:35
+#: glosowania/templates/glosowania/dodaj.html:43
 #: glosowania/templates/glosowania/edit.html:34
 #: obywatele/templates/obywatele/dodaj.html:68
 #: tasks/templates/tasks/task_form.html:31
@@ -2141,11 +2141,11 @@ msgstr ""
 msgid "Cancelled"
 msgstr "Cancel"
 
-#: tasks/models.py:98 tasks/templates/tasks/task_detail.html:84
+#: tasks/models.py:98 tasks/templates/tasks/task_detail.html:96
 msgid "Success"
 msgstr ""
 
-#: tasks/models.py:99 tasks/templates/tasks/task_detail.html:90
+#: tasks/models.py:99 tasks/templates/tasks/task_detail.html:102
 msgid "Failure"
 msgstr ""
 
@@ -2213,7 +2213,15 @@ msgstr ""
 msgid "Vote down"
 msgstr ""
 
-#: tasks/templates/tasks/task_detail.html:78
+#: tasks/templates/tasks/task_detail.html:74
+msgid "Resign"
+msgstr ""
+
+#: tasks/templates/tasks/task_detail.html:85
+msgid "Reopen task"
+msgstr ""
+
+#: tasks/templates/tasks/task_detail.html:90
 msgid "Evaluate outcome"
 msgstr ""
 
@@ -2292,37 +2300,55 @@ msgstr "Created"
 msgid "Task \"%(title)s\" assigned to you."
 msgstr ""
 
-#: tasks/views.py:179
+#: tasks/views.py:130
+msgid "Only the current owner can resign from this task."
+msgstr ""
+
+#: tasks/views.py:137
+msgid "You have resigned from this task."
+msgstr ""
+
+#: tasks/views.py:198
 msgid "Only the current owner can edit this task."
 msgstr ""
 
-#: tasks/views.py:184
+#: tasks/views.py:203
 #, fuzzy
 #| msgid "Updated"
 msgid "Task updated."
 msgstr "Updated"
 
-#: tasks/views.py:196
+#: tasks/views.py:215
 msgid "Only the current owner can close this task."
 msgstr ""
 
-#: tasks/views.py:201
+#: tasks/views.py:220
 msgid "Task closed."
 msgstr ""
 
-#: tasks/views.py:214
+#: tasks/views.py:233
 msgid "Invalid vote value."
 msgstr ""
 
-#: tasks/views.py:225
+#: tasks/views.py:244
 msgid "Vote saved."
 msgstr ""
 
-#: tasks/views.py:238
+#: tasks/views.py:254
+#, fuzzy
+#| msgid "Created"
+msgid "Task is already active."
+msgstr "Created"
+
+#: tasks/views.py:262
+msgid "Task reopened and votes reset."
+msgstr ""
+
+#: tasks/views.py:277
 msgid "Invalid evaluation choice."
 msgstr ""
 
-#: tasks/views.py:249
+#: tasks/views.py:288
 msgid "Evaluation saved."
 msgstr ""
 
@@ -2644,10 +2670,10 @@ msgstr ""
 msgid "<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-mail address</a>."
 msgstr ""
 
-#: zzz/settings.py:87
+#: zzz/settings.py:88
 msgid "English"
 msgstr ""
 
-#: zzz/settings.py:88
+#: zzz/settings.py:89
 msgid "Polish"
 msgstr ""
