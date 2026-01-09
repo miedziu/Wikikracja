@@ -33,8 +33,8 @@
 		{% else %} class="btn btn-sm mr-1 mb-1 btn-secondary"
 		{% endif %} href="{% url 'glosowania:approved' %}">{% trans 'Approved' %}</a>
 		
-		<a {% if request.path_info == '/glosowania/parameters/' %} class="btn mr-1 mb-1 btn-primary rounded-circle fas fa-solid fa-question" style="font-size: 17px;"
-		{% else %} class="btn mr-1 mb-1 btn-secondary rounded-circle fas fa-solid fa-question" style="font-size: 17px;"
+		<a {% if request.path_info == '/glosowania/parameters/' %} class="btn mr-1 mb-1 btn-primary fas fa-solid fa-question" style="font-size: 17px;"
+		{% else %} class="btn mr-1 mb-1 btn-secondary fas fa-solid fa-question" style="font-size: 17px;"
 		{% endif %} href="{% url 'glosowania:parameters' %}"></a>
 		
 		<a {% if request.path_info == '/glosowania/rejected/' %} class="btn mr-1 mb-1 btn-primary fas fa-regular fa-trash" style="font-size: 17px;"

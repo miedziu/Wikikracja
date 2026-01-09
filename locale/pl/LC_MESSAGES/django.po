@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-06 14:10+0100\n"
+"POT-Creation-Date: 2026-01-09 23:36+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -50,16 +50,16 @@ msgstr "Autor"
 msgid "Created"
 msgstr "Utworzone"
 
-#: .\board\models.py:11 .\board\templates\board\board.html:30
-#: .\board\templates\board\board.html:50
+#: .\board\models.py:11 .\board\templates\board\board.html:32
+#: .\board\templates\board\board.html:52
 #: .\board\templates\board\post_detail.html:11
 #: .\events\templates\events\event_detail.html:109
 #: .\home\templates\home\home.html:94
 msgid "Updated"
 msgstr "Zaktualizowane"
 
-#: .\board\models.py:12 .\board\templates\board\board.html:30
-#: .\board\templates\board\board.html:50
+#: .\board\models.py:12 .\board\templates\board\board.html:32
+#: .\board\templates\board\board.html:52
 #: .\board\templates\board\post_detail.html:11 .\events\models.py:96
 #: .\events\templates\events\event_detail.html:80
 #: .\events\templates\events\event_list.html:66
@@ -87,7 +87,7 @@ msgid "Updated important announcement by <strong>%(username)s</strong>: <a href=
 msgstr "Zaktualizowane ważne ogłoszenie od <strong>%(username)s</strong>: <a href='%(post_url)s'>%(title)s</a>"
 
 #: .\board\templates\board\archive.html:12
-#: .\board\templates\board\board.html:14
+#: .\board\templates\board\board.html:16
 msgid "Archive"
 msgstr "Archiwum"
 
@@ -103,12 +103,12 @@ msgstr "Zarchiwizowane"
 msgid "No archived posts yet."
 msgstr "Nie ma jeszcze zarchiwizowanych ogłoszeń"
 
-#: .\board\templates\board\board.html:13
+#: .\board\templates\board\board.html:15
 #: .\board\templates\board\create_post.html:14
 msgid "Create post"
 msgstr "Utwórz ogłoszenie"
 
-#: .\board\templates\board\board.html:61
+#: .\board\templates\board\board.html:63
 #: .\bookkeeping\templates\bookkeeping\category_list.html:38
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:60
 #: .\bookkeeping\templates\bookkeeping\report_list.html:69
@@ -301,6 +301,7 @@ msgstr "Adres"
 #: .\bookkeeping\models.py:18
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:26
 #: .\obywatele\models.py:26 .\obywatele\templates\obywatele\my_profile.html:30
+#: .\obywatele\templates\obywatele\start.html:34
 #: .\obywatele\templates\obywatele\szczegoly.html:53
 msgid "City"
 msgstr "Miasto"
@@ -444,6 +445,7 @@ msgstr "Czy na pewno chcesz skasować tego partnera?"
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:22
 #: .\home\templates\home\login.html:14
 #: .\obywatele\templates\obywatele\poczekalnia.html:19
+#: .\obywatele\templates\obywatele\start.html:24
 msgid "Email"
 msgstr "Email"
 
@@ -1178,7 +1180,7 @@ msgid "Rejected"
 msgstr "Odrzucone"
 
 #: .\glosowania\management\commands\vote.py:178 .\glosowania\views.py:240
-#: .\obywatele\forms.py:153 .\obywatele\views.py:466
+#: .\obywatele\forms.py:153 .\obywatele\views.py:577
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
 msgstr "Dlaczego otrzymałeś ten e-mail? Tutaj jest wyjaśnienie: {url}"
@@ -1937,14 +1939,14 @@ msgstr "Zmień imię i nazwisko"
 #: .\obywatele\templates\obywatele\change_name.html:9
 #: .\obywatele\templates\obywatele\my_profile.html:7
 #: .\obywatele\templates\obywatele\poczekalnia.html:20
-#: .\obywatele\templates\obywatele\start.html:14
+#: .\obywatele\templates\obywatele\start.html:44
 msgid "First name"
 msgstr "Imię"
 
 #: .\obywatele\templates\obywatele\change_name.html:10
 #: .\obywatele\templates\obywatele\my_profile.html:8
 #: .\obywatele\templates\obywatele\poczekalnia.html:21
-#: .\obywatele\templates\obywatele\start.html:15
+#: .\obywatele\templates\obywatele\start.html:54
 msgid "Last name"
 msgstr "Nazwisko"
 
@@ -2068,6 +2070,7 @@ msgid "Read explanation for this mechanism"
 msgstr "Przeczytaj wyjaśnienie tego mechanizmu"
 
 #: .\obywatele\templates\obywatele\poczekalnia.html:18
+#: .\obywatele\templates\obywatele\start.html:14
 msgid "Nick"
 msgstr "Nick"
 
@@ -2076,7 +2079,7 @@ msgid "Candidate since"
 msgstr "Kandydat od"
 
 #: .\obywatele\templates\obywatele\poczekalnia.html:23
-#: .\obywatele\templates\obywatele\start.html:16
+#: .\obywatele\templates\obywatele\start.html:64
 msgid "Last login"
 msgstr "Ostatnie logowanie"
 
@@ -2098,7 +2101,7 @@ msgid "You are neutral about this candidate"
 msgstr "Masz stosunek neutralny do tego kandydata"
 
 #: .\obywatele\templates\obywatele\poczekalnia.html:44
-#: .\obywatele\templates\obywatele\start.html:29
+#: .\obywatele\templates\obywatele\start.html:84
 msgid "Copy email"
 msgstr "Skopiuj email"
 
@@ -2138,19 +2141,19 @@ msgstr "Twój nowy email został zapisany."
 msgid "Your name has been saved."
 msgstr "Twój imię i nazwisko zostały zapisane."
 
-#: .\obywatele\views.py:185
+#: .\obywatele\views.py:282
 msgid "Email already exist"
 msgstr "Email już został użyty"
 
-#: .\obywatele\views.py:220
+#: .\obywatele\views.py:317
 msgid "The new user has been saved"
 msgstr "Nowy użytkownik został zapisany."
 
-#: .\obywatele\views.py:224
+#: .\obywatele\views.py:321
 msgid "New citizen has been proposed"
 msgstr "Został zaproponowany nowy użytkownik"
 
-#: .\obywatele\views.py:225
+#: .\obywatele\views.py:322
 msgid ""
 "proposed new citizen\n"
 "You can approve him/her here:"
@@ -2158,23 +2161,27 @@ msgstr ""
 "zaproponował/a nową osobę\n"
 "Możesz ją zatwierdzić tutaj:"
 
-#: .\obywatele\views.py:281
+#: .\obywatele\views.py:335
+msgid "Please correct the highlighted errors."
+msgstr "Popraw podświetlone błędy."
+
+#: .\obywatele\views.py:392
 msgid "Changes was saved"
 msgstr "Zmiany zostały zapisane"
 
-#: .\obywatele\views.py:294
+#: .\obywatele\views.py:405
 msgid "Form is not valid!"
 msgstr "Formularz zawiera błędy"
 
-#: .\obywatele\views.py:367
+#: .\obywatele\views.py:478
 msgid "positive"
 msgstr "pozytywny"
 
-#: .\obywatele\views.py:374
+#: .\obywatele\views.py:485
 msgid "negative"
 msgstr "negatywny"
 
-#: .\obywatele\views.py:381
+#: .\obywatele\views.py:492
 msgid "neutral"
 msgstr "obojętny"
 

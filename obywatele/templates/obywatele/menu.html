@@ -33,9 +33,9 @@
 			href="{% url 'obywatele:assets' %}">{% trans "Assets" %}</a>
 			
 			<a {% if request.resolver_match.url_name == 'parameters' %}
-				class="btn mr-1 mb-1 btn-primary rounded-circle fas fa-solid fa-question" style="font-size: 17px;"
+				class="btn mr-1 mb-1 btn-primary fas fa-solid fa-question" style="font-size: 17px;"
 			{% else %}
-				class="btn mr-1 mb-1 btn-secondary rounded-circle fas fa-solid fa-question" style="font-size: 17px;"
+				class="btn mr-1 mb-1 btn-secondary fas fa-solid fa-question" style="font-size: 17px;"
 			{% endif %}
 			href="{% url 'obywatele:parameters' %}"> </a>
 
