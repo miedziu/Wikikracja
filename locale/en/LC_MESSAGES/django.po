@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 23:36+0100\n"
+"POT-Creation-Date: 2026-01-10 00:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1161,7 +1161,7 @@ msgid "Signed"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:91
-#: .\glosowania\templates\glosowania\menu.html:26 .\glosowania\views.py:207
+#: .\glosowania\templates\glosowania\menu.html:30 .\glosowania\views.py:207
 msgid "Discussion"
 msgstr ""
 
@@ -1170,12 +1170,12 @@ msgid "Not enough signatures"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:119
-#: .\glosowania\templates\glosowania\menu.html:30 .\glosowania\views.py:207
+#: .\glosowania\templates\glosowania\menu.html:34 .\glosowania\views.py:207
 msgid "Referendum"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:143
-#: .\glosowania\templates\glosowania\menu.html:34 .\glosowania\views.py:207
+#: .\glosowania\templates\glosowania\menu.html:38 .\glosowania\views.py:207
 msgid "Approved"
 msgstr ""
 
@@ -1305,7 +1305,7 @@ msgstr ""
 msgid "A referendum is not a one-off decision. The referendum is to pass a law that will be in force all the time."
 msgstr ""
 
-#: .\glosowania\templates\glosowania\menu.html:22
+#: .\glosowania\templates\glosowania\menu.html:26
 msgid "Propositions"
 msgstr ""
 
@@ -1573,7 +1573,7 @@ msgid "Sign Up"
 msgstr ""
 
 #: .\home\templates\home\base.html:81 .\obywatele\models.py:47
-#: .\obywatele\templates\obywatele\menu.html:19
+#: .\obywatele\templates\obywatele\menu.html:26
 msgid "Citizens"
 msgstr ""
 
@@ -1958,11 +1958,11 @@ msgstr ""
 msgid "Below fields are not mandatory but filling them out will help us make the right decision when accepting a new person."
 msgstr ""
 
-#: .\obywatele\templates\obywatele\menu.html:26
+#: .\obywatele\templates\obywatele\menu.html:33
 msgid "Candidates"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\menu.html:33
+#: .\obywatele\templates\obywatele\menu.html:40
 msgid "Assets"
 msgstr ""
 
