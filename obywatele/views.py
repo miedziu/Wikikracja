@@ -138,6 +138,7 @@ def obywatele(request: HttpRequest):
         'city': 'uzytkownik__city',
         'first_name': 'first_name',
         'last_name': 'last_name',
+        'joined': 'uzytkownik__data_przyjecia',
     }
     blank_sort_fields = {
         'username': 'username_is_blank',
@@ -146,8 +147,9 @@ def obywatele(request: HttpRequest):
         'city': 'city_is_blank',
         'first_name': 'first_name_is_blank',
         'last_name': 'last_name_is_blank',
+        'joined': 'joined_is_blank',
     }
-    default_sort = '-last_login'
+    default_sort = '-joined'
     requested_sort = request.GET.get('sort', default_sort)
     requested_field = requested_sort.lstrip('-')
 
@@ -199,6 +201,11 @@ def obywatele(request: HttpRequest):
                 default=Value(0),
                 output_field=IntegerField(),
             ),
+            joined_is_blank=Case(
+                When(Q(uzytkownik__data_przyjecia__isnull=True), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
         )
         .order_by(*order_by_fields)
     )
@@ -210,6 +217,7 @@ def obywatele(request: HttpRequest):
         'city': 'asc',
         'first_name': 'asc',
         'last_name': 'asc',
+        'joined': 'desc',
     }
 
     sort_meta = {}
