@@ -89,6 +89,11 @@ LANGUAGES = (
     ('pl', gettext_lazy('Polish')),
 )
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = env_bool("SESSION_EXPIRE_AT_BROWSER_CLOSE", False)
+SESSION_COOKIE_AGE = env_int("SESSION_COOKIE_AGE", 60 * 60 * 24 * 90)  # default 90 days
+REMEMBER_ME_DAYS = env_int("REMEMBER_ME_DAYS", 90)
+REMEMBER_ME_COOKIE_AGE = env_int("REMEMBER_ME_COOKIE_AGE", 60 * 60 * 24 * REMEMBER_ME_DAYS)
+
 REDIS_HOST = os.getenv("REDIS_HOST", "redis://redis:6379/1")
 CHANNEL_LAYERS = {
     'default': {

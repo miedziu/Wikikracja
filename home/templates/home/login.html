@@ -18,6 +18,16 @@
             <label for="{{form.password.name}}" class="text-info"> {{form.password.label}}</label><br>
             <input type="password" name="{{form.password.name}}" class="form-control" id="{{form.password.auto_id}}">
           </div>
+          <div class="form-group form-check">
+            <input type="checkbox"
+                   name="{{ form.remember_me.name }}"
+                   class="form-check-input"
+                   id="{{ form.remember_me.auto_id }}"
+                   {% if form.remember_me.value %}checked{% endif %}>
+            <label class="form-check-label text-info" for="{{ form.remember_me.auto_id }}">
+              {{ form.remember_me.label }}
+            </label>
+          </div>
           <div class="text-center">
             <div class="d-inline-flex flex-wrap justify-content-center" style="gap: 8px;">
               <input type="submit" name="submit" class="btn btn-info" value={% trans 'Login' %}>

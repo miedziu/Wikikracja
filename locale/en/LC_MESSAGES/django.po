@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-10 11:35+0100\n"
+"POT-Creation-Date: 2026-01-10 12:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,7 +131,7 @@ msgstr ""
 #: .\obywatele\templates\obywatele\change_username.html:18
 #: .\obywatele\templates\obywatele\dodaj.html:67
 #: .\obywatele\templates\obywatele\my_assets.html:89
-#: .\tasks\templates\tasks\task_form.html:30
+#: .\tasks\templates\tasks\task_form.html:31
 msgid "Save"
 msgstr ""
 
@@ -207,7 +207,7 @@ msgstr ""
 #: .\glosowania\templates\glosowania\dodaj.html:43
 #: .\glosowania\templates\glosowania\edit.html:34
 #: .\obywatele\templates\obywatele\dodaj.html:68
-#: .\tasks\templates\tasks\task_form.html:31
+#: .\tasks\templates\tasks\task_form.html:32
 msgid "Back"
 msgstr ""
 
@@ -445,7 +445,7 @@ msgid "Are you sure you want to delete this partner?"
 msgstr ""
 
 #: .\bookkeeping\templates\bookkeeping\partner_confirm_delete.html:76
-#: .\bookkeeping\templates\bookkeeping\partner_list.html:22
+#: .\bookkeeping\templates\bookkeeping\partner_list.html:22 .\home\forms.py:16
 #: .\home\templates\home\login.html:14
 #: .\obywatele\templates\obywatele\poczekalnia.html:19
 #: .\obywatele\templates\obywatele\start.html:24
@@ -1180,7 +1180,7 @@ msgid "Approved"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:162 .\glosowania\views.py:207
-#: .\tasks\templates\tasks\task_list.html:33 .\tasks\views.py:21
+#: .\tasks\templates\tasks\task_list.html:37 .\tasks\views.py:21
 msgid "Rejected"
 msgstr ""
 
@@ -1543,6 +1543,10 @@ msgstr ""
 msgid "The %(site_name)s team"
 msgstr ""
 
+#: .\home\forms.py:9
+msgid "Keep me signed in"
+msgstr ""
+
 #: .\home\templates\home\base.html:50 .\home\templates\home\home.html:46
 msgid "Start"
 msgstr ""
@@ -1561,13 +1565,13 @@ msgstr ""
 
 #: .\home\templates\home\base.html:69 .\home\templates\home\home.html:14
 #: .\home\templates\home\login.html:4 .\home\templates\home\login.html:12
-#: .\home\templates\home\login.html:23
+#: .\home\templates\home\login.html:33
 #: .\obywatele\management\commands\count_citizens.py:83
 msgid "Login"
 msgstr ""
 
 #: .\home\templates\home\base.html:73 .\home\templates\home\home.html:17
-#: .\home\templates\home\login.html:24
+#: .\home\templates\home\login.html:34
 #: .\templates\allauth\account\signup.html:27
 msgid "Sign Up"
 msgstr ""
@@ -1605,7 +1609,7 @@ msgstr ""
 msgid "Change password"
 msgstr ""
 
-#: .\home\templates\home\home.html:20 .\home\templates\home\login.html:25
+#: .\home\templates\home\home.html:20 .\home\templates\home\login.html:35
 #: .\home\templates\home\password_reset_form.html:5
 msgid "Reset password"
 msgstr ""
@@ -1650,15 +1654,15 @@ msgstr ""
 msgid "Updated posts"
 msgstr ""
 
-#: .\home\templates\home\login.html:29
+#: .\home\templates\home\login.html:39
 msgid "The username or password is incorrect."
 msgstr ""
 
-#: .\home\templates\home\login.html:30
+#: .\home\templates\home\login.html:40
 msgid "Also your account may not be active jet."
 msgstr ""
 
-#: .\home\templates\home\login.html:31
+#: .\home\templates\home\login.html:41
 msgid "Please try again or reset your password."
 msgstr ""
 
@@ -1699,11 +1703,11 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: .\home\views.py:62
+#: .\home\views.py:79
 msgid "Your password has been changed."
 msgstr ""
 
-#: .\home\views.py:65
+#: .\home\views.py:82
 msgid "You typed something wrong. See what error appeared above and try again."
 msgstr ""
 
@@ -2187,11 +2191,11 @@ msgstr ""
 msgid "Invalid closing status."
 msgstr ""
 
-#: .\tasks\models.py:31 .\tasks\templates\tasks\task_list.html:25
+#: .\tasks\models.py:31 .\tasks\templates\tasks\task_list.html:29
 msgid "Completed"
 msgstr ""
 
-#: .\tasks\models.py:32 .\tasks\templates\tasks\task_list.html:29
+#: .\tasks\models.py:32 .\tasks\templates\tasks\task_list.html:33
 #, fuzzy
 #| msgid "Cancel"
 msgid "Cancelled"
@@ -2293,39 +2297,43 @@ msgstr ""
 msgid "Add task"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:13
+#: .\tasks\templates\tasks\task_list.html:12
+msgid "This module is used to determine which tasks we should complete as a group and which we should skip."
+msgstr ""
+
+#: .\tasks\templates\tasks\task_list.html:17
 msgid "Actively handled"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:14
+#: .\tasks\templates\tasks\task_list.html:18
 msgid "No active tasks with assignee."
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:18
+#: .\tasks\templates\tasks\task_list.html:22
 msgid "Awaiting pickup"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:19
+#: .\tasks\templates\tasks\task_list.html:23
 msgid "Nothing is awaiting yet."
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:23
+#: .\tasks\templates\tasks\task_list.html:27
 msgid "Finished"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:26
+#: .\tasks\templates\tasks\task_list.html:30
 #, fuzzy
 #| msgid "No events yet"
 msgid "No completed tasks yet."
 msgstr "No events yet"
 
-#: .\tasks\templates\tasks\task_list.html:30
+#: .\tasks\templates\tasks\task_list.html:34
 #, fuzzy
 #| msgid "No events yet"
 msgid "No cancelled tasks yet."
 msgstr "No events yet"
 
-#: .\tasks\templates\tasks\task_list.html:34
+#: .\tasks\templates\tasks\task_list.html:38
 #, fuzzy
 #| msgid "No events yet"
 msgid "No rejected tasks yet."

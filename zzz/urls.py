@@ -15,7 +15,7 @@ from django.urls import URLPattern, URLResolver
 urlpatterns: List[URLPattern | URLResolver] = [
     path('', include('home.urls')),
     path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/login/'}, name='logout'),
-    path('login/', auth_views.LoginView.as_view(template_name='home/login.html'), name='login'),
+    path('login/', hv.RememberLoginView.as_view(), name='login'),
     path('haslo/', hv.haslo, name='haslo'),
     path('change_email/', ov.change_email, name='change_email'),
     path('accounts/', include('allauth.urls')),

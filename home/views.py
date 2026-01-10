@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.conf import settings
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import LoginView
 # from glosowania.views import ZliczajWszystko
 from glosowania.models import Decyzja
 from obywatele.models import Uzytkownik
@@ -14,6 +16,7 @@ from datetime import datetime as dt
 from datetime import timedelta as td
 from django.utils import timezone
 from django.http import HttpRequest
+from .forms import RememberLoginForm
 import logging as l
 
 l.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=l.INFO)
@@ -50,6 +53,20 @@ def home(request: HttpRequest):
                       'posts': posts,
                       'books': books,
                   })
+
+
+class RememberLoginView(LoginView):
+    form_class = RememberLoginForm
+    template_name = 'home/login.html'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        remember = form.cleaned_data.get("remember_me")
+        if remember:
+            self.request.session.set_expiry(getattr(settings, "REMEMBER_ME_COOKIE_AGE", settings.SESSION_COOKIE_AGE))
+        else:
+            self.request.session.set_expiry(0)
+        return response
 
 
 @login_required
