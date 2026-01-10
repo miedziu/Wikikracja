@@ -8,6 +8,10 @@
     <a class="btn btn-primary" href="{% url 'tasks:add' %}">{% trans "Add task" %}</a>
   </div>
 
+  <p class="text-muted mb-4">
+    {% trans "This module is used to determine which tasks we should complete as a group and which we should skip." %}
+  </p>
+
   <div class="row">
     <div class="col-lg-4 mb-4">
       <h2 class="h5">{% trans "Actively handled" %}</h2>
