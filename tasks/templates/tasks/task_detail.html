@@ -35,27 +35,33 @@
 
       <div class="mt-3">
         <span class="badge bg-light text-dark me-2">{% trans "Votes" %}: {{ task.votes_score|default:0 }}</span>
-        <span class="badge bg-light text-dark me-2">{% trans "Success votes" %}: {{ task.eval_success|default:0 }}</span>
-        <span class="badge bg-light text-dark">{% trans "Failure votes" %}: {{ task.eval_failure|default:0 }}</span>
+        <span class="badge bg-light text-dark me-2">{% trans "Success" %}: {{ task.eval_success|default:0 }}</span>
+        <span class="badge bg-light text-dark">{% trans "Failure" %}: {{ task.eval_failure|default:0 }}</span>
       </div>
     </div>
   </div>
 
   <div class="d-flex gap-2 mb-4">
     {% if task.is_active %}
-      <form method="post" action="{% url 'tasks:vote' task.pk %}">
+      {% with vote_value=user_vote_value %}
+      <form class="mr-2" method="post" action="{% url 'tasks:vote' task.pk %}">
         {% csrf_token %}
         <input type="hidden" name="value" value="1">
         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-        <button class="btn btn-outline-success" type="submit">{% trans "Vote up" %}</button>
+        <button class="btn {% if vote_value == 1 %}btn-success{% else %}btn-outline-success{% endif %}" type="submit">
+          {% trans "Vote up" %}
+        </button>
       </form>
 
-      <form method="post" action="{% url 'tasks:vote' task.pk %}">
+      <form class="mr-2" method="post" action="{% url 'tasks:vote' task.pk %}">
         {% csrf_token %}
         <input type="hidden" name="value" value="-1">
         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-        <button class="btn btn-outline-danger" type="submit">{% trans "Vote down" %}</button>
+        <button class="btn {% if vote_value == -1 %}btn-danger{% else %}btn-outline-danger{% endif %}" type="submit">
+          {% trans "Vote down" %}
+        </button>
       </form>
+      {% endwith %}
 
       {% if not task.assigned_to %}
         <form method="post" action="{% url 'tasks:take' task.pk %}">
@@ -66,9 +72,9 @@
       {% endif %}
 
       {% if task.assigned_to == request.user %}
-        <a class="btn btn-secondary" href="{% url 'tasks:edit' task.pk %}">{% trans "Edit" %}</a>
-        <a class="btn btn-warning" href="{% url 'tasks:close' task.pk %}">{% trans "Close task" %}</a>
-        <form method="post" action="{% url 'tasks:resign' task.pk %}">
+        <a class="btn btn-secondary mr-2" href="{% url 'tasks:edit' task.pk %}">{% trans "Edit" %}</a>
+        <a class="btn btn-warning mr-2" href="{% url 'tasks:close' task.pk %}">{% trans "Close task" %}</a>
+        <form class="mr-2" method="post" action="{% url 'tasks:resign' task.pk %}">
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ request.get_full_path }}">
           <button class="btn btn-outline-danger" type="submit">{% trans "Resign" %}</button>
@@ -88,12 +94,12 @@
     <div class="card">
       <div class="card-body">
         <h2 class="h5 mb-3">{% trans "Evaluate outcome" %}</h2>
-        <div class="d-flex gap-2">
+        <div class="d-flex">
           <form method="post" action="{% url 'tasks:evaluate' task.pk %}">
             {% csrf_token %}
             <input type="hidden" name="value" value="success">
             <input type="hidden" name="next" value="{{ request.get_full_path }}">
-            <button class="btn btn-success" type="submit">{% trans "Success" %}</button>
+            <button class="btn btn-success mr-2" type="submit">{% trans "Success" %}</button>
           </form>
           <form method="post" action="{% url 'tasks:evaluate' task.pk %}">
             {% csrf_token %}

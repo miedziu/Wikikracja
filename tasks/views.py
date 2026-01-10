@@ -1,6 +1,4 @@
 import math
-
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
@@ -68,8 +66,16 @@ class TaskListView(LoginRequiredMixin, TemplateView):
         _assign_priorities(active_tasks)
         rejected_active = [task for task in active_tasks if task.priority_category == "rejected"]
         active_non_rejected = [task for task in active_tasks if task.priority_category != "rejected"]
-        active_with_owner = [task for task in active_non_rejected if task.assigned_to]
-        awaiting_tasks = [task for task in active_non_rejected if not task.assigned_to]
+        active_with_owner = [
+            task
+            for task in active_non_rejected
+            if task.assigned_to and ((task.votes_up or 0) - (task.votes_down or 0) >= 1)
+        ]
+        awaiting_tasks = [
+            task
+            for task in active_non_rejected
+            if task not in active_with_owner
+        ]
         finished_tasks = list(queryset.exclude(status=Task.Status.ACTIVE))
         _assign_priorities(finished_tasks)
         rejected_tasks = [task for task in finished_tasks if task.priority_category == "rejected"]
@@ -104,7 +110,6 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        messages.success(self.request, _("Task created."))
         return super().form_valid(form)
 
 
@@ -114,10 +119,6 @@ def take_task(request: HttpRequest, pk: int) -> HttpResponse:
     task = get_object_or_404(Task, pk=pk)
     task.assigned_to = request.user
     task.save(update_fields=["assigned_to", "updated_at"])
-    messages.success(
-        request,
-        _('Task "%(title)s" assigned to you.') % {"title": task.title},
-    )
     return redirect(request.POST.get("next") or "tasks:list")
 
 
@@ -127,14 +128,12 @@ def resign_task(request: HttpRequest, pk: int) -> HttpResponse:
     task = get_object_or_404(Task, pk=pk)
     next_url = request.POST.get("next")
     if task.assigned_to != request.user:
-        messages.error(request, _("Only the current owner can resign from this task."))
         if next_url:
             return redirect(next_url)
         return redirect("tasks:detail", pk=pk)
 
     task.assigned_to = None
     task.save(update_fields=["assigned_to", "updated_at"])
-    messages.success(request, _("You have resigned from this task."))
     if next_url:
         return redirect(next_url)
     return redirect("tasks:list")
@@ -183,6 +182,9 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         )
         task.priority_label = current_label or task.get_status_display()
         task.priority_category = current_category
+        if self.request.user.is_authenticated:
+            vote = TaskVote.objects.filter(task=task, user=self.request.user).first()
+            context["user_vote_value"] = vote.value if vote else None
         context["task"] = task
         return context
 
@@ -195,12 +197,10 @@ class TaskEditView(LoginRequiredMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         task = self.get_object()
         if task.assigned_to != request.user:
-            messages.error(request, _("Only the current owner can edit this task."))
             return redirect("tasks:detail", pk=task.pk)
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        messages.success(self.request, _("Task updated."))
         return reverse_lazy("tasks:detail", kwargs={"pk": self.object.pk})
 
 
@@ -212,12 +212,10 @@ class TaskCloseView(LoginRequiredMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         task = self.get_object()
         if task.assigned_to != request.user:
-            messages.error(request, _("Only the current owner can close this task."))
             return redirect("tasks:detail", pk=task.pk)
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        messages.success(self.request, _("Task closed."))
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -230,18 +228,18 @@ def vote_task(request: HttpRequest, pk: int) -> HttpResponse:
     task = get_object_or_404(Task, pk=pk)
     value = int(request.POST.get("value", 0))
     if value not in (TaskVote.Value.DOWN, TaskVote.Value.UP):
-        messages.error(request, _("Invalid vote value."))
         return redirect(request.POST.get("next") or "tasks:list")
 
-    vote, created = TaskVote.objects.get_or_create(
-        task=task,
-        user=request.user,
-        defaults={"value": value},
-    )
-    if not created:
-        vote.value = value
-        vote.save(update_fields=["value", "updated_at"])
-    messages.success(request, _("Vote saved."))
+    vote = TaskVote.objects.filter(task=task, user=request.user).first()
+    if vote and vote.value == value:
+        vote.delete()
+    else:
+        if not vote:
+            vote = TaskVote(task=task, user=request.user, value=value)
+            vote.save()
+        else:
+            vote.value = value
+            vote.save(update_fields=["value", "updated_at"])
     return redirect(request.POST.get("next") or "tasks:list")
 
 
@@ -251,7 +249,6 @@ def reopen_task(request: HttpRequest, pk: int) -> HttpResponse:
     task = get_object_or_404(Task, pk=pk)
     next_url = request.POST.get("next")
     if task.is_active:
-        messages.info(request, _("Task is already active."))
         if next_url:
             return redirect(next_url)
         return redirect("tasks:detail", pk=pk)
@@ -259,7 +256,6 @@ def reopen_task(request: HttpRequest, pk: int) -> HttpResponse:
     TaskVote.objects.filter(task=task).delete()
     task.status = Task.Status.ACTIVE
     task.save(update_fields=["status", "updated_at"])
-    messages.success(request, _("Task reopened and votes reset."))
     if next_url:
         return redirect(next_url)
     return redirect("tasks:list")
@@ -274,7 +270,6 @@ def evaluate_task(request: HttpRequest, pk: int) -> HttpResponse:
         TaskEvaluation.Value.SUCCESS,
         TaskEvaluation.Value.FAILURE,
     ):
-        messages.error(request, _("Invalid evaluation choice."))
         return redirect(request.POST.get("next") or "tasks:list")
 
     evaluation, created = TaskEvaluation.objects.get_or_create(
@@ -285,5 +280,4 @@ def evaluate_task(request: HttpRequest, pk: int) -> HttpResponse:
     if not created:
         evaluation.value = value
         evaluation.save(update_fields=["value", "updated_at"])
-    messages.success(request, _("Evaluation saved."))
     return redirect(request.POST.get("next") or "tasks:list")

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Very small cross-platform dev helper (Windows/Linux)."""
+"""
+Dev starter for Windows/Linux.
+Default: prepare .env, ensure SECRET_KEY, load env, create media/uploads,
+run migrations and start Daphne.
+With --full: additionally pip install -r requirements.txt, makemigrations for
+listed apps, makemessages/compilemessages and collectstatic.
+"""
+import argparse
 import os
 import secrets
 import subprocess
@@ -59,6 +66,14 @@ def run(cmd):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Start dev environment quickly; use --full for slow/setup tasks.")
+    parser.add_argument(
+        "--full",
+        action="store_true",
+        help="Run full setup (pip install, makemigrations, i18n messages, collectstatic) before start.",
+    )
+    args = parser.parse_args()
+
     if sys.prefix == sys.base_prefix:
         print("Activate your virtualenv first.")
         sys.exit(1)
@@ -72,18 +87,21 @@ def main():
 
     (BASE_DIR / "media" / "uploads").mkdir(parents=True, exist_ok=True)
 
-    run([sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", "requirements.txt"])
+    if args.full:
+        run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
 
     manage = [sys.executable, "manage.py"]
     apps = ["obywatele", "glosowania", "elibrary", "chat", "home", "bookkeeping", "board", "events", "tasks"]
-    for app in apps:
-        run(manage + ["makemigrations", app])
+    if args.full:
+        for app in apps:
+            run(manage + ["makemigrations", app])
 
     run(manage + ["migrate"])
-    run(manage + ["makemessages", "-v", "0", "--no-wrap", "--no-obsolete", "-l", "en", "--ignore=.git/*", "--ignore=static/*", "--ignore=.mypy_cache/*"])
-    run(manage + ["makemessages", "-v", "0", "--no-wrap", "--no-obsolete", "-l", "pl", "--ignore=.git/*", "--ignore=static/*", "--ignore=.mypy_cache/*"])
-    run(manage + ["compilemessages", "-v", "0", "--ignore=.git/*", "--ignore=static/*", "--ignore=.mypy_cache/*"])
-    run(manage + ["collectstatic", "-v", "0", "--no-input", "-c"])
+    if args.full:
+        run(manage + ["makemessages", "-v", "0", "--no-wrap", "--no-obsolete", "-l", "en", "--ignore=.git/*", "--ignore=static/*", "--ignore=.mypy_cache/*"])
+        run(manage + ["makemessages", "-v", "0", "--no-wrap", "--no-obsolete", "-l", "pl", "--ignore=.git/*", "--ignore=static/*", "--ignore=.mypy_cache/*"])
+        run(manage + ["compilemessages", "-v", "0", "--ignore=.git/*", "--ignore=static/*", "--ignore=.mypy_cache/*"])
+        run(manage + ["collectstatic", "-v", "0", "--no-input", "-c"])
 
     print("\nDevelopment instance started\n")
     run(["daphne", "zzz.asgi:application"])
