@@ -15,26 +15,23 @@
   <div class="row">
     <div class="col-lg-4 mb-4">
       <h2 class="h5">{% trans "Actively handled" %}</h2>
-      {% include "tasks/_task_cards.html" with tasks=active_tasks empty_message=_("No active tasks with assignee.") %}
+      {% include "tasks/_task_cards.html" with tasks=active_tasks empty_message=_("None") %}
     </div>
 
     <div class="col-lg-4 mb-4">
       <h2 class="h5">{% trans "Awaiting pickup" %}</h2>
-      {% include "tasks/_task_cards.html" with tasks=awaiting_tasks empty_message=_("Nothing is awaiting yet.") show_take_button=True %}
+      {% include "tasks/_task_cards.html" with tasks=awaiting_tasks empty_message=_("None") show_take_button=True %}
     </div>
 
     <div class="col-lg-4 mb-4">
       <h2 class="h5">{% trans "Finished" %}</h2>
       <div class="mb-3">
-        <h3 class="h6 text-uppercase text-muted">{% trans "Completed" %}</h3>
         {% include "tasks/_task_cards.html" with tasks=finished_completed empty_message=_("No completed tasks yet.") show_status=True %}
       </div>
       <div class="mb-3">
-        <h3 class="h6 text-uppercase text-muted">{% trans "Cancelled" %}</h3>
         {% include "tasks/_task_cards.html" with tasks=finished_cancelled empty_message=_("No cancelled tasks yet.") show_status=True %}
       </div>
       <div>
-        <h3 class="h6 text-uppercase text-muted">{% trans "Rejected" %}</h3>
         {% include "tasks/_task_cards.html" with tasks=finished_rejected empty_message=_("No rejected tasks yet.") show_status=True %}
       </div>
     </div>

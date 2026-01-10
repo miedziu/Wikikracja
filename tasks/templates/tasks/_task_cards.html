@@ -4,13 +4,22 @@
   <div class="card mb-3">
     <div class="card-body py-3">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <div>
-          <div class="small text-muted">{% trans "Title" %}</div>
+        <div class="flex-grow-1 me-3">
           <h3 class="h6 mb-0">
-            <a href="{% url 'tasks:detail' task.pk %}">{{ task.title }}</a>
+            <a class="text-break text-decoration-none" href="{% url 'tasks:detail' task.pk %}">{{ task.title }}</a>
           </h3>
         </div>
-        {% if task.priority_label %}
+        {% if show_status %}
+          {% if task.status == task.Status.COMPLETED %}
+            <span class="badge bg-success text-uppercase">{{ task.get_status_display }}</span>
+          {% elif task.status == task.Status.CANCELLED %}
+            <span class="badge bg-secondary text-uppercase">{{ task.get_status_display }}</span>
+          {% elif task.status == task.Status.REJECTED %}
+            <span class="badge bg-dark text-uppercase">{{ task.get_status_display }}</span>
+          {% else %}
+            <span class="badge bg-info text-dark text-uppercase">{{ task.get_status_display }}</span>
+          {% endif %}
+        {% elif task.priority_label %}
           {% with task.priority_category as category %}
             {% if category == "critical" %}
               <span class="badge bg-danger text-uppercase">{{ task.priority_label }}</span>
