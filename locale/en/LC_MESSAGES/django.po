@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-10 12:15+0100\n"
+"POT-Creation-Date: 2026-01-10 13:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
-#: .\board\models.py:14 .\tasks\views.py:19
+#: .\board\models.py:14 .\tasks\views.py:22
 msgid "Important"
 msgstr ""
 
@@ -1180,7 +1180,8 @@ msgid "Approved"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:162 .\glosowania\views.py:207
-#: .\tasks\templates\tasks\task_list.html:37 .\tasks\views.py:21
+#: .\tasks\models.py:33 .\tasks\templates\tasks\task_list.html:37
+#: .\tasks\views.py:24
 msgid "Rejected"
 msgstr ""
 
@@ -1425,11 +1426,11 @@ msgstr ""
 msgid "Result"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:79 .\tasks\models.py:74
+#: .\glosowania\templates\glosowania\szczegoly.html:79 .\tasks\models.py:75
 msgid "For"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:79 .\tasks\models.py:73
+#: .\glosowania\templates\glosowania\szczegoly.html:79 .\tasks\models.py:74
 msgid "Against"
 msgstr ""
 
@@ -2201,32 +2202,37 @@ msgstr ""
 msgid "Cancelled"
 msgstr "Cancel"
 
-#: .\tasks\models.py:98 .\tasks\templates\tasks\task_detail.html:38
+#: .\tasks\models.py:99 .\tasks\templates\tasks\task_detail.html:38
 #: .\tasks\templates\tasks\task_detail.html:102
 msgid "Success"
 msgstr ""
 
-#: .\tasks\models.py:99 .\tasks\templates\tasks\task_detail.html:39
+#: .\tasks\models.py:100 .\tasks\templates\tasks\task_detail.html:39
 #: .\tasks\templates\tasks\task_detail.html:108
 msgid "Failure"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:36
+#: .\tasks\templates\tasks\_task_cards.html:37
+#: .\tasks\templates\tasks\task_detail.html:80
+msgid "Resign"
+msgstr ""
+
+#: .\tasks\templates\tasks\_task_cards.html:43
 #: .\tasks\templates\tasks\task_detail.html:70
 msgid "Take task"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:42
+#: .\tasks\templates\tasks\_task_cards.html:50
 #: .\tasks\templates\tasks\task_detail.html:37
 msgid "Votes"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:42
+#: .\tasks\templates\tasks\_task_cards.html:50
 #: .\tasks\templates\tasks\task_detail.html:30
 msgid "Owner"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:42
+#: .\tasks\templates\tasks\_task_cards.html:50
 msgid "n/a"
 msgstr ""
 
@@ -2265,10 +2271,6 @@ msgstr ""
 
 #: .\tasks\templates\tasks\task_detail.html:61
 msgid "Vote down"
-msgstr ""
-
-#: .\tasks\templates\tasks\task_detail.html:80
-msgid "Resign"
 msgstr ""
 
 #: .\tasks\templates\tasks\task_detail.html:91
@@ -2339,11 +2341,11 @@ msgstr "No events yet"
 msgid "No rejected tasks yet."
 msgstr "No events yet"
 
-#: .\tasks\views.py:18
+#: .\tasks\views.py:21
 msgid "Critical"
 msgstr ""
 
-#: .\tasks\views.py:20
+#: .\tasks\views.py:23
 msgid "Beneficial"
 msgstr ""
 

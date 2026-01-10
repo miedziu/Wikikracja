@@ -30,6 +30,7 @@ class Task(models.Model):
         ACTIVE = "active", _("Active")
         COMPLETED = "completed", _("Completed")
         CANCELLED = "cancelled", _("Cancelled")
+        REJECTED = "rejected", _("Rejected")
 
     title = models.CharField(max_length=200)
     description = models.TextField()

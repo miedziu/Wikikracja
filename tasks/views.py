@@ -1,6 +1,9 @@
 import math
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import models, transaction
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -69,7 +72,7 @@ class TaskListView(LoginRequiredMixin, TemplateView):
         active_with_owner = [
             task
             for task in active_non_rejected
-            if task.assigned_to and ((task.votes_up or 0) - (task.votes_down or 0) >= 1)
+            if task.assigned_to and ((task.votes_up or 0) - (task.votes_down or 0) >= 2)
         ]
         awaiting_tasks = [
             task
@@ -225,21 +228,34 @@ class TaskCloseView(LoginRequiredMixin, UpdateView):
 @require_POST
 @login_required
 def vote_task(request: HttpRequest, pk: int) -> HttpResponse:
-    task = get_object_or_404(Task, pk=pk)
+    task = get_object_or_404(Task.objects.with_metrics(), pk=pk)
     value = int(request.POST.get("value", 0))
     if value not in (TaskVote.Value.DOWN, TaskVote.Value.UP):
         return redirect(request.POST.get("next") or "tasks:list")
 
-    vote = TaskVote.objects.filter(task=task, user=request.user).first()
-    if vote and vote.value == value:
-        vote.delete()
-    else:
-        if not vote:
-            vote = TaskVote(task=task, user=request.user, value=value)
-            vote.save()
+    with transaction.atomic():
+        vote = TaskVote.objects.filter(task=task, user=request.user).first()
+        if vote and vote.value == value:
+            vote.delete()
         else:
-            vote.value = value
-            vote.save(update_fields=["value", "updated_at"])
+            if not vote:
+                vote = TaskVote(task=task, user=request.user, value=value)
+                vote.save()
+            else:
+                vote.value = value
+                vote.save(update_fields=["value", "updated_at"])
+
+        # Refresh score and set rejected if below threshold
+        task.refresh_from_db(fields=["status", "updated_at"])
+        metrics = Task.objects.filter(pk=task.pk).annotate(
+            votes_score=Coalesce(Sum("votes__value"), 0)
+        ).values("votes_score", "status").first()
+        votes_score = metrics["votes_score"] if metrics else 0
+        if votes_score <= -1 and task.status != Task.Status.REJECTED:
+            Task.objects.filter(pk=task.pk).update(
+                status=Task.Status.REJECTED, updated_at=models.F("updated_at")
+            )
+            task.status = Task.Status.REJECTED
     return redirect(request.POST.get("next") or "tasks:list")
 
 

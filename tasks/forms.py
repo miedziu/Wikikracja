@@ -17,6 +17,13 @@ class TaskForm(forms.ModelForm):
 
 
 class TaskStatusForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["status"].choices = [
+            (Task.Status.COMPLETED, Task.Status.COMPLETED.label),
+            (Task.Status.CANCELLED, Task.Status.CANCELLED.label),
+        ]
+
     class Meta:
         model = Task
         fields = ["status"]
