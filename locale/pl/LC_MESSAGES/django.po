@@ -2292,10 +2292,8 @@ msgid "Add task"
 msgstr "Dodaj zadanie"
 
 #: .\tasks\templates\tasks\task_list.html:12
-#, fuzzy
-#| msgid "This module is used to determine which tasks we should work on as a group and which we should give up."
 msgid "This module is used to determine which tasks we should complete as a group and which we should skip."
-msgstr "Ta moduł jest używany do określenia, które zadania powinniśmy realizować jako grupa a które powinniśmy pominąć."
+msgstr "Ten moduł służy do określenia, które zadania powinniśmy wykonać jako grupa, a które pominąć."
 
 #: .\tasks\templates\tasks\task_list.html:17
 msgid "Actively handled"
