@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-10 13:55+0100\n"
+"POT-Creation-Date: 2026-01-10 15:14+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -24,7 +24,6 @@ msgstr "Treść"
 #: .\board\models.py:6 .\elibrary\forms.py:7 .\elibrary\models.py:11
 #: .\elibrary\templates\elibrary\book_confirm_delete.html:13
 #: .\events\models.py:39 .\glosowania\models.py:30
-#: .\tasks\templates\tasks\_task_cards.html:8
 #: .\tasks\templates\tasks\task_form.html:19
 msgid "Title"
 msgstr "Tytuł"
@@ -584,6 +583,8 @@ msgstr "dniach"
 #: .\home\templates\home\home.html:59 .\home\templates\home\home.html:72
 #: .\home\templates\home\home.html:83 .\home\templates\home\home.html:96
 #: .\obywatele\templates\obywatele\poczekalnia.html:58
+#: .\tasks\templates\tasks\task_list.html:18
+#: .\tasks\templates\tasks\task_list.html:23
 msgid "None"
 msgstr "Brak"
 
@@ -1175,13 +1176,12 @@ msgid "Approved"
 msgstr "Zatwierdzone"
 
 #: .\glosowania\management\commands\vote.py:162 .\glosowania\views.py:207
-#: .\tasks\models.py:33 .\tasks\templates\tasks\task_list.html:37
-#: .\tasks\views.py:24
+#: .\tasks\models.py:33 .\tasks\views.py:24
 msgid "Rejected"
 msgstr "Odrzucone"
 
 #: .\glosowania\management\commands\vote.py:178 .\glosowania\views.py:240
-#: .\obywatele\forms.py:153 .\obywatele\views.py:577
+#: .\obywatele\forms.py:153 .\obywatele\views.py:585
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
 msgstr "Dlaczego otrzymałeś ten e-mail? Tutaj jest wyjaśnienie: {url}"
@@ -2110,6 +2110,10 @@ msgstr "Masz stosunek neutralny do tego kandydata"
 msgid "Copy email"
 msgstr "Skopiuj email"
 
+#: .\obywatele\templates\obywatele\start.html:91
+msgid "Never"
+msgstr "Nigdy"
+
 #: .\obywatele\templates\obywatele\szczegoly.html:19
 msgid "Joined at"
 msgstr "Data przyjęcia"
@@ -2146,19 +2150,19 @@ msgstr "Twój nowy email został zapisany."
 msgid "Your name has been saved."
 msgstr "Twój imię i nazwisko zostały zapisane."
 
-#: .\obywatele\views.py:282
+#: .\obywatele\views.py:290
 msgid "Email already exist"
-msgstr "Email już został użyty"
+msgstr "Email już istnieje"
 
-#: .\obywatele\views.py:317
+#: .\obywatele\views.py:325
 msgid "The new user has been saved"
 msgstr "Nowy użytkownik został zapisany."
 
-#: .\obywatele\views.py:321
+#: .\obywatele\views.py:329
 msgid "New citizen has been proposed"
 msgstr "Został zaproponowany nowy użytkownik"
 
-#: .\obywatele\views.py:322
+#: .\obywatele\views.py:330
 msgid ""
 "proposed new citizen\n"
 "You can approve him/her here:"
@@ -2166,39 +2170,39 @@ msgstr ""
 "zaproponował/a nową osobę\n"
 "Możesz ją zatwierdzić tutaj:"
 
-#: .\obywatele\views.py:335
+#: .\obywatele\views.py:343
 msgid "Please correct the highlighted errors."
 msgstr "Popraw podświetlone błędy."
 
-#: .\obywatele\views.py:392
+#: .\obywatele\views.py:400
 msgid "Changes was saved"
 msgstr "Zmiany zostały zapisane"
 
-#: .\obywatele\views.py:405
+#: .\obywatele\views.py:413
 msgid "Form is not valid!"
 msgstr "Formularz zawiera błędy"
 
-#: .\obywatele\views.py:478
+#: .\obywatele\views.py:486
 msgid "positive"
 msgstr "pozytywny"
 
-#: .\obywatele\views.py:485
+#: .\obywatele\views.py:493
 msgid "negative"
 msgstr "negatywny"
 
-#: .\obywatele\views.py:492
+#: .\obywatele\views.py:500
 msgid "neutral"
 msgstr "obojętny"
 
-#: .\tasks\forms.py:30
+#: .\tasks\forms.py:37
 msgid "Invalid closing status."
 msgstr "Nieprawidłowy status zamknięcia."
 
-#: .\tasks\models.py:31 .\tasks\templates\tasks\task_list.html:29
+#: .\tasks\models.py:31
 msgid "Completed"
 msgstr "Ukończone"
 
-#: .\tasks\models.py:32 .\tasks\templates\tasks\task_list.html:33
+#: .\tasks\models.py:32
 msgid "Cancelled"
 msgstr "Anulowane"
 
@@ -2212,27 +2216,27 @@ msgstr "Sukces"
 msgid "Failure"
 msgstr "Porażka"
 
-#: .\tasks\templates\tasks\_task_cards.html:37
+#: .\tasks\templates\tasks\_task_cards.html:46
 #: .\tasks\templates\tasks\task_detail.html:80
 msgid "Resign"
 msgstr "Zrezygnuj"
 
-#: .\tasks\templates\tasks\_task_cards.html:43
+#: .\tasks\templates\tasks\_task_cards.html:52
 #: .\tasks\templates\tasks\task_detail.html:70
 msgid "Take task"
 msgstr "Podejmij zadanie"
 
-#: .\tasks\templates\tasks\_task_cards.html:50
+#: .\tasks\templates\tasks\_task_cards.html:59
 #: .\tasks\templates\tasks\task_detail.html:37
 msgid "Votes"
 msgstr "Głosy"
 
-#: .\tasks\templates\tasks\_task_cards.html:50
+#: .\tasks\templates\tasks\_task_cards.html:59
 #: .\tasks\templates\tasks\task_detail.html:30
 msgid "Owner"
 msgstr "Właściciel"
 
-#: .\tasks\templates\tasks\_task_cards.html:50
+#: .\tasks\templates\tasks\_task_cards.html:59
 msgid "n/a"
 msgstr "brak"
 
@@ -2259,7 +2263,7 @@ msgstr "Powrót do listy"
 
 #: .\tasks\templates\tasks\task_detail.html:30
 msgid "Nobody"
-msgstr "Brak"
+msgstr "Nikt"
 
 #: .\tasks\templates\tasks\task_detail.html:52
 msgid "Vote up"
@@ -2301,31 +2305,23 @@ msgstr "Ten moduł służy do określenia, które zadania powinniśmy wykonać j
 msgid "Actively handled"
 msgstr "W realizacji"
 
-#: .\tasks\templates\tasks\task_list.html:18
-msgid "No active tasks with assignee."
-msgstr "Brak aktywnych zadań z przypisaną osobą."
-
 #: .\tasks\templates\tasks\task_list.html:22
 msgid "Awaiting pickup"
 msgstr "Oczekujące na podjęcie"
-
-#: .\tasks\templates\tasks\task_list.html:23
-msgid "Nothing is awaiting yet."
-msgstr "Nic jeszcze nie oczekuje."
 
 #: .\tasks\templates\tasks\task_list.html:27
 msgid "Finished"
 msgstr "Zakończone"
 
-#: .\tasks\templates\tasks\task_list.html:30
+#: .\tasks\templates\tasks\task_list.html:29
 msgid "No completed tasks yet."
 msgstr "Brak ukończonych zadań."
 
-#: .\tasks\templates\tasks\task_list.html:34
+#: .\tasks\templates\tasks\task_list.html:32
 msgid "No cancelled tasks yet."
 msgstr "Brak anulowanych zadań."
 
-#: .\tasks\templates\tasks\task_list.html:38
+#: .\tasks\templates\tasks\task_list.html:35
 msgid "No rejected tasks yet."
 msgstr "Brak odrzuconych zadań."
 

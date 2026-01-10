@@ -86,7 +86,7 @@
 				<td>{{ i.uzytkownik.city|default:"—" }}</td>
 				<td>{{ i.first_name }}</td>
 				<td>{{ i.last_name }}</td>
-				<td>{{ i.last_login|date:"Y-m-d" }}</td>
+				<td>{{ i.last_login|date:"Y-m-d"|default:_("Never") }}</td>
 				{% comment %} Trzeba by dodać citizens żeby wyświetlić datę przyjęcia. date_joined to data zaproponowania kandydata. {% endcomment %}
 				{% comment %} <td><a href="{{ i.pk }}">{{ i.date_joined|date:"Y-m-d" }}</a></td> {% endcomment %}
 			</tr>
