@@ -1,25 +1,18 @@
-
 # PILNE
 - kalendarz. Powiadomienia whatsapp o spotkaniu
 - On the Candidates list there should be icon next each candidate. Icon should have following states: email confirmed, email not confirmed, invited (by existing member)
-
-- Dokończyć Fixtures i dodać je do skryptu instalacyjnego
+- Dokończyć Fixtures i dodać je do skryptu instalacyjnego. Fixtures z przepisami, pokojami i ogłoszeniami. Start: (To jest publiczna strona startowa dostępna dla osób niezalogowanych) i Footer: (To jest publiczna stopka twojej strony).
 - Dodać opcję wyłączania powiadomień email
 - Dodać opcję likwidacji własnego konta
 - Jeśli czas trwania referendum jest ustawiony na 3 dni, to referendum w rzeczywistości trwa 4 dni
-
 - Automatyczne głosowania Wiki. Poziom akceptacji, itd
-
 - Dobrowolny formularz dla nowej osoby ponieważ nic nie wiemy o kimś kto chce przystąpić: coś o sobie, co lubisz, jakie masz hobby, itd. Ja wprawdzie sprawdzam czy osoba żyje ale to za mało - wszyscy powinni móc wyrobić sobie opinie o kandydacie.
-
-- fixtures z przepisami, pokojami i ogłoszeniami Start (To jest publiczna strona startowa dostępna dla osób niezalogowanych) i Footer (To jest publiczna stopka twojej strony)
-- Temat grace period (okres karencji) pojawił się też przy normalnym usuwaniu użytkowników oraz przy czasowej banicji (jako konsekwencji złamania przepisu). Może da się upiec 3 pieczenie przy jednym ogniu.
 - https://www.kialo.com/ https://github.com/ehsanfakhraie/kialo/
 - Lepsze wyjaśnienie do emaili z powiadomieniami (głosowania i czat oddzielnie).
 - Warto było ustawić "Tryb powolny" na wysoką wartość tak aby wysyłanie wiadomości na "Ważne Ogłoszenia" można było robić bardzo rzadko.
 - Walidacja czyści formularz jeśli pierwsze pole jest nieprawidłowe (przy zapraszaniu nowej osoby)
 - Powinna być możliwość samodzielnego usunięcie z grupy ale też powinien być okres karencji po którym potwierdza się chęć odejścia. W okresie karencji będziemy mieli szansę zapytać co jest nie tak.
-
+- Temat grace period (okres karencji) pojawił się też przy normalnym usuwaniu użytkowników oraz przy czasowej banicji (jako konsekwencji złamania przepisu). Może da się upiec 3 pieczenie przy jednym ogniu.
 
 # BOOKKEEPING
 - mechanizm do opłacania składki
@@ -29,8 +22,10 @@
 - Między sobą: kto, komu, ile, kiedy, za co. Squash: jeśli A wisi B, B wisi C, C wisi A 100zł to wszystko się zeruje. Drobne pożyczki wzajemnie wraz z rozliczaniem abc. Funkcjonalność zliczania ile kto komu przekazał pieniędzy w danym roku. do 1000 a w jednym roku. Rozliczenia gotówkowe (kumulowanie płatności) / Śledzenie przekazywania przedmiotów
 - Okresowe składki. Opłaty roczne, miesięczne, jednorazowe
 - Wysyłanie okresowych emaili z przypomnieniami o płatnościach - również do customowej listy odbiorców
+
 ## TRANSAKCJE
 - Zobowiązania powinny pojawiać się na koncie przed czasem i w tym momencie powinien być wysyłany email
+
 ## STAN KONT / RAPORTY
 - Składka powinna być widoczna na koncie grupy
 - Podpisywanie kontraktu jeśli obie strony są w grupie
@@ -44,9 +39,11 @@
   - potwierdzanie otrzymania przedmiotu
 - Kto wprowadza transakcję, kto stwierdza że kasa wpłynęła, a kto podpisuje?
 - Zwykłe płatności grupy: Najczęściej transakcje wprowadza księgowy, ktoś inny powinien potwierdzić, że kasa wpłynęła.
+
 ## Umowy pomiędzy użytkownikami
 - Potwierdzenie zwykłych płatności leży w sprzeczności z umowami. W umowach to druga strona potwierdza, że kasa wpłynęła.
 - Chyba, że umowę/tranakcję wpisze ta strona, która otrzymuje płatność
+
 ## PRZEDMIOTY: przedmioty / usługi / płatności - do oddania / na sprzedaż / do wypożyczenia. FUNKCJONALNOŚCI:
  cena
 - jednostka (sztuka, dzień)
@@ -58,6 +55,7 @@
 - włączone / wyłączone
 ? fungible / none fungible - dotyczy pieniędzy, ale też porównywalnych usług (prąd) i wymienialnych przedmiotów
 - transakcje typu credit / debit
+
 ## Okresowe kredytowanie i debetowanie
 - obecnie miejsce użytkowania (geograficzne, raczej nie osoba) albo miejsce gdzie rzecz jest dostępna
 - właściciel (jedna osoba albo wszyscy, może wielu właścicieli?)
@@ -247,10 +245,6 @@ socket.send(JSON.stringify({
 - przenieść scripts do oddzielnego repo
 - włączyć FireWall na wszystkich domowych maszynach
 - Zastępowanie zmiennych ich wartościami: envsubst < config.txt > confidential_config.txt
-- Zbudować Wordpress Network
-  - blog.dobrada.pl dodać do WordPress Network
-  - Super tani hosting stron WordPress
-  - sklep.dobrada.pl też da się
 - Mapa ze społecznościami. Zlinkować te grupy, które są otwarte.
 - https://web.dev/what-are-pwas/ - da się zrobić aplikację na androida. Trzeba tylko zaszyfrować bazę, wystawić do niej api i wlić ją pomiędzy urządzeniami. Albo wystawić bazę na serwerze.
 - Nie można należeć do dwóch geograficznych grup ale może istnieć więcej niż jedna geograficzna grupa dla danego obszaru. To po to żeby wyrzucone osoby mogłby zbudować swoją lepszą geograficzną grupę dla tego samego obszaru z którego te osoby zostały wyrzucone.
@@ -278,7 +272,6 @@ socket.send(JSON.stringify({
 - Administrator (konfiguracja systemu wedle wytycznych), sędzia (weryfikacja czy przepisy są realizowane), senator (tworzenie przepisów), skarbnik (trzyma kasę i magazyn): opisać ich role, ustawić jako argumenty dla ludzi
 - Do woli: Jeśli dostajesz minusy a mimo to nie przyznajesz się do błędu to dostajesz dużego Minusa. Ale jeśli po dłuższym czasie WIĘKSZOŚĆ przyzna, że Miałeś rację to dostajesz ogromnego plusa. Wielkość plus jest proporcjonalna do czasu jaki upłynął od pierwotnej opinii. Takie podejście będzie premiowało to czy i, który z uczestników typuje z większym wyprzedzeniem przyszłe wydarzenia. Ci, których przewidywania się nie sprawdziły będą wraz z upływem czasu tracili na wartości (po to aby zachęcić do przyznawania się do błędu - przyznanie zatrzymuje licznik).
 - settings.SECURE_SSL_HOST
-- Automat do sklepów dla kermitasklep.dobrada.pl, allegro, oxl, itd.
 - https://beeware.org/
 - pycryptodome==3.6.1 > 3.6.6 ale to czeka na upgrade djangosecure z 0.0.11 na coś nowszego.
 - Emaile nie są tłumaczone na angielski
@@ -288,9 +281,6 @@ socket.send(JSON.stringify({
 - Automatyczny newsletter. Moduł do zapisywania ważnych wydarzeń w momencie ich zaistnienia i wysyłania zbiorczej informacji raz na tydzień.
 - doprowadzić do tego żeby superuser był zbędny czyli eliminacja tego co jest w ## After installation
 - Refactoring - przetłumaczyć zmienne na angielski
-- PUPPET - INSTANCE
-- certbot per instance lub wildcard z modulu z puppet forge. Przeczytać README.md i REFERENCE.md
-- restart_services.sh - specjalna kolejność przy restarowaniu serwisów
 - fail2ban
 - Wyświetlać końcówkę adresu IP z którego loguje się użytkownik
 - Konfederacja: 
