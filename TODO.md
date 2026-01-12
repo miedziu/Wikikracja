@@ -32,7 +32,7 @@
 ## TRANSAKCJE
 - Zobowiązania powinny pojawiać się na koncie przed czasem i w tym momencie powinien być wysyłany email
 ## STAN KONT / RAPORTY
-- Składka powinna być widoczna na koncie Bractwa
+- Składka powinna być widoczna na koncie grupy
 - Podpisywanie kontraktu jeśli obie strony są w grupie
 - Podpisywanie kontraktu jeśli grupa coś kupuje (zatwierdzanie wydatku)
 - odnotowywać kto dodał, zmienił i skasował wpis?
@@ -211,7 +211,6 @@ socket.send(JSON.stringify({
 - autor i tytuł zamiast obrazka zastępczego
 - eBiblioteka - tagi + rating stars + recenzja/opis
 - Wiki: assets - załączanie dowolnej ilości plików + galeria okładka książki + autor + gatunek + tagi + rating stars + czas wygasania + później player audio wideo + nft? + jeśli nft to ile jest sztuk + kto obecnie przechwuje (potwierdzenie od nadawcy i odbiorcy) 
-- Wielkość okładki https://bractwo.dobrada.pl/elibrary/
 
 # OGŁOSZENIA / BOARD
 - Start i Footer powinny być opcjami w podczas edycji ogłoszenia
@@ -285,7 +284,7 @@ socket.send(JSON.stringify({
 - Emaile nie są tłumaczone na angielski
 - 2021-02 Generowanie userów na podstawie listy mieszkańców, listy emaili, numerów mieszkań. Kod zapraszający wygenerowany z konta osoby zapraszającej. Można podać fejkowy email i w ten sposób wygenerować hasło. Kliknięcie kodu oznaczałoby zgodę itp. Trochę mi tego brakuje. https://django-registration.readthedocs.io/en/3.1.1/ + dodatkowe pole z kodem. Tutorial: https://dev.to/coderasha/create-advanced-user-sign-up-view-in-django-step-by-step-k9m
 - Przykład sukcesu: https://wiadomosci.gazeta.pl/wiadomosci/7,114881,26810291,legalna-aborcja-w-argentynie-dzialaczki-kosciol-wiedzial.amp
-- https://docs.djangoproject.com/en/dev/ref/clickjacking/ - ok Wrzuć nową wersję na stronę a potem: https://www.ponycheckup.com/result/?url=bractwo.dobrada.pl
+- https://docs.djangoproject.com/en/dev/ref/clickjacking/ - ok Wrzuć nową wersję na stronę a potem: https://www.ponycheckup.com/result/
 - Automatyczny newsletter. Moduł do zapisywania ważnych wydarzeń w momencie ich zaistnienia i wysyłania zbiorczej informacji raz na tydzień.
 - doprowadzić do tego żeby superuser był zbędny czyli eliminacja tego co jest w ## After installation
 - Refactoring - przetłumaczyć zmienne na angielski
