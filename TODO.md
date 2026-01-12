@@ -94,6 +94,82 @@
 - Możliwość oznaczania wypowiedzi jako predykcji. Powinno dać się datę przypomnienia albo wydarzenie po którym będzie można sprawdzić tą predykcję.
 - nie działa na safari. Automate cross browser testing. ReferenceError can't find variable TRANSLATION on Safari
 
+1. Consolidate JavaScript Files:
+Currently, chat-related JavaScript is spread across multiple files (chat.js, templates.js, utility.js, notifications.js)
+Consider combining these into a single chat.js file or at least organizing them better in a chat/ directory
+This would make the code more maintainable and reduce the number of HTTP requests
+
+2. Simplify Room Management:
+The Room model has many fields and relationships that could be simplified
+Consider removing the seen_by and muted_by M2M fields and replacing them with a single RoomUserPreference model
+This would make the model cleaner and easier to maintain
+
+3. Streamline Message Handling:
+The message template in templates.js is quite complex with many conditional elements
+Consider splitting it into smaller, reusable components
+The voting system could be moved to a separate component
+
+4. Improve CSS Organization:
+The chat.css file has many hardcoded values and could benefit from CSS variables
+Consider organizing styles into logical sections (layout, messages, rooms, etc.)
+Remove commented-out code and unused styles
+
+5. Simplify WebSocket Communication:
+The ChatConsumer class has many methods and complex logic
+Consider splitting it into smaller, focused classes (e.g., MessageHandler, RoomHandler)
+The message formatting logic could be moved to a separate service
+
+6. Template Structure:
+The chat.html template has duplicate code for public and private sections
+Consider creating reusable template components for common elements
+The archive toggle functionality could be simplified
+
+7. Database Optimization:
+The Message model has a complex unique constraint that might be unnecessary
+Consider simplifying the voting system to use a single table with a vote type field
+Add proper indexes for frequently queried fields
+
+8. Code Organization:
+Move all chat-related static files to a dedicated chat/static/chat/ directory
+Consider using a proper frontend framework (like React or Vue) for the chat interface
+This would make the code more maintainable and easier to test
+
+9. Error Handling:
+Add proper error handling for WebSocket connections
+Implement retry mechanisms for failed operations
+Add proper logging for debugging
+
+10.  Performance Improvements:
+Implement message pagination to reduce initial load time
+Add caching for frequently accessed data
+Optimize database queries in the consumer
+
+CHAT2
+
+Mobile API Documentation
+Endpoints:
+
+    /chat2/api/rooms/ - List and create rooms
+    /chat2/api/messages/ - List and send messages
+    /ws/chat2/<room_id>/ - WebSocket connection for real-time messages
+
+WebSocket Example:
+
+// JavaScript example
+const socket = new WebSocket(
+    'ws://' + window.location.host + '/ws/chat2/1/'
+);
+
+socket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    console.log(data);
+};
+
+// Send a message
+socket.send(JSON.stringify({
+    'type': 'message',
+    'content': 'Hello, world!'
+}));
 
 # CRON dla Wikikracji
 - chat - archiwizowanie pokoi
