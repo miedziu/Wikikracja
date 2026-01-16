@@ -30,23 +30,23 @@ def _assign_priorities(tasks):
         task.priority_label = None
         task.priority_category = None
 
-    non_negative = [t for t in tasks if (t.votes_score or 0) >= 0]
-    negative = [t for t in tasks if (t.votes_score or 0) < 0]
-    total = len(non_negative)
+    non_rejected = [t for t in tasks if (t.votes_score or 0) >= -1]
+    rejected = [t for t in tasks if (t.votes_score or 0) <= -2]
+    total = len(non_rejected)
 
     def mark(task, category):
         task.priority_category = category
         task.priority_label = PRIORITY_LABELS[category]
 
     if total == 0:
-        for task in negative:
+        for task in rejected:
             mark(task, "rejected")
         return
 
     critical_limit = max(1, math.ceil(total * 0.2))
     important_limit = critical_limit + math.ceil(total * 0.3)
 
-    for idx, task in enumerate(non_negative):
+    for idx, task in enumerate(non_rejected):
         if idx < critical_limit:
             mark(task, "critical")
         elif idx < important_limit:
@@ -54,7 +54,7 @@ def _assign_priorities(tasks):
         else:
             mark(task, "beneficial")
 
-    for task in negative:
+    for task in rejected:
         mark(task, "rejected")
 
 
@@ -245,13 +245,13 @@ def vote_task(request: HttpRequest, pk: int) -> HttpResponse:
                 vote.value = value
                 vote.save(update_fields=["value", "updated_at"])
 
-        # Refresh score and set rejected if below threshold
+        # Refresh score and set rejected if sum of votes <= -2
         task.refresh_from_db(fields=["status", "updated_at"])
         metrics = Task.objects.filter(pk=task.pk).annotate(
             votes_score=Coalesce(Sum("votes__value"), 0)
         ).values("votes_score", "status").first()
         votes_score = metrics["votes_score"] if metrics else 0
-        if votes_score <= -1 and task.status != Task.Status.REJECTED:
+        if votes_score <= -2 and task.status != Task.Status.REJECTED:
             Task.objects.filter(pk=task.pk).update(
                 status=Task.Status.REJECTED, updated_at=models.F("updated_at")
             )
