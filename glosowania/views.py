@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from glosowania.models import Decyzja, ZebranePodpisy, KtoJuzGlosowal, VoteCode
-from glosowania.forms import DecyzjaForm
+from glosowania.models import Decyzja, ZebranePodpisy, KtoJuzGlosowal, VoteCode, Argument
+from glosowania.forms import DecyzjaForm, ArgumentForm
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.http import HttpRequest
@@ -69,8 +69,6 @@ def edit(request: HttpRequest, pk: int):
             decision.tresc = form.cleaned_data['tresc']
             decision.kara = form.cleaned_data['kara']
             decision.uzasadnienie = form.cleaned_data['uzasadnienie']
-            decision.args_for = form.cleaned_data['args_for']
-            decision.args_against = form.cleaned_data['args_against']
             decision.znosi = form.cleaned_data['znosi']
             decision.save()
             message = _("Saved.")
@@ -91,8 +89,6 @@ def edit(request: HttpRequest, pk: int):
             'tresc': decision.tresc,
             'kara': decision.kara,
             'uzasadnienie': decision.uzasadnienie,
-            'args_for': decision.args_for,
-            'args_against': decision.args_against,
             'znosi': decision.znosi,
         })
         
@@ -216,6 +212,32 @@ def details(request:HttpRequest, pk: int):
 
     chat_room = Room.objects.filter(title=room_title).first()
     
+    # Query arguments for this decision
+    arguments = Argument.objects.filter(decyzja=pk).select_related('author')
+    
+    # Custom sorting: prioritize concise arguments, then by author's argument count
+    # First, get all arguments as a list to apply custom sorting
+    all_arguments = list(arguments)
+    
+    # Count arguments per author for this decision
+    from collections import Counter
+    author_counts = Counter(arg.author_id for arg in all_arguments if arg.author_id)
+    
+    # Sort by: 1) content length (shorter first), 2) author's argument count (fewer first)
+    def sort_key(arg):
+        content_length = len(arg.content)
+        author_arg_count = author_counts.get(arg.author_id, 0) if arg.author_id else 0
+        return (content_length, author_arg_count)
+    
+    sorted_arguments = sorted(all_arguments, key=sort_key)
+    
+    # Separate into positive and negative
+    positive_arguments = [arg for arg in sorted_arguments if arg.argument_type == 'FOR']
+    negative_arguments = [arg for arg in sorted_arguments if arg.argument_type == 'AGAINST']
+    
+    # Create argument form for adding new arguments
+    argument_form = ArgumentForm()
+    
     return render(request, 'glosowania/szczegoly.html', {'id': szczegoly,
                                                          'signed': signed,
                                                          'voted': voted,
@@ -227,7 +249,99 @@ def details(request:HttpRequest, pk: int):
                                                          'prev': prev,
                                                          'next': next,
                                                          'chat_room': chat_room,
+                                                         'positive_arguments': positive_arguments,
+                                                         'negative_arguments': negative_arguments,
+                                                         'argument_form': argument_form,
                                                          })
+
+
+@login_required
+def add_argument(request: HttpRequest, pk: int):
+    """Add a new argument to decision pk"""
+    decyzja = get_object_or_404(Decyzja, pk=pk)
+    
+    # Block adding arguments after voting has ended (status 4=Rejected or 5=Approved)
+    if decyzja.status in [4, 5]:
+        messages.error(request, _("Arguments cannot be added after voting has ended."))
+        return redirect('glosowania:details', pk)
+    
+    if request.method == 'POST':
+        form = ArgumentForm(request.POST)
+        if form.is_valid():
+            argument = form.save(commit=False)
+            argument.decyzja = decyzja
+            argument.author = request.user
+            argument.save()
+            
+            arg_type = argument.get_argument_type_display()
+            message = _("Your {type} argument has been added.").format(type=arg_type.lower())
+            messages.success(request, message)
+            
+            l.info(f"User {request.user} added {argument.argument_type} argument to decision #{pk}")
+        else:
+            messages.error(request, _("There was an error with your argument. Please try again."))
+    
+    return redirect('glosowania:details', pk)
+
+
+@login_required
+def edit_argument(request: HttpRequest, argument_id: int):
+    """Edit an existing argument (only by its author)"""
+    argument = get_object_or_404(Argument, pk=argument_id)
+    
+    # Check if user is the author
+    if argument.author != request.user:
+        messages.error(request, _("You can only edit your own arguments."))
+        return redirect('glosowania:details', argument.decyzja.pk)
+    
+    # Block editing after voting has ended (status 4=Rejected or 5=Approved)
+    if argument.decyzja.status in [4, 5]:
+        messages.error(request, _("Arguments cannot be edited after voting has ended."))
+        return redirect('glosowania:details', argument.decyzja.pk)
+    
+    if request.method == 'POST':
+        form = ArgumentForm(request.POST, instance=argument)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("Your argument has been updated."))
+            l.info(f"User {request.user} edited argument #{argument_id}")
+            return redirect('glosowania:details', argument.decyzja.pk)
+    else:
+        form = ArgumentForm(instance=argument)
+    
+    return render(request, 'glosowania/edit_argument.html', {
+        'form': form,
+        'argument': argument,
+        'decyzja': argument.decyzja,
+    })
+
+
+@login_required
+def delete_argument(request: HttpRequest, argument_id: int):
+    """Delete an argument (only by its author)"""
+    argument = get_object_or_404(Argument, pk=argument_id)
+    decyzja_pk = argument.decyzja.pk
+    
+    # Check if user is the author
+    if argument.author != request.user:
+        messages.error(request, _("You can only delete your own arguments."))
+        return redirect('glosowania:details', decyzja_pk)
+    
+    # Block deletion after voting has ended (status 4=Rejected or 5=Approved)
+    if argument.decyzja.status in [4, 5]:
+        messages.error(request, _("Arguments cannot be deleted after voting has ended."))
+        return redirect('glosowania:details', decyzja_pk)
+    
+    if request.method == 'POST':
+        l.info(f"User {request.user} deleted argument #{argument_id} from decision #{decyzja_pk}")
+        argument.delete()
+        messages.success(request, _("Your argument has been deleted."))
+        return redirect('glosowania:details', decyzja_pk)
+    
+    return render(request, 'glosowania/delete_argument.html', {
+        'argument': argument,
+        'decyzja': argument.decyzja,
+    })
 
 
 def SendEmail(subject: str, message: str):

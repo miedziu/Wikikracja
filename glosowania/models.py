@@ -88,6 +88,54 @@ class Decyzja(models.Model):
     objects = models.Manager()
 
 
+class Argument(models.Model):
+    ARGUMENT_TYPE_CHOICES = [
+        ('FOR', _('Positive')),
+        ('AGAINST', _('Negative')),
+    ]
+    
+    decyzja = models.ForeignKey(
+        Decyzja,
+        on_delete=models.CASCADE,
+        related_name='arguments',
+        verbose_name=_('Decision')
+    )
+    author = models.ForeignKey(
+        'auth.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name=_('Author')
+    )
+    argument_type = models.CharField(
+        max_length=10,
+        choices=ARGUMENT_TYPE_CHOICES,
+        verbose_name=_('Argument Type'),
+        help_text=_('Is this a positive or negative argument?')
+    )
+    content = models.TextField(
+        max_length=1000,
+        verbose_name=_('Argument Content'),
+        help_text=_('Enter your argument. You can include links.')
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('Created At')
+    )
+    modified_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_('Last Modified')
+    )
+    
+    class Meta:
+        ordering = ['created_at']
+        verbose_name = _('Argument')
+        verbose_name_plural = _('Arguments')
+    
+    def __str__(self):
+        return f"{self.get_argument_type_display()}: {self.content[:50]}..."
+
+
 class ZebranePodpisy(models.Model):
     '''Lista podpisów pod wnioskiem o referendum'''
     projekt = models.ForeignKey(Decyzja, on_delete=models.SET_NULL, null=True)

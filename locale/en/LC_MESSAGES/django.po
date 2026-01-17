@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 02:50+0100\n"
+"POT-Creation-Date: 2026-01-17 17:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgstr ""
 #: board/models.py:9 board/templates/board/post_detail.html:11
 #: elibrary/forms.py:8 elibrary/models.py:12
 #: elibrary/templates/elibrary/book_confirm_delete.html:15
-#: glosowania/templates/glosowania/szczegoly.html:111
+#: glosowania/models.py:108 glosowania/templates/glosowania/szczegoly.html:200
 msgid "Author"
 msgstr ""
 
@@ -43,7 +43,9 @@ msgstr ""
 #: bookkeeping/models.py:34
 #: bookkeeping/templates/bookkeeping/transaction_list.html:23
 #: events/templates/events/event_detail.html:107
+#: glosowania/templates/glosowania/delete_argument.html:20
 #: glosowania/templates/glosowania/discussion.html:36
+#: glosowania/templates/glosowania/edit_argument.html:12
 #: glosowania/templates/glosowania/proposition.html:40
 #: tasks/templates/tasks/task_detail.html:28
 msgid "Created"
@@ -119,8 +121,9 @@ msgstr ""
 #: bookkeeping/forms.py:34 bookkeeping/forms.py:94
 #: chat/templates/chat/add.html:15 elibrary/templates/elibrary/add.html:33
 #: elibrary/templates/elibrary/book_form.html:29
-#: glosowania/templates/glosowania/dodaj.html:42
-#: glosowania/templates/glosowania/edit.html:33
+#: glosowania/templates/glosowania/dodaj.html:36
+#: glosowania/templates/glosowania/edit.html:31
+#: glosowania/templates/glosowania/edit_argument.html:31
 #: home/templates/home/haslo.html:25
 #: obywatele/templates/obywatele/change_email.html:23
 #: obywatele/templates/obywatele/change_name.html:24
@@ -144,6 +147,7 @@ msgstr ""
 #: elibrary/templates/elibrary/book_confirm_delete.html:25
 #: elibrary/templates/elibrary/book_form.html:30
 #: events/templates/events/event_confirm_delete.html:34
+#: glosowania/templates/glosowania/edit_argument.html:32
 #: home/templates/home/haslo.html:26
 #: obywatele/templates/obywatele/change_email.html:24
 #: obywatele/templates/obywatele/change_name.html:25
@@ -174,6 +178,8 @@ msgstr ""
 #: bookkeeping/templates/bookkeeping/transaction_list.html:47
 #: elibrary/templates/elibrary/book_detail.html:34
 #: events/templates/events/event_detail.html:16
+#: glosowania/templates/glosowania/szczegoly.html:56
+#: glosowania/templates/glosowania/szczegoly.html:90
 msgid "Delete"
 msgstr ""
 
@@ -192,14 +198,16 @@ msgstr ""
 #: elibrary/templates/elibrary/book_detail.html:35
 #: events/templates/events/event_detail.html:13
 #: events/templates/events/event_list.html:81
-#: glosowania/templates/glosowania/szczegoly.html:51
+#: glosowania/templates/glosowania/szczegoly.html:55
+#: glosowania/templates/glosowania/szczegoly.html:89
+#: glosowania/templates/glosowania/szczegoly.html:140
 #: tasks/templates/tasks/task_detail.html:75
 msgid "Edit"
 msgstr ""
 
 #: board/templates/board/post_detail.html:17 chat/templates/chat/add.html:16
-#: glosowania/templates/glosowania/dodaj.html:43
-#: glosowania/templates/glosowania/edit.html:34
+#: glosowania/templates/glosowania/dodaj.html:37
+#: glosowania/templates/glosowania/edit.html:32
 #: obywatele/templates/obywatele/dodaj.html:68
 #: tasks/templates/tasks/task_form.html:32
 msgid "Back"
@@ -635,8 +643,8 @@ msgstr ""
 msgid "If nothing happens, you may have ignored permission prompt too many times. Check your browser settings to enable them."
 msgstr ""
 
-#: chat/views.py:167 glosowania/templates/glosowania/szczegoly.html:64
-#: glosowania/templates/glosowania/szczegoly.html:85
+#: chat/views.py:167 glosowania/templates/glosowania/szczegoly.html:153
+#: glosowania/templates/glosowania/szczegoly.html:174
 msgid "Yes"
 msgstr ""
 
@@ -797,6 +805,7 @@ msgid "This action cannot be undone. All associated files will be permanently de
 msgstr ""
 
 #: elibrary/templates/elibrary/book_confirm_delete.html:24
+#: glosowania/templates/glosowania/delete_argument.html:29
 msgid "Yes, Delete"
 msgstr ""
 
@@ -1157,7 +1166,7 @@ msgid "Signed"
 msgstr ""
 
 #: glosowania/management/commands/vote.py:91
-#: glosowania/templates/glosowania/menu.html:30 glosowania/views.py:207
+#: glosowania/templates/glosowania/menu.html:30 glosowania/views.py:203
 msgid "Discussion"
 msgstr ""
 
@@ -1166,21 +1175,21 @@ msgid "Not enough signatures"
 msgstr ""
 
 #: glosowania/management/commands/vote.py:119
-#: glosowania/templates/glosowania/menu.html:34 glosowania/views.py:207
+#: glosowania/templates/glosowania/menu.html:34 glosowania/views.py:203
 msgid "Referendum"
 msgstr ""
 
 #: glosowania/management/commands/vote.py:143
-#: glosowania/templates/glosowania/menu.html:38 glosowania/views.py:207
+#: glosowania/templates/glosowania/menu.html:38 glosowania/views.py:203
 msgid "Approved"
 msgstr ""
 
-#: glosowania/management/commands/vote.py:162 glosowania/views.py:207
+#: glosowania/management/commands/vote.py:162 glosowania/views.py:203
 #: tasks/models.py:33 tasks/views.py:24
 msgid "Rejected"
 msgstr ""
 
-#: glosowania/management/commands/vote.py:178 glosowania/views.py:240
+#: glosowania/management/commands/vote.py:178 glosowania/views.py:354
 #: obywatele/forms.py:153 obywatele/views.py:585
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
@@ -1204,7 +1213,7 @@ msgstr ""
 
 #: glosowania/models.py:40 glosowania/templates/glosowania/discussion.html:21
 #: glosowania/templates/glosowania/proposition.html:22
-#: glosowania/templates/glosowania/szczegoly.html:25
+#: glosowania/templates/glosowania/szczegoly.html:26
 msgid "Penalty for non-compliance"
 msgstr ""
 
@@ -1248,6 +1257,59 @@ msgstr ""
 msgid "The path this bill took."
 msgstr ""
 
+#: glosowania/models.py:93
+msgid "Positive"
+msgstr ""
+
+#: glosowania/models.py:94
+#, fuzzy
+#| msgid "Inactive"
+msgid "Negative"
+msgstr "Inactive"
+
+#: glosowania/models.py:101
+#: glosowania/templates/glosowania/delete_argument.html:13
+#: glosowania/templates/glosowania/edit_argument.html:10
+msgid "Decision"
+msgstr ""
+
+#: glosowania/models.py:113
+#: glosowania/templates/glosowania/delete_argument.html:14
+msgid "Argument Type"
+msgstr ""
+
+#: glosowania/models.py:114
+msgid "Is this a positive or negative argument?"
+msgstr ""
+
+#: glosowania/models.py:118
+msgid "Argument Content"
+msgstr ""
+
+#: glosowania/models.py:119
+msgid "Enter your argument. You can include links."
+msgstr ""
+
+#: glosowania/models.py:123
+#, fuzzy
+#| msgid "Created"
+msgid "Created At"
+msgstr "Created"
+
+#: glosowania/models.py:127
+#: glosowania/templates/glosowania/delete_argument.html:22
+#: glosowania/templates/glosowania/edit_argument.html:14
+msgid "Last Modified"
+msgstr ""
+
+#: glosowania/models.py:132
+msgid "Argument"
+msgstr ""
+
+#: glosowania/models.py:133
+msgid "Arguments"
+msgstr ""
+
 #: glosowania/signals.py:43
 #, python-brace-format
 msgid ""
@@ -1264,27 +1326,47 @@ msgstr ""
 msgid "There is no proposal with this status"
 msgstr ""
 
+#: glosowania/templates/glosowania/delete_argument.html:6
+#, fuzzy
+#| msgid "Delete Event"
+msgid "Delete Argument"
+msgstr "Delete Event"
+
+#: glosowania/templates/glosowania/delete_argument.html:9
+#, fuzzy
+#| msgid "Are you sure you want to delete the following event?"
+msgid "Are you sure you want to delete this argument?"
+msgstr "Are you sure you want to delete the following event?"
+
+#: glosowania/templates/glosowania/delete_argument.html:15
+msgid "Content"
+msgstr ""
+
+#: glosowania/templates/glosowania/delete_argument.html:30
+#, fuzzy
+#| msgid "Cancel"
+msgid "No, Cancel"
+msgstr "Cancel"
+
 #: glosowania/templates/glosowania/discussion.html:24
 #: glosowania/templates/glosowania/proposition.html:25
-#: glosowania/templates/glosowania/szczegoly.html:26
+#: glosowania/templates/glosowania/szczegoly.html:27
 msgid "Reason"
 msgstr ""
 
 #: glosowania/templates/glosowania/discussion.html:29
 #: glosowania/templates/glosowania/proposition.html:30
-#: glosowania/templates/glosowania/szczegoly.html:27
 msgid "Positives"
 msgstr ""
 
 #: glosowania/templates/glosowania/discussion.html:32
 #: glosowania/templates/glosowania/proposition.html:33
-#: glosowania/templates/glosowania/szczegoly.html:28
 msgid "Negatives"
 msgstr ""
 
 #: glosowania/templates/glosowania/discussion.html:35
 #: glosowania/templates/glosowania/proposition.html:36
-#: glosowania/templates/glosowania/szczegoly.html:29
+#: glosowania/templates/glosowania/szczegoly.html:28
 msgid "This law supersedes the following bills"
 msgstr ""
 
@@ -1295,6 +1377,12 @@ msgstr ""
 #: glosowania/templates/glosowania/edit.html:7
 msgid "Edit law proposal"
 msgstr ""
+
+#: glosowania/templates/glosowania/edit_argument.html:7
+#, fuzzy
+#| msgid "Edit Event"
+msgid "Edit Argument"
+msgstr "Edit Event"
 
 #: glosowania/templates/glosowania/menu.html:13
 msgid "A referendum is not a one-off decision. The referendum is to pass a law that will be in force all the time."
@@ -1358,105 +1446,152 @@ msgid "Signatures"
 msgstr ""
 
 #: glosowania/templates/glosowania/referendum.html:22
-#: glosowania/templates/glosowania/szczegoly.html:117
+#: glosowania/templates/glosowania/szczegoly.html:206
 msgid "Start referendum"
 msgstr ""
 
 #: glosowania/templates/glosowania/referendum.html:24
-#: glosowania/templates/glosowania/szczegoly.html:120
+#: glosowania/templates/glosowania/szczegoly.html:209
 msgid "End referendum"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:15
+#: glosowania/templates/glosowania/szczegoly.html:16
 msgid "Discuss this proposal in the chat room"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:21
+#: glosowania/templates/glosowania/szczegoly.html:22
 msgid "Bill number"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:22
+#: glosowania/templates/glosowania/szczegoly.html:23
 msgid "Bill title"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:23
+#: glosowania/templates/glosowania/szczegoly.html:24
 msgid "Bill state"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:24
+#: glosowania/templates/glosowania/szczegoly.html:25
 msgid "Bill text"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:40
+#: glosowania/templates/glosowania/szczegoly.html:37
+msgid "Positive Arguments"
+msgstr ""
+
+#: glosowania/templates/glosowania/szczegoly.html:47
+#: glosowania/templates/glosowania/szczegoly.html:81
+msgid "By"
+msgstr ""
+
+#: glosowania/templates/glosowania/szczegoly.html:48
+#: glosowania/templates/glosowania/szczegoly.html:82
+msgid "Added"
+msgstr ""
+
+#: glosowania/templates/glosowania/szczegoly.html:50
+#: glosowania/templates/glosowania/szczegoly.html:84
+msgid "Modified"
+msgstr ""
+
+#: glosowania/templates/glosowania/szczegoly.html:64
+#, fuzzy
+#| msgid "No events yet"
+msgid "No positive arguments yet."
+msgstr "No events yet"
+
+#: glosowania/templates/glosowania/szczegoly.html:71
+#, fuzzy
+#| msgid "Inactive"
+msgid "Negative Arguments"
+msgstr "Inactive"
+
+#: glosowania/templates/glosowania/szczegoly.html:98
+#, fuzzy
+#| msgid "No events yet"
+msgid "No negative arguments yet."
+msgstr "No events yet"
+
+#: glosowania/templates/glosowania/szczegoly.html:108
+msgid "Add Your Argument"
+msgstr ""
+
+#: glosowania/templates/glosowania/szczegoly.html:114
+#, fuzzy
+#| msgid "Add Event"
+msgid "Add Argument"
+msgstr "Add Event"
+
+#: glosowania/templates/glosowania/szczegoly.html:129
 msgid "Do you want a referendum on this law?"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:41
+#: glosowania/templates/glosowania/szczegoly.html:130
 msgid "Yes, I sign"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:44
+#: glosowania/templates/glosowania/szczegoly.html:133
 msgid "You already signed this proposal."
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:46
+#: glosowania/templates/glosowania/szczegoly.html:135
 msgid "Withdraw your sign"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:63
+#: glosowania/templates/glosowania/szczegoly.html:152
 msgid "Do you want to implement this law?"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:65
-#: glosowania/templates/glosowania/szczegoly.html:87
+#: glosowania/templates/glosowania/szczegoly.html:154
+#: glosowania/templates/glosowania/szczegoly.html:176
 msgid "No"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:68
+#: glosowania/templates/glosowania/szczegoly.html:157
 msgid "You already voted."
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:78
+#: glosowania/templates/glosowania/szczegoly.html:167
 msgid "Result"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:79 tasks/models.py:75
+#: glosowania/templates/glosowania/szczegoly.html:168 tasks/models.py:75
 msgid "For"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:79 tasks/models.py:74
+#: glosowania/templates/glosowania/szczegoly.html:168 tasks/models.py:74
 msgid "Against"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:82
+#: glosowania/templates/glosowania/szczegoly.html:171
 msgid "Protocol"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:94
+#: glosowania/templates/glosowania/szczegoly.html:183
 msgid "List of people who voted"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:98
+#: glosowania/templates/glosowania/szczegoly.html:187
 msgid "No votes recorded yet."
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:109
+#: glosowania/templates/glosowania/szczegoly.html:198
 msgid "Number of people signed the motion for a referendum"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:113
+#: glosowania/templates/glosowania/szczegoly.html:202
 msgid "History"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:115
+#: glosowania/templates/glosowania/szczegoly.html:204
 msgid "Date created"
 msgstr ""
 
-#: glosowania/templates/glosowania/szczegoly.html:116
+#: glosowania/templates/glosowania/szczegoly.html:205
 msgid "Date of collecting signatures"
 msgstr ""
 
-#: glosowania/views.py:37 glosowania/views.py:207
+#: glosowania/views.py:37 glosowania/views.py:203
 msgid "Proposition"
 msgstr ""
 
@@ -1475,44 +1610,81 @@ msgid ""
 "You can read it here: {url}"
 msgstr ""
 
-#: glosowania/views.py:76
+#: glosowania/views.py:74
 msgid "Saved."
 msgstr ""
 
-#: glosowania/views.py:80
+#: glosowania/views.py:78
 msgid "Proposal no. {} has been modified"
 msgstr ""
 
-#: glosowania/views.py:81
+#: glosowania/views.py:79
 #, python-brace-format
 msgid ""
 "{user} modified proposal\n"
 "You can read new version here: {url}"
 msgstr ""
 
-#: glosowania/views.py:120
+#: glosowania/views.py:116
 msgid "You signed this motion for a referendum."
 msgstr ""
 
-#: glosowania/views.py:131
+#: glosowania/views.py:127
 msgid "Not signed."
 msgstr ""
 
-#: glosowania/views.py:155
+#: glosowania/views.py:151
 msgid "Your vote has been saved. You voted Yes."
 msgstr ""
 
-#: glosowania/views.py:158 glosowania/views.py:186
+#: glosowania/views.py:154 glosowania/views.py:182
 #, python-format
 msgid "Your verification code is: %(code)s"
 msgstr ""
 
-#: glosowania/views.py:161 glosowania/views.py:189
+#: glosowania/views.py:157 glosowania/views.py:185
 msgid "Write down your code or create screenshot to verify it when the referendum is over. This code will be presented just once and will be not related to you."
 msgstr ""
 
-#: glosowania/views.py:183
+#: glosowania/views.py:179
 msgid "Your vote has been saved. You voted No."
+msgstr ""
+
+#: glosowania/views.py:265
+msgid "Arguments cannot be added after voting has ended."
+msgstr ""
+
+#: glosowania/views.py:277
+#, python-brace-format
+msgid "Your {type} argument has been added."
+msgstr ""
+
+#: glosowania/views.py:282
+msgid "There was an error with your argument. Please try again."
+msgstr ""
+
+#: glosowania/views.py:294
+msgid "You can only edit your own arguments."
+msgstr ""
+
+#: glosowania/views.py:299
+msgid "Arguments cannot be edited after voting has ended."
+msgstr ""
+
+#: glosowania/views.py:306
+msgid "Your argument has been updated."
+msgstr ""
+
+#: glosowania/views.py:327
+msgid "You can only delete your own arguments."
+msgstr ""
+
+#: glosowania/views.py:332
+msgid "Arguments cannot be deleted after voting has ended."
+msgstr ""
+
+#: glosowania/views.py:338
+msgid "Your argument has been deleted."
 msgstr ""
 
 #: grappelli/templates/registration/password_reset_email.html:2

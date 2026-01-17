@@ -1,0 +1,34 @@
+{% extends 'glosowania/menu.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block glosowania %}
+<h2>{% trans 'Edit Argument' %}</h2>
+
+<div class="mb-3">
+    <p><strong>{% trans 'Decision' %}:</strong> #{{ decyzja.pk }} - {{ decyzja.title }}</p>
+    <p><small>
+        <strong>{% trans 'Created' %}:</strong> {{ argument.created_at|date:"Y-m-d H:i" }}
+        {% if argument.created_at != argument.modified_at %}
+        | <strong>{% trans 'Last Modified' %}:</strong> {{ argument.modified_at|date:"Y-m-d H:i" }}
+        {% endif %}
+    </small></p>
+</div>
+
+<form action="." method="POST" class="post-form">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12">
+          {{ form.argument_type|as_crispy_field }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+          {{ form.content|as_crispy_field }}
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm">{% trans 'Save' %}</button>
+    <a href="{% url 'glosowania:details' decyzja.pk %}" class="btn btn-warning btn-sm">{% trans 'Cancel' %}</a>
+</form>
+{% endblock %}

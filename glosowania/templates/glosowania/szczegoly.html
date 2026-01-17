@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load i18n %}
+{% load crispy_forms_tags %}
 
 {% block glosowania %}
 
@@ -24,9 +25,93 @@
 		<h5><u><b>{% trans 'Bill text' %}</b></u> {{ id.tresc|linebreaks }}</h5>
 		<h5><u><b>{% trans 'Penalty for non-compliance' %}</b></u> {{ id.kara|linebreaks }}</h5>
 		<h5><u><b>{% trans 'Reason' %}</b></u> {{ id.uzasadnienie|linebreaks }}</h5>
-		<h5><u><b>{% trans 'Positives' %}</b></u> {{ id.args_for|linebreaks|default_if_none:"--" }}</h5>
-		<h5><u><b>{% trans 'Negatives' %}</b></u> {{ id.args_against|linebreaks|default_if_none:"--" }}</h5>
     <h5><u><b>{% trans 'This law supersedes the following bills' %}</b></u> {{ id.znosi|default_if_none:"--" }}</h5>
+
+{% comment %} ARGUMENTS SECTION - Responsive two-column layout {% endcomment %}
+	<hr>
+	<div class="row">
+		{% comment %} Positive Arguments Column - First on mobile, Left on desktop {% endcomment %}
+		<div class="col-12 col-lg-6 mb-3">
+			<h5><u><b>{% trans 'Positive Arguments' %}</b></u></h5>
+			{% if positive_arguments %}
+				{% for arg in positive_arguments %}
+					<div class="card mb-2">
+						<div class="card-body">
+							<div class="argument-content">
+								{{ arg.content|urlize|linebreaks }}
+							</div>
+							<div class="argument-meta mt-2">
+								<small class="text-muted">
+									<strong>{% trans 'By' %}:</strong> {{ arg.author.username|default:"Anonymous" }}
+									| <strong>{% trans 'Added' %}:</strong> {{ arg.created_at|date:"Y-m-d H:i" }}
+									{% if arg.created_at != arg.modified_at %}
+										| <strong>{% trans 'Modified' %}:</strong> {{ arg.modified_at|date:"Y-m-d H:i" }}
+									{% endif %}
+								</small>
+								{% if arg.author == current_user and id.status not in "4,5"|make_list %}
+									<div class="mt-1">
+										<a href="{% url 'glosowania:edit_argument' arg.id %}" class="btn btn-sm btn-outline-secondary">{% trans 'Edit' %}</a>
+										<a href="{% url 'glosowania:delete_argument' arg.id %}" class="btn btn-sm btn-outline-danger">{% trans 'Delete' %}</a>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			{% else %}
+				<p class="text-muted">{% trans 'No positive arguments yet.' %}</p>
+			{% endif %}
+		</div>
+
+		{% comment %} Negative Arguments Column - Second on mobile, Right on desktop {% endcomment %}
+		<div class="col-12 col-lg-6 mb-3">
+			<h5><u><b>{% trans 'Negative Arguments' %}</b></u></h5>
+			{% if negative_arguments %}
+				{% for arg in negative_arguments %}
+					<div class="card mb-2">
+						<div class="card-body">
+							<div class="argument-content">
+								{{ arg.content|urlize|linebreaks }}
+							</div>
+							<div class="argument-meta mt-2">
+								<small class="text-muted">
+									<strong>{% trans 'By' %}:</strong> {{ arg.author.username|default:"Anonymous" }}
+									| <strong>{% trans 'Added' %}:</strong> {{ arg.created_at|date:"Y-m-d H:i" }}
+									{% if arg.created_at != arg.modified_at %}
+										| <strong>{% trans 'Modified' %}:</strong> {{ arg.modified_at|date:"Y-m-d H:i" }}
+									{% endif %}
+								</small>
+								{% if arg.author == current_user and id.status not in "4,5"|make_list %}
+									<div class="mt-1">
+										<a href="{% url 'glosowania:edit_argument' arg.id %}" class="btn btn-sm btn-outline-secondary">{% trans 'Edit' %}</a>
+										<a href="{% url 'glosowania:delete_argument' arg.id %}" class="btn btn-sm btn-outline-danger">{% trans 'Delete' %}</a>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			{% else %}
+				<p class="text-muted">{% trans 'No negative arguments yet.' %}</p>
+			{% endif %}
+		</div>
+	</div>
+
+	{% comment %} ADD ARGUMENT FORM - Only show before voting ends {% endcomment %}
+	{% if user.is_authenticated and id.status not in "4,5"|make_list %}
+		<div class="card mt-3 mb-3">
+			<div class="card-header">
+				<h5 class="mb-0">{% trans 'Add Your Argument' %}</h5>
+			</div>
+			<div class="card-body">
+				<form method="POST" action="{% url 'glosowania:add_argument' id.pk %}">
+					{% csrf_token %}
+					{{ argument_form|crispy }}
+					<button type="submit" class="btn btn-primary btn-sm">{% trans 'Add Argument' %}</button>
+				</form>
+			</div>
+		</div>
+	{% endif %}
 
 {% comment %} COMMON FIELDS ENDS HERE {% endcomment %}
 
