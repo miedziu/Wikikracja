@@ -55,8 +55,13 @@
         {% endif %}
       </div>
 
-      <div class="d-flex flex-wrap gap-3 small text-muted border-top pt-2">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 small text-muted border-top pt-2">
         <span>{% trans "Votes" %}: {{ task.votes_score|default:0 }} | {% trans "Owner" %}: {{ task.assigned_to|default:_("n/a") }}</span>
+        {% if task.chat_room_url %}
+          <a href="{{ task.chat_room_url }}" target="_blank" class="text-decoration-none ms-auto">
+            <i class="bi bi-chat-dots"></i> {% trans "Discussion" %}
+          </a>
+        {% endif %}
       </div>
     </div>
   </div>

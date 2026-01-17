@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Count, Q, Sum
 from django.db.models.functions import Coalesce
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
@@ -67,6 +68,21 @@ class Task(models.Model):
     @property
     def is_active(self) -> bool:
         return self.status == self.Status.ACTIVE
+
+    def get_chat_room_title(self):
+        return f"Task #{self.id}: {self.title[:50]}"
+
+    def get_chat_room_url(self):
+        from chat.models import Room
+        try:
+            room = Room.objects.get(title=self.get_chat_room_title())
+            return f"{reverse('chat:chat')}#room_id={room.id}"
+        except Room.DoesNotExist:
+            return None
+
+    @property
+    def chat_room_url(self):
+        return self.get_chat_room_url()
 
 
 class TaskVote(models.Model):

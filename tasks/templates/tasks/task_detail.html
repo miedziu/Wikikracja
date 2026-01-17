@@ -33,6 +33,14 @@
 
       <p>{{ task.description|linebreaks }}</p>
 
+      {% if task.chat_room_url %}
+      <div class="mb-3">
+        <a href="{{ task.chat_room_url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-chat-dots"></i> {% trans "Join discussion" %}
+        </a>
+      </div>
+      {% endif %}
+
       <div class="mt-3">
         <span class="badge bg-light text-dark me-2">{% trans "Votes" %}: {{ task.votes_score|default:0 }}</span>
         <span class="badge bg-light text-dark me-2">{% trans "Success" %}: {{ task.eval_success|default:0 }}</span>

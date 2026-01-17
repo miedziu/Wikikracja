@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 17:51+0100\n"
+"POT-Creation-Date: 2026-01-17 18:55+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -198,7 +198,7 @@ msgstr "Prywatne"
 #: glosowania/templates/glosowania/szczegoly.html:55
 #: glosowania/templates/glosowania/szczegoly.html:89
 #: glosowania/templates/glosowania/szczegoly.html:140
-#: tasks/templates/tasks/task_detail.html:75
+#: tasks/templates/tasks/task_detail.html:83
 msgid "Edit"
 msgstr "Edytuj"
 
@@ -953,7 +953,7 @@ msgid "For monthly ordinal events: which day of the week? (e.g., Monday, Tuesday
 msgstr "Dla wydarzeń powtarzających się w określonym dniu tygodnia: który dzień tygodnia? (np., Poniedziałek, Wtorek)"
 
 #: events/models.py:91 events/templates/events/event_detail.html:71
-#: tasks/models.py:30
+#: tasks/models.py:31
 msgid "Active"
 msgstr "Aktywne"
 
@@ -1162,6 +1162,7 @@ msgstr "Podpisana"
 
 #: glosowania/management/commands/vote.py:91
 #: glosowania/templates/glosowania/menu.html:30 glosowania/views.py:203
+#: tasks/templates/tasks/_task_cards.html:62
 msgid "Discussion"
 msgstr "Dyskusja"
 
@@ -1180,7 +1181,7 @@ msgid "Approved"
 msgstr "Zatwierdzone"
 
 #: glosowania/management/commands/vote.py:162 glosowania/views.py:203
-#: tasks/models.py:33 tasks/views.py:24
+#: tasks/models.py:34 tasks/views.py:24
 msgid "Rejected"
 msgstr "Odrzucone"
 
@@ -1463,7 +1464,7 @@ msgstr "Treść przepisu"
 
 #: glosowania/templates/glosowania/szczegoly.html:37
 msgid "Positive Arguments"
-msgstr "Argumenty pozytywne"
+msgstr "Argumenty Za"
 
 #: glosowania/templates/glosowania/szczegoly.html:47
 #: glosowania/templates/glosowania/szczegoly.html:81
@@ -1486,11 +1487,11 @@ msgstr "Brak argumentów pozytywnych."
 
 #: glosowania/templates/glosowania/szczegoly.html:71
 msgid "Negative Arguments"
-msgstr "Argumenty negatywne"
+msgstr "Argumenty Przeciw"
 
 #: glosowania/templates/glosowania/szczegoly.html:98
 msgid "No negative arguments yet."
-msgstr "Brak argumentów negatywnych."
+msgstr "Brak argumentów przeciw."
 
 #: glosowania/templates/glosowania/szczegoly.html:108
 msgid "Add Your Argument"
@@ -1533,11 +1534,11 @@ msgstr "Już zagłosowałeś."
 msgid "Result"
 msgstr "Wynik"
 
-#: glosowania/templates/glosowania/szczegoly.html:168 tasks/models.py:75
+#: glosowania/templates/glosowania/szczegoly.html:168 tasks/models.py:91
 msgid "For"
 msgstr "Za"
 
-#: glosowania/templates/glosowania/szczegoly.html:168 tasks/models.py:74
+#: glosowania/templates/glosowania/szczegoly.html:168 tasks/models.py:90
 msgid "Against"
 msgstr "Przeciw"
 
@@ -2308,36 +2309,36 @@ msgstr "obojętny"
 msgid "Invalid closing status."
 msgstr "Nieprawidłowy status zamknięcia."
 
-#: tasks/models.py:31
+#: tasks/models.py:32
 msgid "Completed"
 msgstr "Ukończone"
 
-#: tasks/models.py:32
+#: tasks/models.py:33
 msgid "Cancelled"
 msgstr "Anulowane"
 
-#: tasks/models.py:99 tasks/templates/tasks/task_detail.html:38
-#: tasks/templates/tasks/task_detail.html:102
+#: tasks/models.py:115 tasks/templates/tasks/task_detail.html:46
+#: tasks/templates/tasks/task_detail.html:110
 msgid "Success"
 msgstr "Sukces"
 
-#: tasks/models.py:100 tasks/templates/tasks/task_detail.html:39
-#: tasks/templates/tasks/task_detail.html:108
+#: tasks/models.py:116 tasks/templates/tasks/task_detail.html:47
+#: tasks/templates/tasks/task_detail.html:116
 msgid "Failure"
 msgstr "Porażka"
 
 #: tasks/templates/tasks/_task_cards.html:46
-#: tasks/templates/tasks/task_detail.html:80
+#: tasks/templates/tasks/task_detail.html:88
 msgid "Resign"
 msgstr "Zrezygnuj"
 
 #: tasks/templates/tasks/_task_cards.html:52
-#: tasks/templates/tasks/task_detail.html:70
+#: tasks/templates/tasks/task_detail.html:78
 msgid "Take task"
 msgstr "Podejmij zadanie"
 
 #: tasks/templates/tasks/_task_cards.html:59
-#: tasks/templates/tasks/task_detail.html:37
+#: tasks/templates/tasks/task_detail.html:45
 msgid "Votes"
 msgstr "Głosy"
 
@@ -2355,7 +2356,7 @@ msgid "Back to task"
 msgstr "Powrót do zadania"
 
 #: tasks/templates/tasks/task_close.html:10
-#: tasks/templates/tasks/task_detail.html:76
+#: tasks/templates/tasks/task_detail.html:84
 msgid "Close task"
 msgstr "Zamknij zadanie"
 
@@ -2375,19 +2376,23 @@ msgstr "Powrót do listy"
 msgid "Nobody"
 msgstr "Nikt"
 
-#: tasks/templates/tasks/task_detail.html:52
+#: tasks/templates/tasks/task_detail.html:39
+msgid "Join discussion"
+msgstr "Dyskusja"
+
+#: tasks/templates/tasks/task_detail.html:60
 msgid "Vote up"
 msgstr "Głos za"
 
-#: tasks/templates/tasks/task_detail.html:61
+#: tasks/templates/tasks/task_detail.html:69
 msgid "Vote down"
 msgstr "Głos przeciw"
 
-#: tasks/templates/tasks/task_detail.html:91
+#: tasks/templates/tasks/task_detail.html:99
 msgid "Reopen task"
 msgstr "Otwórz ponownie zadanie"
 
-#: tasks/templates/tasks/task_detail.html:96
+#: tasks/templates/tasks/task_detail.html:104
 msgid "Evaluate outcome"
 msgstr "Oceń rezultat"
 
