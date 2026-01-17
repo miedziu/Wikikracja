@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 18:55+0100\n"
+"POT-Creation-Date: 2026-01-17 20:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,7 +63,7 @@ msgstr "Updated"
 #: board/templates/board/board.html:52
 #: board/templates/board/post_detail.html:11 events/models.py:96
 #: events/templates/events/event_detail.html:80
-#: events/templates/events/event_list.html:66 home/templates/home/home.html:94
+#: events/templates/events/event_list.html:67 home/templates/home/home.html:94
 msgid "Public"
 msgstr ""
 
@@ -185,7 +185,7 @@ msgstr ""
 
 #: board/templates/board/post_detail.html:11
 #: events/templates/events/event_detail.html:84
-#: events/templates/events/event_list.html:70 home/templates/home/home.html:94
+#: events/templates/events/event_list.html:71 home/templates/home/home.html:94
 msgid "Private"
 msgstr ""
 
@@ -197,7 +197,7 @@ msgstr ""
 #: bookkeeping/templates/bookkeeping/transaction_list.html:46
 #: elibrary/templates/elibrary/book_detail.html:35
 #: events/templates/events/event_detail.html:13
-#: events/templates/events/event_list.html:81
+#: events/templates/events/event_list.html:82
 #: glosowania/templates/glosowania/szczegoly.html:55
 #: glosowania/templates/glosowania/szczegoly.html:89
 #: glosowania/templates/glosowania/szczegoly.html:140
@@ -383,6 +383,7 @@ msgstr ""
 #: bookkeeping/templates/bookkeeping/category_confirm_delete.html:34
 #: bookkeeping/templates/bookkeeping/partner_confirm_delete.html:34
 #: bookkeeping/templates/bookkeeping/transaction_confirm_delete.html:33
+#: events/templates/events/event_list.html:35
 msgid "Date"
 msgstr ""
 
@@ -830,7 +831,7 @@ msgid "Which occurrence in the month?"
 msgstr ""
 
 #: events/forms.py:28 events/models.py:20
-#: events/templates/events/event_list.html:95
+#: events/templates/events/event_list.html:96
 msgid "First"
 msgstr "First"
 
@@ -847,7 +848,7 @@ msgid "Fourth"
 msgstr ""
 
 #: events/forms.py:32 events/models.py:24
-#: events/templates/events/event_list.html:113
+#: events/templates/events/event_list.html:114
 msgid "Last"
 msgstr "Last"
 
@@ -910,8 +911,9 @@ msgid "Optional description of the event"
 msgstr ""
 
 #: events/models.py:49 events/templates/events/event_detail.html:35
-msgid "Link"
-msgstr "Link"
+#: events/templates/events/event_list.html:42
+msgid "Link do spotkania"
+msgstr ""
 
 #: events/models.py:50
 msgid "Optional link to event details, registration, or location"
@@ -1010,12 +1012,12 @@ msgid "Visibility"
 msgstr ""
 
 #: events/templates/events/event_detail.html:79
-#: events/templates/events/event_list.html:65
+#: events/templates/events/event_list.html:66
 msgid "Visible to everyone"
 msgstr ""
 
 #: events/templates/events/event_detail.html:83
-#: events/templates/events/event_list.html:69
+#: events/templates/events/event_list.html:70
 msgid "Visible only to logged-in users"
 msgstr ""
 
@@ -1048,40 +1050,40 @@ msgstr "View Event"
 msgid "Add Event"
 msgstr "Add Event"
 
-#: events/templates/events/event_list.html:46
-#: events/templates/events/event_list.html:110
+#: events/templates/events/event_list.html:28
+#: events/templates/events/event_list.html:111
 msgid "Next"
 msgstr "Next"
 
-#: events/templates/events/event_list.html:62
+#: events/templates/events/event_list.html:63
 msgid "Upcoming"
 msgstr "Upcoming"
 
-#: events/templates/events/event_list.html:77
+#: events/templates/events/event_list.html:78
 msgid "View Details"
 msgstr "View Details"
 
-#: events/templates/events/event_list.html:98
+#: events/templates/events/event_list.html:99
 msgid "Previous"
 msgstr "Previous"
 
-#: events/templates/events/event_list.html:104
+#: events/templates/events/event_list.html:105
 msgid "Page"
 msgstr "Page"
 
-#: events/templates/events/event_list.html:104
+#: events/templates/events/event_list.html:105
 msgid "of"
 msgstr "of"
 
-#: events/templates/events/event_list.html:121
+#: events/templates/events/event_list.html:122
 msgid "No events yet"
 msgstr "No events yet"
 
-#: events/templates/events/event_list.html:122
+#: events/templates/events/event_list.html:123
 msgid "There are no events to display."
 msgstr "There are no events to display."
 
-#: events/templates/events/event_list.html:125
+#: events/templates/events/event_list.html:126
 msgid "Create the first event"
 msgstr "Create the first event"
 

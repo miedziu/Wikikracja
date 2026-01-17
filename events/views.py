@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.utils import timezone
 from .models import Event
 from .forms import EventForm
 
@@ -20,6 +21,11 @@ class EventListView(ListView):
             queryset = queryset.filter(is_public=True)
         
         return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
 
 
 class EventDetailView(DetailView):

@@ -46,7 +46,7 @@ class Event(models.Model):
     )
     link = models.URLField(
         blank=True,
-        verbose_name=_('Link'),
+        verbose_name=_('Link do spotkania'),
         help_text=_('Optional link to event details, registration, or location')
     )
     place = models.CharField(

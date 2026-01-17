@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 18:55+0100\n"
+"POT-Creation-Date: 2026-01-17 20:08+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -62,7 +62,7 @@ msgstr "Zaktualizowane"
 #: board/templates/board/board.html:52
 #: board/templates/board/post_detail.html:11 events/models.py:96
 #: events/templates/events/event_detail.html:80
-#: events/templates/events/event_list.html:66 home/templates/home/home.html:94
+#: events/templates/events/event_list.html:67 home/templates/home/home.html:94
 msgid "Public"
 msgstr "Publiczne"
 
@@ -182,7 +182,7 @@ msgstr "Skasuj"
 
 #: board/templates/board/post_detail.html:11
 #: events/templates/events/event_detail.html:84
-#: events/templates/events/event_list.html:70 home/templates/home/home.html:94
+#: events/templates/events/event_list.html:71 home/templates/home/home.html:94
 msgid "Private"
 msgstr "Prywatne"
 
@@ -194,7 +194,7 @@ msgstr "Prywatne"
 #: bookkeeping/templates/bookkeeping/transaction_list.html:46
 #: elibrary/templates/elibrary/book_detail.html:35
 #: events/templates/events/event_detail.html:13
-#: events/templates/events/event_list.html:81
+#: events/templates/events/event_list.html:82
 #: glosowania/templates/glosowania/szczegoly.html:55
 #: glosowania/templates/glosowania/szczegoly.html:89
 #: glosowania/templates/glosowania/szczegoly.html:140
@@ -380,6 +380,7 @@ msgstr "Ta kategoria jest używana w następujących transakcjach:"
 #: bookkeeping/templates/bookkeeping/category_confirm_delete.html:34
 #: bookkeeping/templates/bookkeeping/partner_confirm_delete.html:34
 #: bookkeeping/templates/bookkeeping/transaction_confirm_delete.html:33
+#: events/templates/events/event_list.html:35
 msgid "Date"
 msgstr "Data"
 
@@ -827,7 +828,7 @@ msgid "Which occurrence in the month?"
 msgstr "Która wystąpienie w miesiącu?"
 
 #: events/forms.py:28 events/models.py:20
-#: events/templates/events/event_list.html:95
+#: events/templates/events/event_list.html:96
 msgid "First"
 msgstr "Pierwszy"
 
@@ -844,7 +845,7 @@ msgid "Fourth"
 msgstr "Czwarty"
 
 #: events/forms.py:32 events/models.py:24
-#: events/templates/events/event_list.html:113
+#: events/templates/events/event_list.html:114
 msgid "Last"
 msgstr "Ostatni"
 
@@ -905,8 +906,9 @@ msgid "Optional description of the event"
 msgstr "Opcjonalny opis wydarzenia"
 
 #: events/models.py:49 events/templates/events/event_detail.html:35
-msgid "Link"
-msgstr "Link"
+#: events/templates/events/event_list.html:42
+msgid "Link do spotkania"
+msgstr ""
 
 #: events/models.py:50
 msgid "Optional link to event details, registration, or location"
@@ -1005,12 +1007,12 @@ msgid "Visibility"
 msgstr "Widoczność"
 
 #: events/templates/events/event_detail.html:79
-#: events/templates/events/event_list.html:65
+#: events/templates/events/event_list.html:66
 msgid "Visible to everyone"
 msgstr "Widoczne dla wszystkich"
 
 #: events/templates/events/event_detail.html:83
-#: events/templates/events/event_list.html:69
+#: events/templates/events/event_list.html:70
 msgid "Visible only to logged-in users"
 msgstr "Widoczne tylko dla zalogowanych użytkowników"
 
@@ -1043,40 +1045,40 @@ msgstr "Wyświetl Wydarzenie"
 msgid "Add Event"
 msgstr "Dodaj Wydarzenie"
 
-#: events/templates/events/event_list.html:46
-#: events/templates/events/event_list.html:110
+#: events/templates/events/event_list.html:28
+#: events/templates/events/event_list.html:111
 msgid "Next"
 msgstr "Następne"
 
-#: events/templates/events/event_list.html:62
+#: events/templates/events/event_list.html:63
 msgid "Upcoming"
 msgstr "Nadchodzące"
 
-#: events/templates/events/event_list.html:77
+#: events/templates/events/event_list.html:78
 msgid "View Details"
 msgstr "Wyświetl szczegóły"
 
-#: events/templates/events/event_list.html:98
+#: events/templates/events/event_list.html:99
 msgid "Previous"
 msgstr "Poprzedni"
 
-#: events/templates/events/event_list.html:104
+#: events/templates/events/event_list.html:105
 msgid "Page"
 msgstr "Strona"
 
-#: events/templates/events/event_list.html:104
+#: events/templates/events/event_list.html:105
 msgid "of"
 msgstr "z"
 
-#: events/templates/events/event_list.html:121
+#: events/templates/events/event_list.html:122
 msgid "No events yet"
 msgstr "Nie ma jeszcze wydarzeń"
 
-#: events/templates/events/event_list.html:122
+#: events/templates/events/event_list.html:123
 msgid "There are no events to display."
 msgstr "Nie ma żadnych wydarzeń do wyświetlenia."
 
-#: events/templates/events/event_list.html:125
+#: events/templates/events/event_list.html:126
 msgid "Create the first event"
 msgstr "Stwórz pierwsze wydarzenie"
 
