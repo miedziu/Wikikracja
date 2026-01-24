@@ -54,7 +54,7 @@ const room_template = `
 `;
 
 const message_template = `
-<div class='message <% if (own) { %> own <% } %>' data-message-id=<%-message_id%>>
+<div class='message <% if (own) { %> own <% } %>' data-message-id="<%-message_id%>" data-room-id="<%-room_id%>">
   <div class='message-content'>
 
     <div class='message-header'>
@@ -67,6 +67,14 @@ const message_template = `
           <div class='edit-message ml-1' data-message-id="<%-message_id%>" >${_("edit")}</div>
         <% } %>
         <div class='message-timestamp ml-1' data-message-id='<%-message_id%>'><%- latest_ts %></div>
+        <button type='button'
+          class='btn btn-link btn-sm p-0 ml-1 copy-link-btn copy-message-url'
+          data-room-id='<%-room_id%>'
+          data-message-id='<%-message_id%>'
+          title='${_("Copy link")}'
+          aria-label='${_("Copy message link")}'>
+          <i class="fas fa-link"></i>
+        </button>
       </div>
     </div>
 

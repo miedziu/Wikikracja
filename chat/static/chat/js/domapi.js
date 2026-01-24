@@ -67,6 +67,25 @@ export default class DomApi {
         return $(`.message[data-message-id="${message_id}"]`);
     }
 
+    scrollToMessage(message_id) {
+        let message = this.getMessageDiv(message_id);
+        if (!message.length) {
+            return false;
+        }
+
+        let container = this.getMessagesDiv();
+        if (!container.length) {
+            return false;
+        }
+
+        let top = message.position().top + container.scrollTop();
+        container.scrollTop(Math.max(top - 40, 0));
+
+        message.addClass('message-highlight');
+        setTimeout(() => message.removeClass('message-highlight'), 2000);
+        return true;
+    }
+
     getRoomIcon(room_id) {
         return $(`.room-link[data-room-id="${room_id}"]`);
     }
@@ -267,5 +286,24 @@ export default class DomApi {
 
     addPermissionBanner() {
         $('.room-header').append("<button type='button' class='alert alert-info p-1 mb-0' style='display: inline-block;' onclick='Notification.requestPermission().then(() => location.reload())'><i class='far fa-bell-slash'></i>" + " " + _("Click here to enable notifications") + " " + "<i class ='far fa-bell-slash'></i></button>")
+    }
+
+    showCopyFeedback(button, message, success) {
+        if (!button) {
+            return;
+        }
+
+        let $button = $(button);
+        let $tooltip = $('<span class="copy-feedback badge"></span>');
+        $tooltip.text(message);
+        $tooltip.toggleClass('badge-success', !!success);
+        $tooltip.toggleClass('badge-danger', !success);
+
+        $button.append($tooltip);
+        setTimeout(() => {
+            $tooltip.fadeOut(200, function() {
+                $(this).remove();
+            });
+        }, 1200);
     }
 }

@@ -603,6 +603,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def get_user_by_id(self, id):
+        if id is None:
+            logger.debug("Attempted to fetch user with ID None; returning None")
+            return None
         try:
             return User.objects.get(id=id)
         except User.DoesNotExist:

@@ -11,6 +11,7 @@
     font-family: 'Noto Sans Mono', monospace;
     font-size: 1.0rem;
     justify-content: space-between;
+    align-items: center;
     margin: .1rem;
     padding: .1rem .2rem .2rem .2rem;
     text-overflow: ellipsis;
@@ -33,6 +34,19 @@
 
 .room-link[data-room-type="public"] {
     text-transform: uppercase!important;
+}
+
+.copy-link-btn {
+    position: relative;
+    color: var(--light);
+}
+
+.copy-feedback {
+    position: absolute;
+    top: -0.2rem;
+    right: -0.2rem;
+    font-size: 0.65rem;
+    z-index: 2;
 }
 
 .chat-functions {
@@ -158,6 +172,19 @@
     white-space: nowrap;
     text-overflow: clip;
     overflow: hidden;
+    padding-right: .25rem;
+}
+
+.room-controls {
+    display: flex;
+    align-items: center;
+    gap: .15rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.room-controls .copy-link-btn {
+    margin-left: .1rem;
 }
 
 /* Style name of online user */
@@ -241,6 +268,11 @@
     margin-bottom: .6rem;
     margin-left: .1rem;
     box-shadow: 3px 3px 5px 2px darkgray;
+}
+
+.message-highlight {
+    box-shadow: 0 0 10px 2px var(--info);
+    transition: box-shadow 0.3s ease;
 }
 .text {
     overflow-wrap: anywhere;

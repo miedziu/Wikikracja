@@ -11,6 +11,8 @@ import {
     onReceiveEdit,
     onReceiveOnlineUpdates,
     onReceiveNotification,
+    copyRoomLink,
+    copyMessageLink,
 } from './chat.js';
 
 import { _ } from './utility.js';
@@ -100,6 +102,21 @@ $(document).on('click', ".stop-editing", function(e) {
 $(document).on('click', ".delete-images-preview", function(e) {
     let room_id = $(this).data("room-id");
     DOM_API.clearFiles(room_id);
+});
+
+$(document).on('click', '.copy-room-url', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    let room_id = $(this).data('room-id');
+    copyRoomLink(room_id, this);
+});
+
+$(document).on('click', '.copy-message-url', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    let room_id = $(this).data('room-id');
+    let message_id = $(this).data('message-id');
+    copyMessageLink(room_id, message_id, this);
 });
 
 $(document).on("change", ".file-input", function(e) {

@@ -6,6 +6,7 @@ let WS_API;
 let DOM_API;
 const RoomLock = new Lock();
 let current_room = null;
+let pendingMessageId = null;
 
 
 $(() => {
@@ -34,6 +35,9 @@ $(() => {
             let obj = parseParms(hash);
             if (obj.room_id) {
                 room_id = obj.room_id;
+            }
+            if (obj.message_id) {
+                pendingMessageId = obj.message_id;
             }
         }
 
@@ -183,7 +187,21 @@ export async function onReceiveMessages(messages) {
             active_btn.addClass('active');
         }
     }
-    msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
+
+    let shouldStickToBottom = !pendingMessageId;
+    if (pendingMessageId) {
+        let didScroll = DOM_API.scrollToMessage(pendingMessageId);
+        if (didScroll) {
+            shouldStickToBottom = false;
+        }
+        if (didScroll) {
+            pendingMessageId = null;
+        }
+    }
+
+    if (shouldStickToBottom) {
+        msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
+    }
     $("#room > div.chat-controls > div > input").focus();
 }
 
@@ -248,11 +266,73 @@ export async function onToggleNotifications(room_id, is_enabled) {
 
 export async function onMessageHistory(message_id) {
     let history = await WS_API.getMessageHistory(message_id);
-    history = history.message_history.map(
-        x => { x.formattedTime = formatTime(x.timestamp); return x; }
-    );
+    let html = MessageHistory({ history });
+    $("#message-history-modal .modal-body").html(html);
+    $("#message-history-modal").modal('show');
+}
 
-    DOM_API.showHistoryModal(_("Changes History"), history);
+export async function copyRoomLink(room_id, button) {
+    if (!room_id) {
+        return;
+    }
+    let link = buildRoomUrl(room_id);
+    let success = await writeToClipboard(link);
+    showCopyFeedback(button, success);
+}
+
+export async function copyMessageLink(room_id, message_id, button) {
+    if (!room_id || !message_id) {
+        return;
+    }
+    let link = buildMessageUrl(room_id, message_id);
+    let success = await writeToClipboard(link);
+    showCopyFeedback(button, success);
+}
+
+async function writeToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (err) {
+            console.warn('Clipboard API copy failed', err);
+        }
+    }
+
+    let textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    let success = false;
+    try {
+        success = document.execCommand('copy');
+    } catch (err) {
+        console.warn('document.execCommand copy failed', err);
+    } finally {
+        document.body.removeChild(textarea);
+    }
+
+    return success;
+}
+
+function showCopyFeedback(button, success) {
+    if (!button || !DOM_API || typeof DOM_API.showCopyFeedback !== 'function') {
+        return;
+    }
+    let message = success ? _("Link copied") : _("Could not copy link");
+    DOM_API.showCopyFeedback(button, message, success);
+}
+
+function buildRoomUrl(room_id) {
+    return `${window.location.origin}/chat#room_id=${room_id}`;
+}
+
+function buildMessageUrl(room_id, message_id) {
+    return `${buildRoomUrl(room_id)}&message_id=${message_id}`;
 }
 
 export async function onSubmitMessage(message, editing_message_id) {
