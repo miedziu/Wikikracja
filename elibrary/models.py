@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator
 # from taggit.managers import TaggableManager
 from django.urls import reverse
-from datetime import datetime
+from django.utils import timezone
 
 
 class Book(models.Model):
@@ -19,7 +19,7 @@ class Book(models.Model):
     file_mobi = models.FileField(null=True, blank=True, upload_to='elibrary', verbose_name=_('mobi'), validators=[FileExtensionValidator(['mobi'])])
     file_pdf = models.FileField(null=True, blank=True, upload_to='elibrary', verbose_name=_('pdf'), validators=[FileExtensionValidator(['pdf'])])
     uploader = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    uploaded = models.DateTimeField(_('Uploaded'), default=datetime.now, editable=False)
+    uploaded = models.DateTimeField(_('Uploaded'), default=timezone.now, editable=False)
     
     # https://django-taggit.readthedocs.io/en/latest/forms.html
     # tag = TaggableManager(blank=True,
