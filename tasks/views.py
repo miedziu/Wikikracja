@@ -297,3 +297,13 @@ def evaluate_task(request: HttpRequest, pk: int) -> HttpResponse:
         evaluation.value = value
         evaluation.save(update_fields=["value", "updated_at"])
     return redirect(request.POST.get("next") or "tasks:list")
+
+
+@require_POST
+@login_required
+def delete_task(request: HttpRequest, pk: int) -> HttpResponse:
+    task = get_object_or_404(Task, pk=pk)
+    if task.created_by != request.user:
+        return redirect("tasks:detail", pk=pk)
+    task.delete()
+    return redirect("tasks:list")
