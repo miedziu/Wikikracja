@@ -69,6 +69,7 @@ class Decyzja(models.Model):
         verbose_name=_('The path this bill took.'))
     ile_osob_podpisalo = models.SmallIntegerField(editable=False, default=0)
     data_powstania = models.DateField(auto_now_add=True, editable=False, null=True)
+    data_ostatniej_modyfikacji = models.DateTimeField(auto_now=True, editable=False, null=True)
     data_zebrania_podpisow = models.DateField(editable=False, null=True)
     data_referendum_start = models.DateField(editable=False, null=True)
     data_referendum_stop = models.DateField(editable=False, null=True)

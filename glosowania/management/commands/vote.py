@@ -87,6 +87,13 @@ class Command(BaseCommand):
                     # FROM PROPOSITION TO DISCUSSION
                     if i.status == proposition:
                         if i.ile_osob_podpisalo >= s.WYMAGANYCH_PODPISOW:
+                            # Check if 2 days have passed since last modification
+                            if i.data_ostatniej_modyfikacji:
+                                days_since_modification = (dzisiaj - i.data_ostatniej_modyfikacji.date()).days
+                                if days_since_modification < 2:
+                                    l.info(f"Proposition {i.id} has enough signatures but waiting for 2-day freeze period (modified {days_since_modification} days ago).")
+                                    continue
+                            
                             i.status = discussion
                             i.path = str(i.path) + " -> " + _("Signed") + " -> " + _("Discussion")
                             i.data_zebrania_podpisow = dzisiaj
