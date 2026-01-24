@@ -25,14 +25,6 @@
 						<b>{% trans "Reason" %}:</b> {{ i.uzasadnienie|linebreaks }}
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<b>{% trans "Positives" %}:</b> {{ i.args_for|linebreaks }}
-					</div>
-					<div class="col-md-6">
-						<b>{% trans "Negatives" %}:</b> {{ i.args_against|linebreaks }}
-					</div>
-				</div>
 				<b>{% trans "This law supersedes the following bills" %}:</b> {{ i.znosi|default_if_none:"--" }}
 				<br>
 				<b>{% trans "Signatures" %}:</b> {{ i.ile_osob_podpisalo|default_if_none:"--" }}
