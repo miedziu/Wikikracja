@@ -26,6 +26,7 @@
         {% endif %}
       </div>
       <p class="text-muted small mb-1">{% trans "Created" %}: {{ task.created_at|date:"Y-m-d H:i" }}</p>
+      <p class="text-muted small mb-1">{% trans "Author" %}: {{ task.created_by|default:_("Unknown") }}</p>
       <p class="text-muted small mb-3">
         {% trans "Owner" %}: {{ task.assigned_to|default:_("Nobody") }} |
         {% trans "Status" %}: {{ task.get_status_display }}
