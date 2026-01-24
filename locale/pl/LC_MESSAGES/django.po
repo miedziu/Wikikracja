@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 20:08+0100\n"
+"POT-Creation-Date: 2026-01-24 15:28+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -15,7 +15,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #: board/forms.py:9 board/models.py:8
 msgid "Text"
@@ -34,7 +36,8 @@ msgstr "Podtytuł"
 #: board/models.py:9 board/templates/board/post_detail.html:11
 #: elibrary/forms.py:8 elibrary/models.py:12
 #: elibrary/templates/elibrary/book_confirm_delete.html:15
-#: glosowania/models.py:108 glosowania/templates/glosowania/szczegoly.html:200
+#: glosowania/models.py:109 glosowania/templates/glosowania/szczegoly.html:214
+#: tasks/templates/tasks/task_detail.html:64
 msgid "Author"
 msgstr "Autor"
 
@@ -43,10 +46,10 @@ msgstr "Autor"
 #: bookkeeping/templates/bookkeeping/transaction_list.html:23
 #: events/templates/events/event_detail.html:107
 #: glosowania/templates/glosowania/delete_argument.html:20
-#: glosowania/templates/glosowania/discussion.html:36
+#: glosowania/templates/glosowania/discussion.html:49
 #: glosowania/templates/glosowania/edit_argument.html:12
-#: glosowania/templates/glosowania/proposition.html:40
-#: tasks/templates/tasks/task_detail.html:28
+#: glosowania/templates/glosowania/proposition.html:53
+#: tasks/templates/tasks/task_detail.html:63
 msgid "Created"
 msgstr "Utworzone"
 
@@ -77,13 +80,21 @@ msgstr "Ważne"
 
 #: board/signals.py:37
 #, python-format
-msgid "New important announcement by <strong>%(username)s</strong>: <a href='%(post_url)s'>%(title)s</a>"
-msgstr "Nowe ważne ogłoszenie od <strong>%(username)s</strong>: <a href='%(post_url)s'>%(title)s</a>"
+msgid ""
+"New important announcement by <strong>%(username)s</strong>: <a "
+"href='%(post_url)s'>%(title)s</a>"
+msgstr ""
+"Nowe ważne ogłoszenie od <strong>%(username)s</strong>: <a "
+"href='%(post_url)s'>%(title)s</a>"
 
 #: board/signals.py:43
 #, python-format
-msgid "Updated important announcement by <strong>%(username)s</strong>: <a href='%(post_url)s'>%(title)s</a>"
-msgstr "Zaktualizowane ważne ogłoszenie od <strong>%(username)s</strong>: <a href='%(post_url)s'>%(title)s</a>"
+msgid ""
+"Updated important announcement by <strong>%(username)s</strong>: <a "
+"href='%(post_url)s'>%(title)s</a>"
+msgstr ""
+"Zaktualizowane ważne ogłoszenie od <strong>%(username)s</strong>: <a "
+"href='%(post_url)s'>%(title)s</a>"
 
 #: board/templates/board/archive.html:12 board/templates/board/board.html:16
 msgid "Archive"
@@ -153,6 +164,7 @@ msgstr "Zapisz"
 #: obywatele/templates/obywatele/change_username.html:19
 #: obywatele/templates/obywatele/my_assets.html:90
 #: tasks/templates/tasks/task_close.html:21
+#: tasks/templates/tasks/task_detail.html:174
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -175,8 +187,8 @@ msgstr "Czy na pewno chcesz skasować ten ogłoszenie?"
 #: bookkeeping/templates/bookkeeping/transaction_list.html:47
 #: elibrary/templates/elibrary/book_detail.html:34
 #: events/templates/events/event_detail.html:16
-#: glosowania/templates/glosowania/szczegoly.html:56
-#: glosowania/templates/glosowania/szczegoly.html:90
+#: glosowania/templates/glosowania/szczegoly.html:70
+#: glosowania/templates/glosowania/szczegoly.html:104
 msgid "Delete"
 msgstr "Skasuj"
 
@@ -195,10 +207,10 @@ msgstr "Prywatne"
 #: elibrary/templates/elibrary/book_detail.html:35
 #: events/templates/events/event_detail.html:13
 #: events/templates/events/event_list.html:82
-#: glosowania/templates/glosowania/szczegoly.html:55
-#: glosowania/templates/glosowania/szczegoly.html:89
-#: glosowania/templates/glosowania/szczegoly.html:140
-#: tasks/templates/tasks/task_detail.html:83
+#: glosowania/templates/glosowania/szczegoly.html:69
+#: glosowania/templates/glosowania/szczegoly.html:103
+#: glosowania/templates/glosowania/szczegoly.html:154
+#: tasks/templates/tasks/task_detail.html:111
 msgid "Edit"
 msgstr "Edytuj"
 
@@ -526,12 +538,20 @@ msgid "Add Transaction"
 msgstr "Dodaj Transakcję"
 
 #: bookkeeping/views.py:52
-msgid "Cannot delete category because it is in use. Remove all transactions that use it first."
-msgstr "Nie można usunąć kategorii, ponieważ jest w użyciu. Usuń najpierw wszystkie transakcje, które ją wykorzystują."
+msgid ""
+"Cannot delete category because it is in use. Remove all transactions that "
+"use it first."
+msgstr ""
+"Nie można usunąć kategorii, ponieważ jest w użyciu. Usuń najpierw wszystkie "
+"transakcje, które ją wykorzystują."
 
 #: bookkeeping/views.py:102
-msgid "Cannot delete partner because it is in use. Remove all transactions that use it first."
-msgstr "Nie można usunąć partnera, ponieważ jest w użyciu. Usuń najpierw wszystkie transakcje, które go wykorzystują."
+msgid ""
+"Cannot delete partner because it is in use. Remove all transactions that use "
+"it first."
+msgstr ""
+"Nie można usunąć partnera, ponieważ jest w użyciu. Usuń najpierw wszystkie "
+"transakcje, które go wykorzystują."
 
 #: chat/management/commands/chat_messages.py:42
 #, python-brace-format
@@ -544,8 +564,11 @@ msgid "New messages on {HOST}/chat"
 msgstr "Nowe wiadomości na {HOST}/chat"
 
 #: chat/management/commands/chat_messages.py:44
-msgid "You can disable those messages by unchecking bell icon next to chat room name."
-msgstr "Możesz wyłączyć te powiadomienia odznaczając ikonę dzwonka obok nazwy pokoju."
+msgid ""
+"You can disable those messages by unchecking bell icon next to chat room "
+"name."
+msgstr ""
+"Możesz wyłączyć te powiadomienia odznaczając ikonę dzwonka obok nazwy pokoju."
 
 #: chat/management/commands/chat_messages.py:45
 #, python-brace-format
@@ -573,8 +596,12 @@ msgid "days. After"
 msgstr "dni. Po"
 
 #: chat/templates/chat/chat.html:118
-msgid "days they are deleted. Private messages are archived when user is blocked and deleted after"
-msgstr "dniach są usuwane. Prywatne wiadomości są archiwizowane, gdy użytkownik jest blokowany i usuwany po"
+msgid ""
+"days they are deleted. Private messages are archived when user is blocked "
+"and deleted after"
+msgstr ""
+"dniach są usuwane. Prywatne wiadomości są archiwizowane, gdy użytkownik jest "
+"blokowany i usuwany po"
 
 #: chat/templates/chat/chat.html:118
 #: obywatele/templates/obywatele/parameters.html:23
@@ -587,8 +614,8 @@ msgstr "dniach"
 #: home/templates/home/home.html:59 home/templates/home/home.html:72
 #: home/templates/home/home.html:83 home/templates/home/home.html:96
 #: obywatele/templates/obywatele/poczekalnia.html:58
-#: tasks/templates/tasks/task_list.html:18
-#: tasks/templates/tasks/task_list.html:23
+#: tasks/templates/tasks/task_list.html:33
+#: tasks/templates/tasks/task_list.html:38
 msgid "None"
 msgstr "Brak"
 
@@ -602,12 +629,22 @@ msgstr "Historia zmian"
 
 #: chat/templates/chat/chat.html:189 chat/templates/chat/chat.html:197
 #: chat/templates/chat/chat.html:210 chat/views.py:172
+#: tasks/templates/tasks/task_detail.html:166
 msgid "Close"
 msgstr "Zamknij"
 
 #: chat/templates/chat/chat.html:209
 msgid "Permission"
 msgstr "Uprawnienie"
+
+#: chat/templates/chat/room_icon.html:21
+msgid "Copy link"
+msgstr "Skopiuj link"
+
+#: chat/templates/chat/room_icon.html:22
+#, python-format
+msgid "Copy link to room %(room_name)s"
+msgstr "Skopiuj link do pokoju %(room_name)s"
 
 #: chat/views.py:159
 msgid "Click here to enable notifications"
@@ -630,19 +667,27 @@ msgid "Enable Notifications"
 msgstr "Włącz powiadomienia"
 
 #: chat/views.py:164
-msgid "Chat works better with notifications. You can allow them to see new messages even beyond chat room."
-msgstr "Czat działa lepiej z powiadomieniami. Możesz zezwolić na wyświetlanie powiadomień - nawet poza pokojem rozmów."
+msgid ""
+"Chat works better with notifications. You can allow them to see new messages "
+"even beyond chat room."
+msgstr ""
+"Czat działa lepiej z powiadomieniami. Możesz zezwolić na wyświetlanie "
+"powiadomień - nawet poza pokojem rozmów."
 
 #: chat/views.py:165
 msgid "Do you want to receive notifications?"
 msgstr "Czy chcesz otrzymywać powiadomienia?"
 
 #: chat/views.py:166
-msgid "If nothing happens, you may have ignored permission prompt too many times. Check your browser settings to enable them."
-msgstr "Jeśli nic się nie dzieje, być może zbyt wiele razy zignorowałeś prośbę o pozwolenie. Sprawdź ustawienia swojej przeglądarki, aby je włączyć."
+msgid ""
+"If nothing happens, you may have ignored permission prompt too many times. "
+"Check your browser settings to enable them."
+msgstr ""
+"Jeśli nic się nie dzieje, być może zbyt wiele razy zignorowałeś prośbę o "
+"pozwolenie. Sprawdź ustawienia swojej przeglądarki, aby je włączyć."
 
-#: chat/views.py:167 glosowania/templates/glosowania/szczegoly.html:153
-#: glosowania/templates/glosowania/szczegoly.html:174
+#: chat/views.py:167 glosowania/templates/glosowania/szczegoly.html:167
+#: glosowania/templates/glosowania/szczegoly.html:188
 msgid "Yes"
 msgstr "Tak"
 
@@ -799,8 +844,12 @@ msgid "Are you sure you want to delete this book?"
 msgstr "Czy na pewno chcesz skasować ten ebook?"
 
 #: elibrary/templates/elibrary/book_confirm_delete.html:19
-msgid "This action cannot be undone. All associated files will be permanently deleted."
-msgstr "Ten ebook zostanie skasowany i wszystkie związane z nim pliki zostaną usunięte."
+msgid ""
+"This action cannot be undone. All associated files will be permanently "
+"deleted."
+msgstr ""
+"Ten ebook zostanie skasowany i wszystkie związane z nim pliki zostaną "
+"usunięte."
 
 #: elibrary/templates/elibrary/book_confirm_delete.html:24
 #: glosowania/templates/glosowania/delete_argument.html:29
@@ -867,7 +916,9 @@ msgstr "Zapisz Wydarzenie"
 
 #: events/forms.py:114 events/forms.py:116
 msgid "This field is required for monthly ordinal events."
-msgstr "To pole jest wymagane dla wydarzeń powtarzających się w określonym dniu tygodnia."
+msgstr ""
+"To pole jest wymagane dla wydarzeń powtarzających się w określonym dniu "
+"tygodnia."
 
 #: events/models.py:11
 msgid "One-time"
@@ -908,7 +959,7 @@ msgstr "Opcjonalny opis wydarzenia"
 #: events/models.py:49 events/templates/events/event_detail.html:35
 #: events/templates/events/event_list.html:42
 msgid "Link do spotkania"
-msgstr ""
+msgstr "Link do spotkania"
 
 #: events/models.py:50
 msgid "Optional link to event details, registration, or location"
@@ -948,11 +999,16 @@ msgstr "Jak często się powtarza to wydarzenie?"
 
 #: events/models.py:80
 msgid "For monthly ordinal events: which week? (e.g., First, Second, Last)"
-msgstr "Dla wydarzeń powtarzających się w określonym dniu tygodnia: który tydzień? (np., Pierwszy, Drugi, Ostatni)"
+msgstr ""
+"Dla wydarzeń powtarzających się w określonym dniu tygodnia: który tydzień? "
+"(np., Pierwszy, Drugi, Ostatni)"
 
 #: events/models.py:87
-msgid "For monthly ordinal events: which day of the week? (e.g., Monday, Tuesday)"
-msgstr "Dla wydarzeń powtarzających się w określonym dniu tygodnia: który dzień tygodnia? (np., Poniedziałek, Wtorek)"
+msgid ""
+"For monthly ordinal events: which day of the week? (e.g., Monday, Tuesday)"
+msgstr ""
+"Dla wydarzeń powtarzających się w określonym dniu tygodnia: który dzień "
+"tygodnia? (np., Poniedziałek, Wtorek)"
 
 #: events/models.py:91 events/templates/events/event_detail.html:71
 #: tasks/models.py:31
@@ -964,8 +1020,12 @@ msgid "Uncheck to disable this event"
 msgstr "Odznacz aby wyłączyć to wydarzenie"
 
 #: events/models.py:97
-msgid "Public events are visible to everyone. Private events are only visible to logged-in users."
-msgstr "Wydarzenia publiczne są widoczne dla wszystkich. Wydarzenia prywatne są widoczne tylko dla zalogowanych użytkowników."
+msgid ""
+"Public events are visible to everyone. Private events are only visible to "
+"logged-in users."
+msgstr ""
+"Wydarzenia publiczne są widoczne dla wszystkich. Wydarzenia prywatne są "
+"widoczne tylko dla zalogowanych użytkowników."
 
 #: events/models.py:104
 msgid "Event"
@@ -994,7 +1054,7 @@ msgstr "Agenda"
 
 #: events/templates/events/event_detail.html:69
 #: tasks/templates/tasks/task_close.html:16
-#: tasks/templates/tasks/task_detail.html:31
+#: tasks/templates/tasks/task_detail.html:67
 msgid "Status"
 msgstr "Status"
 
@@ -1158,36 +1218,35 @@ msgstr "została zatwierdzona"
 msgid "and was removed from queue"
 msgstr "i został usunięty z kolejki"
 
-#: glosowania/management/commands/vote.py:91
+#: glosowania/management/commands/vote.py:98
 msgid "Signed"
 msgstr "Podpisana"
 
-#: glosowania/management/commands/vote.py:91
+#: glosowania/management/commands/vote.py:98
 #: glosowania/templates/glosowania/menu.html:30 glosowania/views.py:203
-#: tasks/templates/tasks/_task_cards.html:62
 msgid "Discussion"
 msgstr "Dyskusja"
 
-#: glosowania/management/commands/vote.py:106
+#: glosowania/management/commands/vote.py:113
 msgid "Not enough signatures"
 msgstr "Nie zabrała podpisów"
 
-#: glosowania/management/commands/vote.py:119
+#: glosowania/management/commands/vote.py:126
 #: glosowania/templates/glosowania/menu.html:34 glosowania/views.py:203
 msgid "Referendum"
 msgstr "Referendum"
 
-#: glosowania/management/commands/vote.py:143
+#: glosowania/management/commands/vote.py:150
 #: glosowania/templates/glosowania/menu.html:38 glosowania/views.py:203
 msgid "Approved"
 msgstr "Zatwierdzone"
 
-#: glosowania/management/commands/vote.py:162 glosowania/views.py:203
+#: glosowania/management/commands/vote.py:169 glosowania/views.py:203
 #: tasks/models.py:34 tasks/views.py:24
 msgid "Rejected"
 msgstr "Odrzucone"
 
-#: glosowania/management/commands/vote.py:178 glosowania/views.py:354
+#: glosowania/management/commands/vote.py:185 glosowania/views.py:362
 #: obywatele/forms.py:153 obywatele/views.py:585
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
@@ -1207,33 +1266,45 @@ msgstr "Treść przepisu"
 
 #: glosowania/models.py:36
 msgid "Enter the exact wording of the law as it is to be applied."
-msgstr "Wpisz treść przepisu dokładnie w takim brzmieniu w jakim ma obowiązywać."
+msgstr ""
+"Wpisz treść przepisu dokładnie w takim brzmieniu w jakim ma obowiązywać."
 
-#: glosowania/models.py:40 glosowania/templates/glosowania/discussion.html:21
-#: glosowania/templates/glosowania/proposition.html:22
-#: glosowania/templates/glosowania/szczegoly.html:26
+#: glosowania/models.py:40 glosowania/templates/glosowania/discussion.html:42
+#: glosowania/templates/glosowania/proposition.html:43
+#: glosowania/templates/glosowania/szczegoly.html:40
 msgid "Penalty for non-compliance"
 msgstr "Konsekwencje złamania przepisu"
 
 #: glosowania/models.py:41
-msgid "What is the penalty for non-compliance with this rule. This can be, for example: \"Banishment for 3 months\", \"Banishment forever\", etc."
-msgstr "Jakie są konsekwencje za nieprzestrzeganie tej zasady. Może to być na przykład: \"Wygnanie na 3 miesiące\", \"Wygnanie na zawsze itd.\""
+msgid ""
+"What is the penalty for non-compliance with this rule. This can be, for "
+"example: \"Banishment for 3 months\", \"Banishment forever\", etc."
+msgstr ""
+"Jakie są konsekwencje za nieprzestrzeganie tej zasady. Może to być na "
+"przykład: \"Wygnanie na 3 miesiące\", \"Wygnanie na zawsze itd.\""
 
 #: glosowania/models.py:45
 msgid "Reasoning"
 msgstr "Uzasadnienie"
 
 #: glosowania/models.py:46
-msgid "What events or thoughts inspired this bill? What are the expected results?"
-msgstr "Jakie wydarzenia lub przemyślenia zainspirowały ten projekt? Jakie są oczekiwane efekty?"
+msgid ""
+"What events or thoughts inspired this bill? What are the expected results?"
+msgstr ""
+"Jakie wydarzenia lub przemyślenia zainspirowały ten projekt? Jakie są "
+"oczekiwane efekty?"
 
 #: glosowania/models.py:51
 msgid "Positive Aspects of the Idea"
 msgstr "Pozytywne Aspekty Pomysłu"
 
 #: glosowania/models.py:52
-msgid "Enter the benefits for the group, environment, economy, etc. resulting from the introduction of the idea."
-msgstr "Określ korzyści dla grupy, otoczenia, środowiska, ekonomi etc. wynikające z wprowadzenia pomysłu."
+msgid ""
+"Enter the benefits for the group, environment, economy, etc. resulting from "
+"the introduction of the idea."
+msgstr ""
+"Określ korzyści dla grupy, otoczenia, środowiska, ekonomi etc. wynikające z "
+"wprowadzenia pomysłu."
 
 #: glosowania/models.py:57
 msgid "Negative Aspects of the Idea"
@@ -1248,59 +1319,63 @@ msgid "Abolishes the rules"
 msgstr "Znosi przepis/y"
 
 #: glosowania/models.py:64
-msgid "If the proposed law supersedes other bills, enter their comma separated numbers here."
-msgstr "Jeśli proponowane prawo zastępuje inne przepisy, wprowadź tutaj ich numery rozdzielone przecinkami."
+msgid ""
+"If the proposed law supersedes other bills, enter their comma separated "
+"numbers here."
+msgstr ""
+"Jeśli proponowane prawo zastępuje inne przepisy, wprowadź tutaj ich numery "
+"rozdzielone przecinkami."
 
 #: glosowania/models.py:69
 msgid "The path this bill took."
 msgstr "Historia propozycji"
 
-#: glosowania/models.py:93
+#: glosowania/models.py:94
 msgid "Positive"
 msgstr "Argument Za"
 
-#: glosowania/models.py:94
+#: glosowania/models.py:95
 msgid "Negative"
 msgstr "Argument Przeciw"
 
-#: glosowania/models.py:101
+#: glosowania/models.py:102
 #: glosowania/templates/glosowania/delete_argument.html:13
 #: glosowania/templates/glosowania/edit_argument.html:10
 msgid "Decision"
 msgstr "Decyzja"
 
-#: glosowania/models.py:113
+#: glosowania/models.py:114
 #: glosowania/templates/glosowania/delete_argument.html:14
 msgid "Argument Type"
 msgstr "Typ argumentu"
 
-#: glosowania/models.py:114
+#: glosowania/models.py:115
 msgid "Is this a positive or negative argument?"
 msgstr "Czy to argument pozytywny czy negatywny?"
 
-#: glosowania/models.py:118
+#: glosowania/models.py:119
 msgid "Argument Content"
 msgstr "Treść argumentu"
 
-#: glosowania/models.py:119
+#: glosowania/models.py:120
 msgid "Enter your argument. You can include links."
 msgstr "Wprowadź swój argument. Możesz dodać linki."
 
-#: glosowania/models.py:123
+#: glosowania/models.py:124
 msgid "Created At"
 msgstr "Utworzono"
 
-#: glosowania/models.py:127
+#: glosowania/models.py:128
 #: glosowania/templates/glosowania/delete_argument.html:22
 #: glosowania/templates/glosowania/edit_argument.html:14
 msgid "Last Modified"
 msgstr "Ostatnia modyfikacja"
 
-#: glosowania/models.py:132
+#: glosowania/models.py:133
 msgid "Argument"
 msgstr "Argument"
 
-#: glosowania/models.py:133
+#: glosowania/models.py:134
 msgid "Arguments"
 msgstr "Argumenty"
 
@@ -1316,9 +1391,9 @@ msgstr ""
 "Dyskusja, dzielenie się opiniami, pytania."
 
 #: glosowania/templates/glosowania/approved.html:21
-#: glosowania/templates/glosowania/discussion.html:39
-#: glosowania/templates/glosowania/proposition.html:44
-#: glosowania/templates/glosowania/referendum.html:28
+#: glosowania/templates/glosowania/discussion.html:52
+#: glosowania/templates/glosowania/proposition.html:57
+#: glosowania/templates/glosowania/referendum.html:49
 #: glosowania/templates/glosowania/rejected.html:20
 msgid "There is no proposal with this status"
 msgstr "Nie ma propozycji o tym statusie"
@@ -1339,25 +1414,15 @@ msgstr "Treść"
 msgid "No, Cancel"
 msgstr "Nie, anuluj"
 
-#: glosowania/templates/glosowania/discussion.html:24
-#: glosowania/templates/glosowania/proposition.html:25
-#: glosowania/templates/glosowania/szczegoly.html:27
+#: glosowania/templates/glosowania/discussion.html:45
+#: glosowania/templates/glosowania/proposition.html:46
+#: glosowania/templates/glosowania/szczegoly.html:41
 msgid "Reason"
 msgstr "Uzasadnienie"
 
-#: glosowania/templates/glosowania/discussion.html:29
-#: glosowania/templates/glosowania/proposition.html:30
-msgid "Positives"
-msgstr "Argumenty Za"
-
-#: glosowania/templates/glosowania/discussion.html:32
-#: glosowania/templates/glosowania/proposition.html:33
-msgid "Negatives"
-msgstr "Argumenty Przeciw"
-
-#: glosowania/templates/glosowania/discussion.html:35
-#: glosowania/templates/glosowania/proposition.html:36
-#: glosowania/templates/glosowania/szczegoly.html:28
+#: glosowania/templates/glosowania/discussion.html:48
+#: glosowania/templates/glosowania/proposition.html:49
+#: glosowania/templates/glosowania/szczegoly.html:42
 msgid "This law supersedes the following bills"
 msgstr "Ta propozycja znosi następujące przepisy"
 
@@ -1374,8 +1439,12 @@ msgid "Edit Argument"
 msgstr "Edytuj argument"
 
 #: glosowania/templates/glosowania/menu.html:13
-msgid "A referendum is not a one-off decision. The referendum is to pass a law that will be in force all the time."
-msgstr "Referendum nie służy do podejmowania jednorazowych decyzji. Referendum jest po to żeby uchwalić prawo, które będzie obowiązywało cały czas."
+msgid ""
+"A referendum is not a one-off decision. The referendum is to pass a law that "
+"will be in force all the time."
+msgstr ""
+"Referendum nie służy do podejmowania jednorazowych decyzji. Referendum jest "
+"po to żeby uchwalić prawo, które będzie obowiązywało cały czas."
 
 #: glosowania/templates/glosowania/menu.html:26
 msgid "Propositions"
@@ -1394,16 +1463,26 @@ msgid "New proposal needs to gather"
 msgstr "Nowa propozycja musi zebrać"
 
 #: glosowania/templates/glosowania/parameters.html:19
-msgid "signatures in order to trigger referendum. This number should remain low enough for any sensible proposal to be voted on, and only high enough to filter out obvious spam."
-msgstr "podpisy aby została poddana pod referendum. Ta liczba powinna pozostać wystarczająco niska aby możliwe było głosowanie nad każdą rozsądną propozycją, i tylko na tyle wysoka aby odfiltrować oczywisty spam."
+msgid ""
+"signatures in order to trigger referendum. This number should remain low "
+"enough for any sensible proposal to be voted on, and only high enough to "
+"filter out obvious spam."
+msgstr ""
+"podpisy aby została poddana pod referendum. Ta liczba powinna pozostać "
+"wystarczająco niska aby możliwe było głosowanie nad każdą rozsądną "
+"propozycją, i tylko na tyle wysoka aby odfiltrować oczywisty spam."
 
 #: glosowania/templates/glosowania/parameters.html:20
 msgid "Maximum time to gather signatures is"
 msgstr "Maksymalny czas na zebranie podpisów to"
 
 #: glosowania/templates/glosowania/parameters.html:20
-msgid "days. If there is not enough signatures - after this time, proposal is rejected."
-msgstr "dni. Jeśli nie ma wystarczającej liczby podpisów - po tym czasie propozycja jest odrzucana."
+msgid ""
+"days. If there is not enough signatures - after this time, proposal is "
+"rejected."
+msgstr ""
+"dni. Jeśli nie ma wystarczającej liczby podpisów - po tym czasie propozycja "
+"jest odrzucana."
 
 #: glosowania/templates/glosowania/parameters.html:21
 msgid "Queue and discussion before referendum lasts"
@@ -1430,145 +1509,141 @@ msgstr "zaznaczonych"
 msgid "parameters - create referendum."
 msgstr "parametrów - utwórz referendum."
 
-#: glosowania/templates/glosowania/proposition.html:38
+#: glosowania/templates/glosowania/proposition.html:51
 msgid "Signatures"
 msgstr "Podpisy"
 
-#: glosowania/templates/glosowania/referendum.html:22
-#: glosowania/templates/glosowania/szczegoly.html:206
+#: glosowania/templates/glosowania/referendum.html:43
+#: glosowania/templates/glosowania/szczegoly.html:220
 msgid "Start referendum"
 msgstr "Start referendum"
 
-#: glosowania/templates/glosowania/referendum.html:24
-#: glosowania/templates/glosowania/szczegoly.html:209
+#: glosowania/templates/glosowania/referendum.html:45
+#: glosowania/templates/glosowania/szczegoly.html:223
 msgid "End referendum"
 msgstr "Koniec referendum"
 
-#: glosowania/templates/glosowania/szczegoly.html:16
-msgid "Discuss this proposal in the chat room"
-msgstr "Dyskutuj o tej propozycji w czacie"
-
-#: glosowania/templates/glosowania/szczegoly.html:22
+#: glosowania/templates/glosowania/szczegoly.html:29
 msgid "Bill number"
 msgstr "Numer przepisu"
 
-#: glosowania/templates/glosowania/szczegoly.html:23
+#: glosowania/templates/glosowania/szczegoly.html:31
 msgid "Bill title"
 msgstr "Tytuł"
 
-#: glosowania/templates/glosowania/szczegoly.html:24
+#: glosowania/templates/glosowania/szczegoly.html:38
 msgid "Bill state"
 msgstr "Status"
 
-#: glosowania/templates/glosowania/szczegoly.html:25
+#: glosowania/templates/glosowania/szczegoly.html:39
 msgid "Bill text"
 msgstr "Treść przepisu"
 
-#: glosowania/templates/glosowania/szczegoly.html:37
+#: glosowania/templates/glosowania/szczegoly.html:51
 msgid "Positive Arguments"
 msgstr "Argumenty Za"
 
-#: glosowania/templates/glosowania/szczegoly.html:47
-#: glosowania/templates/glosowania/szczegoly.html:81
+#: glosowania/templates/glosowania/szczegoly.html:61
+#: glosowania/templates/glosowania/szczegoly.html:95
 msgid "By"
 msgstr "Przez"
 
-#: glosowania/templates/glosowania/szczegoly.html:48
-#: glosowania/templates/glosowania/szczegoly.html:82
+#: glosowania/templates/glosowania/szczegoly.html:62
+#: glosowania/templates/glosowania/szczegoly.html:96
 msgid "Added"
 msgstr "Dodano"
 
-#: glosowania/templates/glosowania/szczegoly.html:50
-#: glosowania/templates/glosowania/szczegoly.html:84
+#: glosowania/templates/glosowania/szczegoly.html:64
+#: glosowania/templates/glosowania/szczegoly.html:98
 msgid "Modified"
 msgstr "Zmodyfikowano"
 
-#: glosowania/templates/glosowania/szczegoly.html:64
+#: glosowania/templates/glosowania/szczegoly.html:78
 msgid "No positive arguments yet."
 msgstr "Brak argumentów pozytywnych."
 
-#: glosowania/templates/glosowania/szczegoly.html:71
+#: glosowania/templates/glosowania/szczegoly.html:85
 msgid "Negative Arguments"
 msgstr "Argumenty Przeciw"
 
-#: glosowania/templates/glosowania/szczegoly.html:98
+#: glosowania/templates/glosowania/szczegoly.html:112
 msgid "No negative arguments yet."
 msgstr "Brak argumentów przeciw."
 
-#: glosowania/templates/glosowania/szczegoly.html:108
+#: glosowania/templates/glosowania/szczegoly.html:122
 msgid "Add Your Argument"
 msgstr "Dodaj swój argument"
 
-#: glosowania/templates/glosowania/szczegoly.html:114
+#: glosowania/templates/glosowania/szczegoly.html:128
 msgid "Add Argument"
 msgstr "Dodaj argument"
 
-#: glosowania/templates/glosowania/szczegoly.html:129
+#: glosowania/templates/glosowania/szczegoly.html:143
 msgid "Do you want a referendum on this law?"
 msgstr "Czy chcesz referendum w sprawie tego przepisu?"
 
-#: glosowania/templates/glosowania/szczegoly.html:130
+#: glosowania/templates/glosowania/szczegoly.html:144
 msgid "Yes, I sign"
 msgstr "Tak, podpisuję"
 
-#: glosowania/templates/glosowania/szczegoly.html:133
+#: glosowania/templates/glosowania/szczegoly.html:147
 msgid "You already signed this proposal."
 msgstr "Już podpisałeś tą propozycję."
 
-#: glosowania/templates/glosowania/szczegoly.html:135
+#: glosowania/templates/glosowania/szczegoly.html:149
 msgid "Withdraw your sign"
 msgstr "Wycofaj podpis"
 
-#: glosowania/templates/glosowania/szczegoly.html:152
+#: glosowania/templates/glosowania/szczegoly.html:166
 msgid "Do you want to implement this law?"
 msgstr "Czy chcesz wprowadzenia tego przepisu?"
 
-#: glosowania/templates/glosowania/szczegoly.html:154
-#: glosowania/templates/glosowania/szczegoly.html:176
+#: glosowania/templates/glosowania/szczegoly.html:168
+#: glosowania/templates/glosowania/szczegoly.html:190
 msgid "No"
 msgstr "Nie"
 
-#: glosowania/templates/glosowania/szczegoly.html:157
+#: glosowania/templates/glosowania/szczegoly.html:171
 msgid "You already voted."
 msgstr "Już zagłosowałeś."
 
-#: glosowania/templates/glosowania/szczegoly.html:167
+#: glosowania/templates/glosowania/szczegoly.html:181
 msgid "Result"
 msgstr "Wynik"
 
-#: glosowania/templates/glosowania/szczegoly.html:168 tasks/models.py:91
+#: glosowania/templates/glosowania/szczegoly.html:182 tasks/models.py:100
 msgid "For"
 msgstr "Za"
 
-#: glosowania/templates/glosowania/szczegoly.html:168 tasks/models.py:90
+#: glosowania/templates/glosowania/szczegoly.html:182 tasks/models.py:99
 msgid "Against"
 msgstr "Przeciw"
 
-#: glosowania/templates/glosowania/szczegoly.html:171
+#: glosowania/templates/glosowania/szczegoly.html:185
 msgid "Protocol"
 msgstr "Protokół"
 
-#: glosowania/templates/glosowania/szczegoly.html:183
+#: glosowania/templates/glosowania/szczegoly.html:197
 msgid "List of people who voted"
 msgstr "Lista osób, które zagłosowały"
 
-#: glosowania/templates/glosowania/szczegoly.html:187
+#: glosowania/templates/glosowania/szczegoly.html:201
 msgid "No votes recorded yet."
 msgstr "Nie ma jeszcze głosów."
 
-#: glosowania/templates/glosowania/szczegoly.html:198
+#: glosowania/templates/glosowania/szczegoly.html:212
 msgid "Number of people signed the motion for a referendum"
 msgstr "Liczba osób, które podpisały ten wniosek o referendum"
 
-#: glosowania/templates/glosowania/szczegoly.html:202
+#: glosowania/templates/glosowania/szczegoly.html:216
 msgid "History"
 msgstr "Historia"
 
-#: glosowania/templates/glosowania/szczegoly.html:204
+#: glosowania/templates/glosowania/szczegoly.html:218
 msgid "Date created"
 msgstr "Data utworzenia"
 
-#: glosowania/templates/glosowania/szczegoly.html:205
+#: glosowania/templates/glosowania/szczegoly.html:219
 msgid "Date of collecting signatures"
 msgstr "Data zebrania podpisów"
 
@@ -1628,54 +1703,64 @@ msgid "Your verification code is: %(code)s"
 msgstr "Twój kod weryfikacyjny to: %(code)s"
 
 #: glosowania/views.py:157 glosowania/views.py:185
-msgid "Write down your code or create screenshot to verify it when the referendum is over. This code will be presented just once and will be not related to you."
-msgstr "Zapisz swój kod na kartce lub zrób zrzut ekranu aby zweryfikować go po zakończeniu referendum. Ten kod zostanie przedstawiony tylko raz i nie będzie powiązany z twoją osobą."
+msgid ""
+"Write down your code or create screenshot to verify it when the referendum "
+"is over. This code will be presented just once and will be not related to "
+"you."
+msgstr ""
+"Zapisz swój kod na kartce lub zrób zrzut ekranu aby zweryfikować go po "
+"zakończeniu referendum. Ten kod zostanie przedstawiony tylko raz i nie "
+"będzie powiązany z twoją osobą."
 
 #: glosowania/views.py:179
 msgid "Your vote has been saved. You voted No."
 msgstr "Twój głos został zapisany. Zagłosowałeś na Nie."
 
-#: glosowania/views.py:265
+#: glosowania/views.py:273
 msgid "Arguments cannot be added after voting has ended."
 msgstr "Argumenty nie mogą być dodawane po zakończeniu głosowania."
 
-#: glosowania/views.py:277
+#: glosowania/views.py:285
 #, python-brace-format
 msgid "Your {type} argument has been added."
 msgstr "Twój argument {type} został dodany."
 
-#: glosowania/views.py:282
+#: glosowania/views.py:290
 msgid "There was an error with your argument. Please try again."
 msgstr "Wystąpił błąd z twoim argumentem. Spróbuj ponownie."
 
-#: glosowania/views.py:294
+#: glosowania/views.py:302
 msgid "You can only edit your own arguments."
 msgstr "Możesz edytować tylko własne argumenty."
 
-#: glosowania/views.py:299
+#: glosowania/views.py:307
 msgid "Arguments cannot be edited after voting has ended."
 msgstr "Argumenty nie mogą być edytowane po zakończeniu głosowania."
 
-#: glosowania/views.py:306
+#: glosowania/views.py:314
 msgid "Your argument has been updated."
 msgstr "Twój argument został zaktualizowany."
 
-#: glosowania/views.py:327
+#: glosowania/views.py:335
 msgid "You can only delete your own arguments."
 msgstr "Możesz usuwać tylko własne argumenty."
 
-#: glosowania/views.py:332
+#: glosowania/views.py:340
 msgid "Arguments cannot be deleted after voting has ended."
 msgstr "Argumenty nie mogą być usuwane po zakończeniu głosowania."
 
-#: glosowania/views.py:338
+#: glosowania/views.py:346
 msgid "Your argument has been deleted."
 msgstr "Twój argument został usunięty."
 
 #: grappelli/templates/registration/password_reset_email.html:2
 #, python-format
-msgid "You're receiving this email because you requested a password reset for your user account at %(site_name)s."
-msgstr "Otrzymujesz tę wiadomość e-mail, ponieważ poprosiłeś(aś) o zresetowanie hasła na stronie %(site_name)s."
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+"Otrzymujesz tę wiadomość e-mail, ponieważ poprosiłeś(aś) o zresetowanie "
+"hasła na stronie %(site_name)s."
 
 #: grappelli/templates/registration/password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
@@ -1824,20 +1909,30 @@ msgid "here"
 msgstr "tutaj"
 
 #: home/templates/home/password_reset_confirm.html:24
-msgid "The link you used is invalid, possibly because it has already been used."
-msgstr "Użyty link jest nieprawidłowy, prawdopodobnie dlatego, że został już użyty."
+msgid ""
+"The link you used is invalid, possibly because it has already been used."
+msgstr ""
+"Użyty link jest nieprawidłowy, prawdopodobnie dlatego, że został już użyty."
 
 #: home/templates/home/password_reset_confirm.html:25
 msgid "You must restart the password change process"
 msgstr "Musisz ponownie uruchomić proces zmiany hasła"
 
 #: home/templates/home/password_reset_done.html:7
-msgid "We've emailed you instructions for setting your password, if an account exists with the email you entered. You should receive them shortly."
-msgstr "Wysłaliśmy Ci e-mailem instrukcje dotyczące ustawiania hasła, jeśli istnieje konto z podanym adresem e-mail. Wkrótce powinieneś je otrzymać."
+msgid ""
+"We've emailed you instructions for setting your password, if an account "
+"exists with the email you entered. You should receive them shortly."
+msgstr ""
+"Wysłaliśmy Ci e-mailem instrukcje dotyczące ustawiania hasła, jeśli istnieje "
+"konto z podanym adresem e-mail. Wkrótce powinieneś je otrzymać."
 
 #: home/templates/home/password_reset_done.html:11
-msgid "If you don't receive an email, please make sure you've entered the address you registered with, and check your spam folder."
-msgstr "Jeśli nie otrzymasz wiadomości e-mail, upewnij się, że podałeś adres, na który się zarejestrowałeś i sprawdź folder ze spamem."
+msgid ""
+"If you don't receive an email, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr ""
+"Jeśli nie otrzymasz wiadomości e-mail, upewnij się, że podałeś adres, na "
+"który się zarejestrowałeś i sprawdź folder ze spamem."
 
 #: home/templates/home/password_reset_done.html:15
 msgid "Back to login page"
@@ -1857,7 +1952,8 @@ msgstr "Twoje hasło zostało zmienione."
 
 #: home/views.py:82
 msgid "You typed something wrong. See what error appeared above and try again."
-msgstr "Coś źle wpisałeś. Zobacz, jaki błąd pojawił się powyżej i spróbuj ponownie."
+msgstr ""
+"Coś źle wpisałeś. Zobacz, jaki błąd pojawił się powyżej i spróbuj ponownie."
 
 #: obywatele/forms.py:65
 msgid "The two email addresses fields didn't match."
@@ -2073,8 +2169,12 @@ msgid "Change your username"
 msgstr "Zmień nazwę użytkownika"
 
 #: obywatele/templates/obywatele/dodaj.html:28
-msgid "Below fields are not mandatory but filling them out will help us make the right decision when accepting a new person."
-msgstr "Pola poniżej nie są obowiązkowe, ale ich wypełnienie pomoże nam podjąć właściwą decyzję przy przyjmowaniu nowej osoby."
+msgid ""
+"Below fields are not mandatory but filling them out will help us make the "
+"right decision when accepting a new person."
+msgstr ""
+"Pola poniżej nie są obowiązkowe, ale ich wypełnienie pomoże nam podjąć "
+"właściwą decyzję przy przyjmowaniu nowej osoby."
 
 #: obywatele/templates/obywatele/menu.html:33
 msgid "Candidates"
@@ -2137,8 +2237,14 @@ msgid "Edit my assets"
 msgstr "Edytuj moje zasoby"
 
 #: obywatele/templates/obywatele/my_profile.html:25
-msgid "You don't have to fill all of them but the more information you'll give - the better we will be able to fullfill our needs. Also we will know each other better."
-msgstr "Nie musisz wypełniać ich wszystkich, ale im więcej informacji podasz tym łatwiej będziemy mogli wypełniać wzajemnie nasze potrzeby. Dzięki również lepiej się poznamy."
+msgid ""
+"You don't have to fill all of them but the more information you'll give - "
+"the better we will be able to fullfill our needs. Also we will know each "
+"other better."
+msgstr ""
+"Nie musisz wypełniać ich wszystkich, ale im więcej informacji podasz tym "
+"łatwiej będziemy mogli wypełniać wzajemnie nasze potrzeby. Dzięki również "
+"lepiej się poznamy."
 
 #: obywatele/templates/obywatele/parameters.html:13
 msgid "Population"
@@ -2165,7 +2271,8 @@ msgstr "punktów akceptacji."
 
 #: obywatele/templates/obywatele/parameters.html:31
 msgid "Existing person will be banned bellow"
-msgstr "Istniejąca osoba zostanie zablokowane gdy jej reputacja spadnie poniżej"
+msgstr ""
+"Istniejąca osoba zostanie zablokowane gdy jej reputacja spadnie poniżej"
 
 #: obywatele/templates/obywatele/parameters.html:35
 msgid "You can check your reputation in your"
@@ -2319,37 +2426,37 @@ msgstr "Ukończone"
 msgid "Cancelled"
 msgstr "Anulowane"
 
-#: tasks/models.py:115 tasks/templates/tasks/task_detail.html:46
-#: tasks/templates/tasks/task_detail.html:110
+#: tasks/models.py:124 tasks/templates/tasks/task_detail.html:74
+#: tasks/templates/tasks/task_detail.html:147
 msgid "Success"
 msgstr "Sukces"
 
-#: tasks/models.py:116 tasks/templates/tasks/task_detail.html:47
-#: tasks/templates/tasks/task_detail.html:116
+#: tasks/models.py:125 tasks/templates/tasks/task_detail.html:75
+#: tasks/templates/tasks/task_detail.html:153
 msgid "Failure"
 msgstr "Porażka"
 
-#: tasks/templates/tasks/_task_cards.html:46
-#: tasks/templates/tasks/task_detail.html:88
+#: tasks/templates/tasks/_task_cards.html:51
+#: tasks/templates/tasks/task_detail.html:116
 msgid "Resign"
 msgstr "Zrezygnuj"
 
-#: tasks/templates/tasks/_task_cards.html:52
-#: tasks/templates/tasks/task_detail.html:78
+#: tasks/templates/tasks/_task_cards.html:57
+#: tasks/templates/tasks/task_detail.html:106
 msgid "Take task"
 msgstr "Podejmij zadanie"
 
-#: tasks/templates/tasks/_task_cards.html:59
-#: tasks/templates/tasks/task_detail.html:45
+#: tasks/templates/tasks/_task_cards.html:64
+#: tasks/templates/tasks/task_detail.html:73
 msgid "Votes"
 msgstr "Głosy"
 
-#: tasks/templates/tasks/_task_cards.html:59
-#: tasks/templates/tasks/task_detail.html:30
+#: tasks/templates/tasks/_task_cards.html:64
+#: tasks/templates/tasks/task_detail.html:66
 msgid "Owner"
 msgstr "Właściciel"
 
-#: tasks/templates/tasks/_task_cards.html:59
+#: tasks/templates/tasks/_task_cards.html:64
 msgid "n/a"
 msgstr "brak"
 
@@ -2358,7 +2465,7 @@ msgid "Back to task"
 msgstr "Powrót do zadania"
 
 #: tasks/templates/tasks/task_close.html:10
-#: tasks/templates/tasks/task_detail.html:84
+#: tasks/templates/tasks/task_detail.html:112
 msgid "Close task"
 msgstr "Zamknij zadanie"
 
@@ -2370,33 +2477,47 @@ msgstr "Wybierz końcowy status tego zadania."
 msgid "Confirm close"
 msgstr "Potwierdź zamknięcie"
 
-#: tasks/templates/tasks/task_detail.html:6
+#: tasks/templates/tasks/task_detail.html:34
 msgid "Back to list"
 msgstr "Powrót do listy"
 
-#: tasks/templates/tasks/task_detail.html:30
+#: tasks/templates/tasks/task_detail.html:64
+msgid "Unknown"
+msgstr ""
+
+#: tasks/templates/tasks/task_detail.html:66
 msgid "Nobody"
 msgstr "Nikt"
 
-#: tasks/templates/tasks/task_detail.html:39
-msgid "Join discussion"
-msgstr "Dyskusja"
-
-#: tasks/templates/tasks/task_detail.html:60
+#: tasks/templates/tasks/task_detail.html:88
 msgid "Vote up"
 msgstr "Głos za"
 
-#: tasks/templates/tasks/task_detail.html:69
+#: tasks/templates/tasks/task_detail.html:97
 msgid "Vote down"
 msgstr "Głos przeciw"
 
-#: tasks/templates/tasks/task_detail.html:99
+#: tasks/templates/tasks/task_detail.html:126
+#: tasks/templates/tasks/task_detail.html:165
+msgid "Delete task"
+msgstr "Skasuj Zadanie"
+
+#: tasks/templates/tasks/task_detail.html:136
 msgid "Reopen task"
 msgstr "Otwórz ponownie zadanie"
 
-#: tasks/templates/tasks/task_detail.html:104
+#: tasks/templates/tasks/task_detail.html:141
 msgid "Evaluate outcome"
 msgstr "Oceń rezultat"
+
+#: tasks/templates/tasks/task_detail.html:171
+msgid ""
+"Are you sure you want to delete this task? This action cannot be undone."
+msgstr "Czy na pewno chcesz skasować to zadanie? To działanie nie może być odwrócone."
+
+#: tasks/templates/tasks/task_detail.html:177
+msgid "Yes, delete"
+msgstr "Tak, skasuj"
 
 #: tasks/templates/tasks/task_form.html:8
 msgid "Edit task"
@@ -2406,39 +2527,43 @@ msgstr "Edytuj zadanie"
 msgid "Add new task"
 msgstr "Dodaj nowe zadanie"
 
-#: tasks/templates/tasks/task_list.html:7
+#: tasks/templates/tasks/task_list.html:22
 msgid "Task board"
 msgstr "Tablica zadań"
 
-#: tasks/templates/tasks/task_list.html:8
+#: tasks/templates/tasks/task_list.html:23
 msgid "Add task"
 msgstr "Dodaj zadanie"
 
-#: tasks/templates/tasks/task_list.html:12
-msgid "This module is used to determine which tasks we should complete as a group and which we should skip."
-msgstr "Ten moduł służy do określenia, które zadania powinniśmy wykonać jako grupa, a które pominąć."
+#: tasks/templates/tasks/task_list.html:27
+msgid ""
+"This module is used to determine which tasks we should complete as a group "
+"and which we should skip."
+msgstr ""
+"Ten moduł służy do określenia, które zadania powinniśmy wykonać jako grupa, "
+"a które pominąć."
 
-#: tasks/templates/tasks/task_list.html:17
+#: tasks/templates/tasks/task_list.html:32
 msgid "Actively handled"
 msgstr "W realizacji"
 
-#: tasks/templates/tasks/task_list.html:22
+#: tasks/templates/tasks/task_list.html:37
 msgid "Awaiting pickup"
 msgstr "Oczekujące na podjęcie"
 
-#: tasks/templates/tasks/task_list.html:27
+#: tasks/templates/tasks/task_list.html:42
 msgid "Finished"
 msgstr "Zakończone"
 
-#: tasks/templates/tasks/task_list.html:29
+#: tasks/templates/tasks/task_list.html:44
 msgid "No completed tasks yet."
 msgstr "Brak ukończonych zadań."
 
-#: tasks/templates/tasks/task_list.html:32
+#: tasks/templates/tasks/task_list.html:47
 msgid "No cancelled tasks yet."
 msgstr "Brak anulowanych zadań."
 
-#: tasks/templates/tasks/task_list.html:35
+#: tasks/templates/tasks/task_list.html:50
 msgid "No rejected tasks yet."
 msgstr "Brak odrzuconych zadań."
 
@@ -2467,8 +2592,12 @@ msgid "Your account is inactive"
 msgstr "Twoje konto zostało założone ale nie jest jeszcze aktywne"
 
 #: templates/allauth/account/account_inactive.html:10
-msgid "If you are new user you need to wait until community will accept you. You will receive email once it will happen."
-msgstr "Musisz poczekać, aż społeczność zaakceptuje twoją kandydaturę. Gdy to się stanie otrzymasz wiadomość e-mail."
+msgid ""
+"If you are new user you need to wait until community will accept you. You "
+"will receive email once it will happen."
+msgstr ""
+"Musisz poczekać, aż społeczność zaakceptuje twoją kandydaturę. Gdy to się "
+"stanie otrzymasz wiadomość e-mail."
 
 #: templates/allauth/account/email.html:5
 #: templates/allauth/account/email.html:8
@@ -2508,8 +2637,12 @@ msgid "Warning:"
 msgstr "Ostrzeżenie:"
 
 #: templates/allauth/account/email.html:43
-msgid "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc."
-msgstr "Obecnie nie masz skonfigurowanego żadnego adresu e-mail. Naprawdę powinieneś dodać adres e-mail, aby otrzymywać powiadomienia, resetować hasło itp."
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+"Obecnie nie masz skonfigurowanego żadnego adresu e-mail. Naprawdę powinieneś "
+"dodać adres e-mail, aby otrzymywać powiadomienia, resetować hasło itp."
 
 #: templates/allauth/account/email.html:48
 msgid "Add E-mail Address"
@@ -2540,11 +2673,13 @@ msgstr ""
 #: templates/allauth/account/email/email_confirmation_message.txt:5
 #, python-format
 msgid ""
-"You're receiving this e-mail because user %(user_display)s has given your e-mail address to register an account on %(site_domain)s.\n"
+"You're receiving this e-mail because user %(user_display)s has given your e-"
+"mail address to register an account on %(site_domain)s.\n"
 "\n"
 "To confirm this is correct, go to %(activate_url)s"
 msgstr ""
-"Otrzymujesz tę wiadomość e-mail, ponieważ użytkownik %(user_display)s podał Twój adres e-mail do rejestracji konta na %(site_domain)s.\n"
+"Otrzymujesz tę wiadomość e-mail, ponieważ użytkownik %(user_display)s podał "
+"Twój adres e-mail do rejestracji konta na %(site_domain)s.\n"
 "\n"
 "Aby potwierdzić, że jest to twoje konto kliknij ten link %(activate_url)s"
 
@@ -2554,11 +2689,15 @@ msgstr "Potwierdź proszę swój adres E-mail"
 
 #: templates/allauth/account/email/password_reset_key_message.txt:4
 msgid ""
-"You're receiving this e-mail because you or someone else has requested a password for your user account.\n"
-"It can be safely ignored if you did not request a password reset. Click the link below to reset your password."
+"You're receiving this e-mail because you or someone else has requested a "
+"password for your user account.\n"
+"It can be safely ignored if you did not request a password reset. Click the "
+"link below to reset your password."
 msgstr ""
-"Otrzymujesz tę wiadomość e-mail, ponieważ Ty lub ktoś inny zażądał hasło do Twojego konta użytkownika.\n"
-"Można go bezpiecznie zignorować, jeśli nie zażądałeś resetowania hasła. Kliknij link poniżej, aby zresetować hasło."
+"Otrzymujesz tę wiadomość e-mail, ponieważ Ty lub ktoś inny zażądał hasło do "
+"Twojego konta użytkownika.\n"
+"Można go bezpiecznie zignorować, jeśli nie zażądałeś resetowania hasła. "
+"Kliknij link poniżej, aby zresetować hasło."
 
 #: templates/allauth/account/email/password_reset_key_message.txt:9
 #, python-format
@@ -2576,8 +2715,11 @@ msgstr "Potwierdź adres email"
 
 #: templates/allauth/account/email_confirm.html:18
 #, python-format
-msgid "Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is your e-mail."
-msgstr "Potwierdź, że <a href=\"mailto:%(email)s\">%(email)s</a> to twój e-mail"
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is your e-"
+"mail."
+msgstr ""
+"Potwierdź, że <a href=\"mailto:%(email)s\">%(email)s</a> to twój e-mail"
 
 #: templates/allauth/account/email_confirm.html:22
 msgid "Confirm"
@@ -2585,8 +2727,12 @@ msgstr "Potwierdzam"
 
 #: templates/allauth/account/email_confirm.html:29
 #, python-format
-msgid "This e-mail confirmation link expired or is invalid. Please <a href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
-msgstr "Ten e-mailowy link potwierdzający wygasł lub jest nieprawidłowy. Proszę <a href=\"%(email_url)s\">wyślij nową prośbę o potwierdzenie emaila</a>."
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+"Ten e-mailowy link potwierdzający wygasł lub jest nieprawidłowy. Proszę <a "
+"href=\"%(email_url)s\">wyślij nową prośbę o potwierdzenie emaila</a>."
 
 #: templates/allauth/account/login.html:6
 #: templates/allauth/account/login.html:15
@@ -2621,8 +2767,12 @@ msgstr "Potwierdzenie zostało wysłane na adres %(email)s."
 
 #: templates/allauth/account/messages/email_confirmed.txt:2
 #, python-format
-msgid "You have confirmed %(email)s. Please wait until group will accept you. You will receive email when that happen."
-msgstr "Potwierdziłeś email %(email)s. Poczekaj, aż grupa Cię zaakceptuje. Otrzymasz wiadomość, gdy to nastąpi."
+msgid ""
+"You have confirmed %(email)s. Please wait until group will accept you. You "
+"will receive email when that happen."
+msgstr ""
+"Potwierdziłeś email %(email)s. Poczekaj, aż grupa Cię zaakceptuje. Otrzymasz "
+"wiadomość, gdy to nastąpi."
 
 #: templates/allauth/account/messages/email_deleted.txt:2
 #, python-format
@@ -2672,8 +2822,12 @@ msgid "Password Reset"
 msgstr "Zresetowanie hasła"
 
 #: templates/allauth/account/password_reset.html:15
-msgid "Forgotten your password? Enter your e-mail address below, and we'll send you an e-mail allowing you to reset it."
-msgstr "Zapomniałeś swojego hasła? Wpisz poniżej swój adres e-mail, a wyślemy Ci wiadomość e-mail umożliwiającą jego zresetowanie."
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+"Zapomniałeś swojego hasła? Wpisz poniżej swój adres e-mail, a wyślemy Ci "
+"wiadomość e-mail umożliwiającą jego zresetowanie."
 
 #: templates/allauth/account/password_reset.html:20
 msgid "Reset My Password"
@@ -2684,8 +2838,12 @@ msgid "Please contact us if you have any trouble resetting your password."
 msgstr "Skontaktuj się z nami, jeśli masz problemy ze zresetowaniem hasła."
 
 #: templates/allauth/account/password_reset_done.html:15
-msgid "We have sent you an e-mail. Please contact us if you do not receive it within a few minutes."
-msgstr "Wysłaliśmy Ci e-mail. Skontaktuj się z nami, jeśli nie otrzymasz go w ciągu kilku minut."
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+"Wysłaliśmy Ci e-mail. Skontaktuj się z nami, jeśli nie otrzymasz go w ciągu "
+"kilku minut."
 
 #: templates/allauth/account/password_reset_from_key.html:7
 msgid "Bad Token"
@@ -2693,8 +2851,14 @@ msgstr "Nieprawidłowy token"
 
 #: templates/allauth/account/password_reset_from_key.html:11
 #, python-format
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</a>."
-msgstr "Link do resetowania hasła był nieprawidłowy, prawdopodobnie dlatego, że został już użyty. Poproś o <a href=\"%(passwd_reset_url)s\">zresetowanie nowego hasła</a>."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+"Link do resetowania hasła był nieprawidłowy, prawdopodobnie dlatego, że "
+"został już użyty. Poproś o <a href=\"%(passwd_reset_url)s\">zresetowanie "
+"nowego hasła</a>."
 
 #: templates/allauth/account/password_reset_from_key.html:17
 msgid "change password"
@@ -2716,16 +2880,27 @@ msgid "Account is created in 2 steps:"
 msgstr "Konto jest tworzone w 2 krokach:"
 
 #: templates/allauth/account/signup.html:14
-msgid "Right after filling out below form you need to confirm your email. Click the link from email you will receive."
-msgstr "Po wypełnieniu poniższego formularza należy potwierdzić swój adres e-mail. Kliknij link z e-maila, który otrzymasz."
+msgid ""
+"Right after filling out below form you need to confirm your email. Click the "
+"link from email you will receive."
+msgstr ""
+"Po wypełnieniu poniższego formularza należy potwierdzić swój adres e-mail. "
+"Kliknij link z e-maila, który otrzymasz."
 
 #: templates/allauth/account/signup.html:15
-msgid "Then you have to wait until group approve your application. When this happens you will be notified by email."
-msgstr "Następnie musisz poczekać, aż grupa zatwierdzi twoje zgłoszenie. Kiedy to nastąpi, zostaniesz powiadomiony e-mailem."
+msgid ""
+"Then you have to wait until group approve your application. When this "
+"happens you will be notified by email."
+msgstr ""
+"Następnie musisz poczekać, aż grupa zatwierdzi twoje zgłoszenie. Kiedy to "
+"nastąpi, zostaniesz powiadomiony e-mailem."
 
 #: templates/allauth/account/signup.html:16
-msgid " Somebody may contact you to ask about your interests and expectations. "
-msgstr "Ktoś może się z Tobą skontaktować aby zapytać o Twoje zainteresowania i oczekiwania."
+msgid ""
+" Somebody may contact you to ask about your interests and expectations. "
+msgstr ""
+"Ktoś może się z Tobą skontaktować aby zapytać o Twoje zainteresowania i "
+"oczekiwania."
 
 #: templates/allauth/account/signup_closed.html:5
 #: templates/allauth/account/signup_closed.html:8
@@ -2749,12 +2924,20 @@ msgid "Verify Your E-mail Address"
 msgstr "Zweryfikuj swój adres email"
 
 #: templates/allauth/account/verification_sent.html:10
-msgid "We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process."
-msgstr "Wysłaliśmy do Ciebie e-mail w celu weryfikacji. Kliknij link z emaila aby dokończyć rejestrację."
+msgid ""
+"We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process."
+msgstr ""
+"Wysłaliśmy do Ciebie e-mail w celu weryfikacji. Kliknij link z emaila aby "
+"dokończyć rejestrację."
 
 #: templates/allauth/account/verification_sent.html:11
-msgid "After verifying your email, you wont be able to login immidietally. You have to wait a bit to be approved by community."
-msgstr "Po zweryfikowaniu nie będziesz mogła/mógł się zalogować od razu. Musisz chwilkę zaczekać na zaakceptowanie przez społeczność."
+msgid ""
+"After verifying your email, you wont be able to login immidietally. You have "
+"to wait a bit to be approved by community."
+msgstr ""
+"Po zweryfikowaniu nie będziesz mogła/mógł się zalogować od razu. Musisz "
+"chwilkę zaczekać na zaakceptowanie przez społeczność."
 
 #: templates/allauth/account/verified_email_required.html:12
 msgid ""
@@ -2773,13 +2956,18 @@ msgid ""
 "contact us if you do not receive it within a few minutes."
 msgstr ""
 "Wysłaliśmy do Ciebie wiadomość e-mail w celu\n"
-"weryfikacji. Proszę kliknąć na link znajdujący się w tej wiadomości e-mail. Jeśli nie otrzymasz go w ciągu kilku minut,\n"
+"weryfikacji. Proszę kliknąć na link znajdujący się w tej wiadomości e-mail. "
+"Jeśli nie otrzymasz go w ciągu kilku minut,\n"
 "skontaktuj się z nami."
 
 #: templates/allauth/account/verified_email_required.html:20
 #, python-format
-msgid "<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-mail address</a>."
-msgstr "<strong>Uwaga:</strong> nadal możesz <a href=\"%(email_url)s\">zmienić swój adres e-mail</a>."
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
+"mail address</a>."
+msgstr ""
+"<strong>Uwaga:</strong> nadal możesz <a href=\"%(email_url)s\">zmienić swój "
+"adres e-mail</a>."
 
 #: zzz/settings.py:88
 msgid "English"
@@ -2788,3 +2976,15 @@ msgstr "Angielski"
 #: zzz/settings.py:89
 msgid "Polish"
 msgstr "Polski"
+
+#~ msgid "Positives"
+#~ msgstr "Argumenty Za"
+
+#~ msgid "Negatives"
+#~ msgstr "Argumenty Przeciw"
+
+#~ msgid "Discuss this proposal in the chat room"
+#~ msgstr "Dyskutuj o tej propozycji w czacie"
+
+#~ msgid "Join discussion"
+#~ msgstr "Dyskusja"
