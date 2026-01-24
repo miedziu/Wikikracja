@@ -93,6 +93,18 @@ class TaskListView(LoginRequiredMixin, TemplateView):
             if task.priority_category != "rejected" and task.status == Task.Status.CANCELLED
         ]
 
+        # Add chat room pulse class for tasks with unseen messages
+        if self.request.user.is_authenticated:
+            all_tasks = active_tasks + finished_tasks
+            for task in all_tasks:
+                chat_room = task.chat_room
+                if (chat_room and 
+                    chat_room.messages.exists() and 
+                    not chat_room.seen_by.filter(id=self.request.user.id).exists()):
+                    task.chat_room_pulse_class = "chat-room-pulse"
+                else:
+                    task.chat_room_pulse_class = ""
+
         context.update(
             {
                 "active_tasks": active_with_owner,
@@ -188,6 +200,15 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         if self.request.user.is_authenticated:
             vote = TaskVote.objects.filter(task=task, user=self.request.user).first()
             context["user_vote_value"] = vote.value if vote else None
+            
+            # Check if chat room has unseen messages
+            chat_room = task.chat_room
+            if (chat_room and 
+                chat_room.messages.exists() and 
+                not chat_room.seen_by.filter(id=self.request.user.id).exists()):
+                task.chat_room_pulse_class = "chat-room-pulse"
+            else:
+                task.chat_room_pulse_class = ""
         context["task"] = task
         return context
 
@@ -305,5 +326,11 @@ def delete_task(request: HttpRequest, pk: int) -> HttpResponse:
     task = get_object_or_404(Task, pk=pk)
     if task.created_by != request.user:
         return redirect("tasks:detail", pk=pk)
+    
+    # Delete associated chat room if it exists
+    chat_room = task.chat_room
+    if chat_room:
+        chat_room.delete()
+    
     task.delete()
     return redirect("tasks:list")

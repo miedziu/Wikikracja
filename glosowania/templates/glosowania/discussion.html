@@ -8,12 +8,33 @@
 
 {% block glosowania %}
 
+<style>
+  .chat-room-pulse {
+    animation: text-flash 2s infinite;
+  }
+  @keyframes text-flash {
+    0%, 100% {
+      opacity: 1;
+      color: #0d6efd;
+    }
+    50% {
+      opacity: 0.3;
+      color: #0d6efd;
+    }
+  }
+</style>
+
 <div class="container mt-4">
 	<p>
 		{% if votings %}
 			{% for i in votings %}
 				<h5>
 					{{ i.pk }}. <a href="{% url 'glosowania:details' pk=i.pk %}">{{ i.title }}</a>
+					{% if i.chat_room %}
+						<a href="{% url 'chat:chat' %}#room_id={{ i.chat_room.id }}" target="_blank" class="text-decoration-none ms-3 {{ i.chat_room_pulse_class }}">
+							<i class="bi bi-chat-dots" style="font-size: 1.1em;"></i>
+						</a>
+					{% endif %}
 				</h5>
 				{{ i.tresc|linebreaks }}
 				<div class="row">

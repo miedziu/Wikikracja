@@ -6,21 +6,35 @@
 
 {% block glosowania %}
 
+<style>
+  .chat-room-pulse {
+    animation: text-flash 2s infinite;
+  }
+  @keyframes text-flash {
+    0%, 100% {
+      opacity: 1;
+      color: #0d6efd;
+    }
+    50% {
+      opacity: 0.3;
+      color: #0d6efd;
+    }
+  }
+</style>
+
 	{% if prev %} <a href="{% url 'glosowania:details' pk=prev.id %}"> << </a> {% else %} << {% endif %} |
 	{% if next %} <a href="{% url 'glosowania:details' pk=next.id %}"> >> </a> {% else %} >> {% endif %}
 
-	{% if chat_room %}
-		<div class="alert alert-info mb-3">
-			<i class="fas fa-comments"></i> 
-			<a href="{% url 'chat:chat' %}#room_id={{ chat_room.id }}" class="alert-link">
-				{% trans 'Discuss this proposal in the chat room' %} "{{ chat_room.title }}"
-			</a>
-		</div>
-	{% endif %}
-
 	<div>
 		<h5><u><b>{% trans 'Bill number' %}</b></u> {{ id.id }}</h5>
-		<h5><u><b>{% trans 'Bill title' %}</b></u> {{ id.title }}</h5>
+		<h5>
+			<u><b>{% trans 'Bill title' %}</b></u> {{ id.title }}
+			{% if chat_room %}
+				<a href="{% url 'chat:chat' %}#room_id={{ chat_room.id }}" target="_blank" class="text-decoration-none ms-3 {{ chat_room_pulse_class }}">
+					<i class="bi bi-chat-dots" style="font-size: 1.1em;"></i>
+				</a>
+			{% endif %}
+		</h5>
 		<h5><u><b>{% trans 'Bill state' %}</b></u> {{ state }}</h5>
 		<h5><u><b>{% trans 'Bill text' %}</b></u> {{ id.tresc|linebreaks }}</h5>
 		<h5><u><b>{% trans 'Penalty for non-compliance' %}</b></u> {{ id.kara|linebreaks }}</h5>

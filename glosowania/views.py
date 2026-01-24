@@ -212,6 +212,13 @@ def details(request:HttpRequest, pk: int):
 
     chat_room = Room.objects.filter(title=room_title).first()
     
+    # Check if chat room has unseen messages
+    chat_room_pulse_class = ""
+    if chat_room and request.user.is_authenticated:
+        if (chat_room.messages.exists() and 
+            not chat_room.seen_by.filter(id=request.user.id).exists()):
+            chat_room_pulse_class = "chat-room-pulse"
+    
     # Query arguments for this decision
     arguments = Argument.objects.filter(decyzja=pk).select_related('author')
     
@@ -249,6 +256,7 @@ def details(request:HttpRequest, pk: int):
                                                          'prev': prev,
                                                          'next': next,
                                                          'chat_room': chat_room,
+                                                         'chat_room_pulse_class': chat_room_pulse_class,
                                                          'positive_arguments': positive_arguments,
                                                          'negative_arguments': negative_arguments,
                                                          'argument_form': argument_form,
@@ -394,18 +402,69 @@ def rejected(request: HttpRequest):
 @login_required
 def proposition(request: HttpRequest):
     votings = Decyzja.objects.filter(status=1).order_by('data_referendum_start')
+    
+    # Add chat room info for each voting
+    for voting in votings:
+        room_title = f"#{voting.pk}:{voting.title[:20]}"
+        chat_room = Room.objects.filter(title=room_title).first()
+        voting.chat_room = chat_room
+        
+        # Check for unseen messages
+        if chat_room and request.user.is_authenticated:
+            if (chat_room.messages.exists() and 
+                not chat_room.seen_by.filter(id=request.user.id).exists()):
+                voting.chat_room_pulse_class = "chat-room-pulse"
+            else:
+                voting.chat_room_pulse_class = ""
+        else:
+            voting.chat_room_pulse_class = ""
+    
     return render(request, 'glosowania/proposition.html', {'votings': votings})
 
 
 @login_required
 def discussion(request: HttpRequest):
     votings = Decyzja.objects.filter(status=2).order_by('data_referendum_start')
+    
+    # Add chat room info for each voting
+    for voting in votings:
+        room_title = f"#{voting.pk}:{voting.title[:20]}"
+        chat_room = Room.objects.filter(title=room_title).first()
+        voting.chat_room = chat_room
+        
+        # Check for unseen messages
+        if chat_room and request.user.is_authenticated:
+            if (chat_room.messages.exists() and 
+                not chat_room.seen_by.filter(id=request.user.id).exists()):
+                voting.chat_room_pulse_class = "chat-room-pulse"
+            else:
+                voting.chat_room_pulse_class = ""
+        else:
+            voting.chat_room_pulse_class = ""
+    
     return render(request, 'glosowania/discussion.html', {'votings': votings})
 
 
 @login_required
 def referendum(request: HttpRequest):
     votings = Decyzja.objects.filter(status=3).order_by('data_referendum_start')
+    
+    # Add chat room info for each voting
+    for voting in votings:
+        room_title = f"#{voting.pk}:{voting.title[:20]}"
+        chat_room = Room.objects.filter(title=room_title).first()
+        voting.chat_room = chat_room
+        
+        # Check for unseen messages
+        if chat_room and request.user.is_authenticated:
+            if (chat_room.messages.exists() and 
+                not chat_room.seen_by.filter(id=request.user.id).exists()):
+                voting.chat_room_pulse_class = "chat-room-pulse"
+            else:
+                voting.chat_room_pulse_class = ""
+        else:
+            voting.chat_room_pulse_class = ""
+    
     return render(request, 'glosowania/referendum.html', {'votings': votings})
 
 
