@@ -68,14 +68,28 @@ class Command(BaseCommand):
                 logger.info(f'No new messages for user {u.uid}')
                 continue
 
+            # Group messages by room
+            from collections import defaultdict
+            messages_by_room = defaultdict(list)
+            for m in message_list.order_by('room', 'time'):
+                messages_by_room[m.room].append(m)
+
             b: list[str] = []
-            # TODO: Something like <for m in message_list.order_by('room', 'time'):> but this one doesn't work
-            for m in message_list:
-                logger.info(f'Found messages for user {u.uid}: {m.text}')
-                t = m.time.strftime("%Y-%m-%d %H:%M")
-                if m.anonymous:
-                    m.sender = None
-                b.append(f'{t} {m.room.displayed_name(u)} | {m.sender}: {m.text}')
+            for room, messages in messages_by_room.items():
+                # Add room header with name as link
+                room_link = f"{HOST}/chat#room_id={room.id}"
+                room_name = room.displayed_name(u.uid)
+                b.append(f"## {room_name}: {room_link}")
+                b.append("")
+                
+                # Add messages without date/time/room
+                for m in messages:
+                    logger.info(f'Found messages for user {u.uid}: {m.text}')
+                    if m.anonymous:
+                        m.sender = None
+                    b.append(f'{m.sender}: {m.text}')
+                
+                b.append("")  # Empty line between rooms
 
             body = "\n".join(b)
             if body:
