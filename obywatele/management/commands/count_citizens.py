@@ -13,6 +13,7 @@ from django.db.models import Sum
 from chat import signals
 from zzz.utils import get_site_domain
 import logging
+import time
 
 l = logging.getLogger('django')
 
@@ -86,6 +87,7 @@ class Command(BaseCommand):
 {_('You may change password here')}: {host}/haslo/\
 """
                 try:
+                    time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
                     send_mail(subject, message, s.DEFAULT_FROM_EMAIL, [uemail], fail_silently=False)
                     self.stdout.write(f'Sent welcome email to {uemail}')
                 except Exception as e:
@@ -115,6 +117,7 @@ class Command(BaseCommand):
 {_('Your account on')} {host} {_('has been blocked')}\n\n\
 """
                 try:
+                    time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
                     send_mail(subject, message, sender, bcc, fail_silently=False)
                     self.stdout.write(f'Sent account blocked notification to {i.uid.email}')
                 except Exception as e:

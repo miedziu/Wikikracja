@@ -12,6 +12,7 @@ from django.conf import settings as s
 from django.contrib.auth.models import User
 from chat.models import Room
 import logging as l
+import time
 from django.utils import translation
 # from django.contrib import messages
 # from django.shortcuts import redirect
@@ -191,6 +192,7 @@ class Command(BaseCommand):
                 )
             l.warning(f"subject: {subject} \n message: {message}")
             
+            time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
             email_message.send()
 
         zliczaj_wszystko()

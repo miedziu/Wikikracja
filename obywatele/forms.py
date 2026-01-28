@@ -8,6 +8,7 @@ from django.utils import translation
 from django.conf import settings as s
 from django.core.mail import EmailMessage
 import threading
+import time
 from captcha.fields import CaptchaField
 import logging as l
 from zzz.utils import build_site_url, get_site_domain
@@ -160,10 +161,11 @@ def SendEmailToAll(subject, message):
         )
     l.info(f'subject: {subject} message: {message}')
     
-    t = threading.Thread(
-                         target=email_message.send,
-                         kwargs={"fail_silently": False,}
-                        )
+    def _send_with_delay():
+        time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
+        email_message.send(fail_silently=False)
+
+    t = threading.Thread(target=_send_with_delay)
     t.setDaemon(True)
     t.start()
 

@@ -14,6 +14,7 @@ from django.shortcuts import redirect
 import logging
 from django.utils import translation
 import threading
+import time
 import random
 from chat.models import Room
 from zzz.utils import build_site_url, get_site_domain
@@ -369,10 +370,11 @@ def SendEmail(subject: str, message: str):
         )
     # l.info(f'subject: {subject} \n message: {message}')
     
-    t = threading.Thread(
-        target=email_message.send,
-        kwargs={"fail_silently": False,}
-    )
+    def _send_with_delay():
+        time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
+        email_message.send(fail_silently=False)
+
+    t = threading.Thread(target=_send_with_delay)
     t.setDaemon(True)
     t.start()
 

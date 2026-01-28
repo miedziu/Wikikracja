@@ -270,6 +270,7 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 SERVER_EMAIL = os.getenv("SERVER_EMAIL", "")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", SERVER_EMAIL)
+EMAIL_SEND_DELAY_SECONDS = env_int("EMAIL_SEND_DELAY_SECONDS", 2)
 
 if not DEBUG and EMAIL_BACKEND == "django.core.mail.backends.smtp.EmailBackend":
     missing = []

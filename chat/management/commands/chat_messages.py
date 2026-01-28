@@ -51,14 +51,14 @@ class Command(BaseCommand):
                 bcc = recipients,
                 )
             logger.info(f'SENDING - Subject: {email_message.subject}; TO: {email_message.bcc};')
-            # email_message.send  # Without threading
-            t = threading.Thread(
-                target=email_message.send,
-                kwargs={"fail_silently": False,}
-            )
+
+            def _send_with_delay():
+                sleep(s.EMAIL_SEND_DELAY_SECONDS)
+                email_message.send(fail_silently=False)
+
+            t = threading.Thread(target=_send_with_delay)
             t.setDaemon(True)
             t.start()
-            sleep(2)  # Doesn't send emails without that thing
 
         user_list = Uzytkownik.objects.filter(uid__is_active=True)
         for u in user_list:
