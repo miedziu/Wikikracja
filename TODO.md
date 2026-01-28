@@ -1,4 +1,5 @@
 # PILNE
+- Jeśli ktoś próbuje zapisać się do grupy po raz drugi (na ten sam email) to powinien dostać infomrację, że jego kandydatura jeszcze jest w kolejce
 - kalendarz. Powiadomienia whatsapp o spotkaniu
 - On the Candidates list there should be icon next each candidate. Icon should have following states: email confirmed, email not confirmed, invited (by existing member)
 - Dokończyć Fixtures i dodać je do skryptu instalacyjnego. Fixtures z przepisami, pokojami i ogłoszeniami. Start: (To jest publiczna strona startowa dostępna dla osób niezalogowanych) i Footer: (To jest publiczna stopka twojej strony).
