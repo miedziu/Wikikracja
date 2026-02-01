@@ -1,4 +1,6 @@
 # PILNE
+- Dobrowolny formularz dla nowej osoby ponieważ nic nie wiemy o kimś kto chce przystąpić: coś o sobie, co lubisz, jakie masz hobby, itd. Ja wprawdzie sprawdzam czy osoba żyje ale to za mało - wszyscy powinni móc wyrobić sobie opinie o kandydacie.
+- Zadania - małe guziczki za/przeciw w widoku listy.
 - Jeśli ktoś próbuje zapisać się do grupy po raz drugi (na ten sam email) to powinien dostać infomrację, że jego kandydatura jeszcze jest w kolejce
 - kalendarz. Powiadomienia whatsapp o spotkaniu
 - On the Candidates list there should be icon next each candidate. Icon should have following states: email confirmed, email not confirmed, invited (by existing member)
@@ -7,7 +9,6 @@
 - Dodać opcję likwidacji własnego konta
 - Jeśli czas trwania referendum jest ustawiony na 3 dni, to referendum w rzeczywistości trwa 4 dni
 - Automatyczne głosowania Wiki. Poziom akceptacji, itd
-- Dobrowolny formularz dla nowej osoby ponieważ nic nie wiemy o kimś kto chce przystąpić: coś o sobie, co lubisz, jakie masz hobby, itd. Ja wprawdzie sprawdzam czy osoba żyje ale to za mało - wszyscy powinni móc wyrobić sobie opinie o kandydacie.
 - https://www.kialo.com/ https://github.com/ehsanfakhraie/kialo/
 - Lepsze wyjaśnienie do emaili z powiadomieniami (głosowania i czat oddzielnie).
 - Warto było ustawić "Tryb powolny" na wysoką wartość tak aby wysyłanie wiadomości na "Ważne Ogłoszenia" można było robić bardzo rzadko.
