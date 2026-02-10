@@ -1,4 +1,12 @@
 {% load i18n %}
+<style>
+  .owner-highlight {
+    background-color: #fff3cd;
+    padding: 0.2em 0.4em;
+    border-radius: 0.25em;
+    font-weight: 500;
+  }
+</style>
 {% if tasks %}
   {% for task in tasks %}
   <div class="card mb-3">
@@ -61,7 +69,13 @@
       </div>
 
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 small text-muted border-top pt-2">
-        <span>{% trans "Votes" %}: {{ task.votes_score|default:0 }} | {% trans "Owner" %}: {{ task.assigned_to|default:_("n/a") }}</span>
+        <span>{% trans "Votes" %}: {{ task.votes_score|default:0 }} | {% trans "Owner" %}: 
+          {% if task.is_active and task.assigned_to == request.user %}
+            <span class="owner-highlight">{{ task.assigned_to }}</span>
+          {% else %}
+            {{ task.assigned_to|default:_("n/a") }}
+          {% endif %}
+        </span>
       </div>
     </div>
   </div>
