@@ -1,4 +1,5 @@
 # PILNE
+- okres próbny: głowowania wszystkie są zablokowane, finanse i emaile do ludzi nie są widoczne
 - Dobrowolny formularz dla nowej osoby ponieważ nic nie wiemy o kimś kto chce przystąpić: coś o sobie, co lubisz, jakie masz hobby, itd. Ja wprawdzie sprawdzam czy osoba żyje ale to za mało - wszyscy powinni móc wyrobić sobie opinie o kandydacie.
 - Zadania - małe guziczki za/przeciw w widoku listy.
 - Jeśli ktoś próbuje zapisać się do grupy po raz drugi (na ten sam email) to powinien dostać infomrację, że jego kandydatura jeszcze jest w kolejce
