@@ -16,7 +16,7 @@
         {% if events %}
             <div class="row">
                 {% for event in events %}
-                    <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="col-md-6 col-lg-6 mb-4">
                         <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title">{{ event.title }}</h5>
@@ -73,15 +73,18 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <div class="card-footer">
+                            <div class="card-footer d-flex gap-2">
                                 <a href="{% url 'events:detail' event.pk %}" class="btn btn-sm btn-outline-warning">
-                                    {% trans "View Details" %}
+                                    {% trans "Details" %}
                                 </a>
                                 {% if user.is_authenticated %}
                                     <a href="{% url 'events:edit' event.pk %}" class="btn btn-sm btn-outline-info">
                                         {% trans "Edit" %}
                                     </a>
                                 {% endif %}
+                                <a href="{{ event.google_calendar_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success" title="{% trans 'Add to Google Calendar' %}">
+                                    <i class="bi bi-calendar-plus"></i> {% trans "Add to Calendar" %}
+                                </a>
                             </div>
                         </div>
                     </div>

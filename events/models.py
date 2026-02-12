@@ -2,8 +2,9 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from datetime import timedelta
+from datetime import timedelta, timezone as dt_timezone
 import calendar
+from urllib.parse import urlencode
 
 
 class Event(models.Model):
@@ -207,3 +208,82 @@ class Event(models.Model):
         if not self.is_active:
             return False
         return self.get_next_occurrence() is not None
+    
+    @property
+    def google_calendar_url(self):
+        """
+        Generate a Google Calendar URL for this event.
+        
+        Returns:
+            URL string for adding event to Google Calendar
+        """
+        # Use the original start date for the event
+        event_date = self.start_date
+        
+        # Make sure we're working with timezone-aware datetime
+        if timezone.is_naive(event_date):
+            event_date = timezone.make_aware(event_date)
+        
+        # Format dates for Google Calendar (yyyyMMddTHHmmssZ format)
+        # Convert to UTC for consistency
+        event_date_utc = event_date.astimezone(dt_timezone.utc)
+        start_dt = event_date_utc.strftime('%Y%m%dT%H%M%SZ')
+        
+        # Calculate end date
+        if self.end_date:
+            # Use the time difference from original start/end
+            duration = self.end_date - self.start_date
+            end_date = event_date + duration
+            if timezone.is_naive(end_date):
+                end_date = timezone.make_aware(end_date)
+            end_date_utc = end_date.astimezone(dt_timezone.utc)
+            end_dt = end_date_utc.strftime('%Y%m%dT%H%M%SZ')
+        else:
+            # Default to 1 hour duration
+            end_date = event_date + timedelta(hours=1)
+            end_date_utc = end_date.astimezone(dt_timezone.utc)
+            end_dt = end_date_utc.strftime('%Y%m%dT%H%M%SZ')
+        
+        # Build description with link if available
+        description = self.description or ''
+        if self.link:
+            description = f"{description}\n\nLink: {self.link}" if description else f"Link: {self.link}"
+        
+        # Build location
+        location = self.place if self.place else ''
+        
+        # Build recurrence rule for Google Calendar
+        recurrence = None
+        if self.frequency == 'daily':
+            recurrence = 'RRULE:FREQ=DAILY'
+        elif self.frequency == 'weekly':
+            recurrence = 'RRULE:FREQ=WEEKLY'
+        elif self.frequency == 'monthly':
+            recurrence = 'RRULE:FREQ=MONTHLY'
+        elif self.frequency == 'monthly_ordinal' and self.monthly_ordinal and self.monthly_weekday is not None:
+            # Convert weekday (0=Monday) to Google Calendar format (SU, MO, TU, WE, TH, FR, SA)
+            weekday_map = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
+            weekday_str = weekday_map[self.monthly_weekday]
+            ordinal = self.monthly_ordinal
+            recurrence = f'RRULE:FREQ=MONTHLY;BYDAY={ordinal}{weekday_str}'
+        elif self.frequency == 'yearly':
+            recurrence = 'RRULE:FREQ=YEARLY'
+        
+        # Build parameters for new Google Calendar URL format
+        params = {
+            'action': 'TEMPLATE',
+            'text': self.title,
+            'dates': f'{start_dt}/{end_dt}',
+        }
+        
+        # Only add non-empty optional parameters
+        if description:
+            params['details'] = description
+        if location:
+            params['location'] = location
+        if recurrence:
+            params['recur'] = recurrence
+        
+        # Generate URL - use the new calendar.google.com/calendar/u/0/r/eventedit format
+        base_url = 'https://calendar.google.com/calendar/render'
+        return f'{base_url}?{urlencode(params)}'
