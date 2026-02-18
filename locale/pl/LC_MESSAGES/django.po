@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:17+0100\n"
+"POT-Creation-Date: 2026-02-18 22:56+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -1252,8 +1252,8 @@ msgid "Reasoning"
 msgstr "Uzasadnienie"
 
 #: .\glosowania\models.py:46
-msgid "What events or thoughts inspired this bill? What are the expected results?"
-msgstr "Jakie wydarzenia lub przemyślenia zainspirowały ten projekt? Jakie są oczekiwane efekty?"
+msgid "Why do we need this law? What events or thoughts inspired this bill? What are the expected results?"
+msgstr "Dlaczego potrzebujemy tego przepisu? Jakie wydarzenia lub przemyślenia zainspirowały ten projekt? Jakie są oczekiwane efekty?"
 
 #: .\glosowania\models.py:51
 msgid "Positive Aspects of the Idea"

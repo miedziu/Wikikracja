@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:17+0100\n"
+"POT-Creation-Date: 2026-02-18 22:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1263,7 +1263,7 @@ msgid "Reasoning"
 msgstr ""
 
 #: .\glosowania\models.py:46
-msgid "What events or thoughts inspired this bill? What are the expected results?"
+msgid "Why do we need this law? What events or thoughts inspired this bill? What are the expected results?"
 msgstr ""
 
 #: .\glosowania\models.py:51
