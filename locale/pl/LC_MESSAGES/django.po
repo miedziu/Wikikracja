@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-21 15:54+0100\n"
+"POT-Creation-Date: 2026-02-21 16:52+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -600,6 +600,8 @@ msgstr "dniach"
 #: .\home\templates\home\home.html:37 .\home\templates\home\home.html:48
 #: .\home\templates\home\home.html:59 .\home\templates\home\home.html:72
 #: .\home\templates\home\home.html:83 .\home\templates\home\home.html:96
+#: .\home\templates\home\home.html:107 .\home\templates\home\home.html:118
+#: .\home\templates\home\home.html:129
 #: .\obywatele\templates\obywatele\poczekalnia.html:58
 #: .\tasks\templates\tasks\task_list.html:33
 #: .\tasks\templates\tasks\task_list.html:38
@@ -1557,12 +1559,12 @@ msgid "Result"
 msgstr "Wynik"
 
 #: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:100
-#: .\tasks\templates\tasks\_task_cards.html:85
+#: .\tasks\templates\tasks\_task_cards.html:83
 msgid "For"
 msgstr "Za"
 
 #: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:99
-#: .\tasks\templates\tasks\_task_cards.html:91
+#: .\tasks\templates\tasks\_task_cards.html:89
 msgid "Against"
 msgstr "Przeciw"
 
@@ -1877,11 +1879,11 @@ msgstr "Aby zresetować hasło, wprowadź swój adres e-mail i kliknij \"Wyślij
 msgid "Send"
 msgstr "Wyślij"
 
-#: .\home\views.py:79
+#: .\home\views.py:108
 msgid "Your password has been changed."
 msgstr "Twoje hasło zostało zmienione."
 
-#: .\home\views.py:82
+#: .\home\views.py:111
 msgid "You typed something wrong. See what error appeared above and try again."
 msgstr "Coś źle wpisałeś. Zobacz, jaki błąd pojawił się powyżej i spróbuj ponownie."
 
@@ -1903,7 +1905,7 @@ msgstr "Potwierdź nowy email"
 
 #: .\obywatele\forms.py:125 .\obywatele\models.py:40
 msgid "Why do you want to join?"
-msgstr "Dlaczego chcę należeć do grupy?"
+msgstr "Dlaczego chcesz należeć do grupy?"
 
 #: .\obywatele\forms.py:126 .\obywatele\templates\obywatele\change_name.html:9
 #: .\obywatele\templates\obywatele\my_profile.html:7
@@ -2396,31 +2398,31 @@ msgstr "Sukces"
 msgid "Failure"
 msgstr "Porażka"
 
-#: .\tasks\templates\tasks\_task_cards.html:59
+#: .\tasks\templates\tasks\_task_cards.html:57
 #: .\tasks\templates\tasks\task_detail.html:116
 msgid "Resign"
 msgstr "Zrezygnuj"
 
-#: .\tasks\templates\tasks\_task_cards.html:65
+#: .\tasks\templates\tasks\_task_cards.html:63
 #: .\tasks\templates\tasks\task_detail.html:106
 msgid "Take task"
 msgstr "Podejmij zadanie"
 
-#: .\tasks\templates\tasks\_task_cards.html:72
+#: .\tasks\templates\tasks\_task_cards.html:70
 #: .\tasks\templates\tasks\task_detail.html:66
 msgid "Owner"
 msgstr "Właściciel"
 
-#: .\tasks\templates\tasks\_task_cards.html:76
+#: .\tasks\templates\tasks\_task_cards.html:74
 msgid "n/a"
 msgstr "brak"
 
-#: .\tasks\templates\tasks\_task_cards.html:85
+#: .\tasks\templates\tasks\_task_cards.html:83
 #: .\tasks\templates\tasks\task_detail.html:88
 msgid "Vote up"
 msgstr "Głos za"
 
-#: .\tasks\templates\tasks\_task_cards.html:91
+#: .\tasks\templates\tasks\_task_cards.html:89
 #: .\tasks\templates\tasks\task_detail.html:97
 msgid "Vote down"
 msgstr "Głos przeciw"
@@ -2807,6 +2809,10 @@ msgstr "Następnie musisz poczekać, aż grupa zatwierdzi twoje zgłoszenie. Kie
 #: .\templates\allauth\account\signup.html:16
 msgid " Somebody may contact you to ask about your interests and expectations. "
 msgstr "Ktoś może się z Tobą skontaktować aby zapytać o Twoje zainteresowania i oczekiwania."
+
+#: .\templates\allauth\account\signup.html:23
+msgid "All fields below are optional. We are asking for those information to get to know you better. Those information will help us to make desission."
+msgstr "Wszystkie pola poniżej są dobrowolne. Pytamy o te informacje aby wiedzieć cokolwiek o Tobie i móc podjąć decyzję."
 
 #: .\templates\allauth\account\signup_closed.html:5
 #: .\templates\allauth\account\signup_closed.html:8

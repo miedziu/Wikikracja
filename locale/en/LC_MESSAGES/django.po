@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-21 15:54+0100\n"
+"POT-Creation-Date: 2026-02-21 16:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -603,6 +603,8 @@ msgstr ""
 #: .\home\templates\home\home.html:37 .\home\templates\home\home.html:48
 #: .\home\templates\home\home.html:59 .\home\templates\home\home.html:72
 #: .\home\templates\home\home.html:83 .\home\templates\home\home.html:96
+#: .\home\templates\home\home.html:107 .\home\templates\home\home.html:118
+#: .\home\templates\home\home.html:129
 #: .\obywatele\templates\obywatele\poczekalnia.html:58
 #: .\tasks\templates\tasks\task_list.html:33
 #: .\tasks\templates\tasks\task_list.html:38
@@ -1585,12 +1587,12 @@ msgid "Result"
 msgstr ""
 
 #: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:100
-#: .\tasks\templates\tasks\_task_cards.html:85
+#: .\tasks\templates\tasks\_task_cards.html:83
 msgid "For"
 msgstr ""
 
 #: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:99
-#: .\tasks\templates\tasks\_task_cards.html:91
+#: .\tasks\templates\tasks\_task_cards.html:89
 msgid "Against"
 msgstr ""
 
@@ -1901,11 +1903,11 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: .\home\views.py:79
+#: .\home\views.py:108
 msgid "Your password has been changed."
 msgstr ""
 
-#: .\home\views.py:82
+#: .\home\views.py:111
 msgid "You typed something wrong. See what error appeared above and try again."
 msgstr ""
 
@@ -2422,31 +2424,31 @@ msgstr ""
 msgid "Failure"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:59
+#: .\tasks\templates\tasks\_task_cards.html:57
 #: .\tasks\templates\tasks\task_detail.html:116
 msgid "Resign"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:65
+#: .\tasks\templates\tasks\_task_cards.html:63
 #: .\tasks\templates\tasks\task_detail.html:106
 msgid "Take task"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:72
+#: .\tasks\templates\tasks\_task_cards.html:70
 #: .\tasks\templates\tasks\task_detail.html:66
 msgid "Owner"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:76
+#: .\tasks\templates\tasks\_task_cards.html:74
 msgid "n/a"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:85
+#: .\tasks\templates\tasks\_task_cards.html:83
 #: .\tasks\templates\tasks\task_detail.html:88
 msgid "Vote up"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:91
+#: .\tasks\templates\tasks\_task_cards.html:89
 #: .\tasks\templates\tasks\task_detail.html:97
 msgid "Vote down"
 msgstr ""
@@ -2841,6 +2843,10 @@ msgstr ""
 
 #: .\templates\allauth\account\signup.html:16
 msgid " Somebody may contact you to ask about your interests and expectations. "
+msgstr ""
+
+#: .\templates\allauth\account\signup.html:23
+msgid "All fields below are optional. We are asking for those information to get to know you better. Those information will help us to make desission."
 msgstr ""
 
 #: .\templates\allauth\account\signup_closed.html:5

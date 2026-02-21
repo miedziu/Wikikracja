@@ -10,12 +10,15 @@ from obywatele.models import Uzytkownik
 from board.models import Post
 from elibrary.models import Book
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime as dt
 from datetime import timedelta as td
 from django.utils import timezone
 from django.http import HttpRequest
+from tasks.models import Task
+from chat.models import Room
 from .forms import RememberLoginForm
 import logging as l
 
@@ -33,6 +36,29 @@ def home(request: HttpRequest):
 
     posts = Post.objects.filter(updated__gte=timezone.now()-td(days=30)).order_by('-updated')
     books = Book.objects.filter(uploaded__gte=timezone.now()-td(days=30))
+
+    tasks_in_progress = Task.objects.none()
+    tasks_new = Task.objects.none()
+    rooms_with_new_messages = Room.objects.none()
+
+    if request.user.is_authenticated:
+        tasks_in_progress = Task.objects.filter(
+            status=Task.Status.ACTIVE,
+            assigned_to__isnull=False,
+        ).order_by('-updated_at')[:10]
+
+        tasks_new = Task.objects.filter(
+            status=Task.Status.ACTIVE,
+            assigned_to__isnull=True,
+        ).order_by('-created_at')[:10]
+
+        rooms_with_new_messages = (
+            Room.objects.filter(allowed=request.user)
+            .exclude(seen_by=request.user)
+            .annotate(messages_count=Count('messages'))
+            .filter(messages_count__gt=0)
+            .order_by('-last_activity')[:10]
+        )
 
     try:
         start = Post.objects.get(title='Start')
@@ -52,6 +78,9 @@ def home(request: HttpRequest):
                       'people_waiting': people_waiting,
                       'posts': posts,
                       'books': books,
+                      'tasks_in_progress': tasks_in_progress,
+                      'tasks_new': tasks_new,
+                      'rooms_with_new_messages': rooms_with_new_messages,
                   })
 
 

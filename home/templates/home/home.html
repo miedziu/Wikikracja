@@ -97,6 +97,39 @@
 		{% endfor %}
 		</ul>
 	</p>
+
+	<p>
+		<h4>Zadania w realizacji:</h4>
+		<ul class="list-group">
+		{% for i in tasks_in_progress %}
+			<a href="{% url 'tasks:detail' i.pk %}" class="list-group-item">{{ i.title }} | {{ i.updated_at|date:"Y-m-d" }}</a>
+			{% empty %}
+			<div class="alert alert-primary">({% trans 'None' %})</div>
+		{% endfor %}
+		</ul>
+	</p>
+
+	<p>
+		<h4>Nowe zadania:</h4>
+		<ul class="list-group">
+		{% for i in tasks_new %}
+			<a href="{% url 'tasks:detail' i.pk %}" class="list-group-item">{{ i.title }} | {{ i.created_at|date:"Y-m-d" }}</a>
+			{% empty %}
+			<div class="alert alert-primary">({% trans 'None' %})</div>
+		{% endfor %}
+		</ul>
+	</p>
+
+	<p>
+		<h4>Nowe wiadomości na czacie:</h4>
+		<ul class="list-group">
+		{% for room in rooms_with_new_messages %}
+			<a href="{% url 'chat:chat' %}#room_id={{ room.id }}" class="list-group-item">{{ room.title }}</a>
+			{% empty %}
+			<div class="alert alert-primary">({% trans 'None' %})</div>
+		{% endfor %}
+		</ul>
+	</p>
 </div>
 {% endif %}
 {% endblock %}

@@ -1,18 +1,20 @@
 # PILNE
-- okres próbny: głowowania wszystkie są zablokowane, finanse i emaile do ludzi nie są widoczne
-- kalendarz. Powiadomienia whatsapp o spotkaniu
-- On the Candidates list there should be icon next each candidate. Icon should have following states: email confirmed, email not confirmed, invited (by existing member)
-- Dokończyć Fixtures i dodać je do skryptu instalacyjnego. Fixtures z przepisami, pokojami i ogłoszeniami. Start: (To jest publiczna strona startowa dostępna dla osób niezalogowanych) i Footer: (To jest publiczna stopka twojej strony).
 - Dodać opcję wyłączania powiadomień email
 - Dodać opcję likwidacji własnego konta
+- On the Candidates list there should be icon next each candidate. Icon should have following states: email confirmed, email not confirmed, invited (by existing member)
+
+- okres próbny: wszystkie głosowania są zablokowane, finanse i emaile do ludzi nie są widoczne
+- Powinna być możliwość samodzielnego usunięcie z grupy ale też powinien być okres karencji po którym potwierdza się chęć odejścia. W okresie karencji będziemy mieli szansę zapytać co jest nie tak.
+- Temat grace period (okres karencji) pojawił się też przy normalnym usuwaniu użytkowników oraz przy czasowej banicji (jako konsekwencji złamania przepisu). Może da się upiec 3 pieczenie przy jednym ogniu.
+
+- Kalendarz. Powiadomienia whatsapp o spotkaniu
+- Dokończyć Fixtures i dodać je do skryptu instalacyjnego. Fixtures z przepisami, pokojami i ogłoszeniami. Start: (To jest publiczna strona startowa dostępna dla osób niezalogowanych) i Footer: (To jest publiczna stopka twojej strony).
 - Jeśli czas trwania referendum jest ustawiony na 3 dni, to referendum w rzeczywistości trwa 4 dni
 - Automatyczne głosowania Wiki. Poziom akceptacji, itd
 - https://www.kialo.com/ https://github.com/ehsanfakhraie/kialo/
 - Lepsze wyjaśnienie do emaili z powiadomieniami (głosowania i czat oddzielnie).
 - Warto było ustawić "Tryb powolny" na wysoką wartość tak aby wysyłanie wiadomości na "Ważne Ogłoszenia" można było robić bardzo rzadko.
 - Walidacja czyści formularz jeśli pierwsze pole jest nieprawidłowe (przy zapraszaniu nowej osoby)
-- Powinna być możliwość samodzielnego usunięcie z grupy ale też powinien być okres karencji po którym potwierdza się chęć odejścia. W okresie karencji będziemy mieli szansę zapytać co jest nie tak.
-- Temat grace period (okres karencji) pojawił się też przy normalnym usuwaniu użytkowników oraz przy czasowej banicji (jako konsekwencji złamania przepisu). Może da się upiec 3 pieczenie przy jednym ogniu.
 
 # BOOKKEEPING
 - mechanizm do opłacania składki
@@ -169,12 +171,6 @@ socket.send(JSON.stringify({
     'content': 'Hello, world!'
 }));
 
-# CRON dla Wikikracji
-- chat - archiwizowanie pokoi
-- obywatele - reputacja
-- jeden scrypt cron (chat, glosowania, obywatele, bookkeeping)
-- Powiadamiacz na Androida i iOS1
-
 # EMAILE
 - język w emailach ustawiony na sztywno - niezależnie od przeglądarki wysyłającego formularz zapisywania się
   - funkcja wysyłające emaile powtarza się 6 razy. Może moduł z multitreading? https://anymail.dev/en/v12.0/tips/django_templates/ 
@@ -303,8 +299,6 @@ socket.send(JSON.stringify({
 - Prawa administratora nadajemy po wyborach. Podobnie sędzia i senator. Administrator realizuje przepisy. Sędzia kontroluje administratora i senatora. Senator musi znać przepisy i we współpracy z administratorem i sędzią tworzy nowe.
 - Dodać informację, że podanie emaila jest niezbędne żeby otrzymać hasło
 
-------------------------------------------------------------
-
 # NIE BĘDZIE ZROBIONE WILL NOT BE DONE FOR NOW
   - Flutter - aplikacja na Androida i IOS
   - Riot/Matrix integration. Odpada bo trzeba by tworzyć oddzielne konta na Riot dla użytkowników
@@ -312,7 +306,10 @@ socket.send(JSON.stringify({
   - nasz człowiek w parlamencie
   - 2021-03 dodać ankiety do błahych decyzji - zamiast tego zrobić up_vote/down_vote do chatu - wypowiedź z największą ilością (większość?) up votów tworzy nowy pokój
 
+------------------------------------------------------------
+
 # ZROBIONE
 - Dobrowolny formularz dla nowej osoby, która sama się zapisuje. Adnotacja: "Wszystkie pola są dobrowolne. Potrzebujemy tego ponieważ nic nie wiemy o nowych osobach." Pola w formualrzu:  dlaczego chcesz należeć do grupy, imię, nazwisko, telefon, miasto, zawód, hobby, biznes, umiejętności, wiedza.
 - Zadania - małe guziczki za/przeciw w widoku listy.
 - Jeśli ktoś próbuje zapisać się do grupy po raz drugi (na ten sam email) to powinien dostać infomrację, że jego kandydatura jeszcze jest w kolejce.
+- Do Start dodałem Zadania w realizacji i nowe nowe wiadomości na czacie
