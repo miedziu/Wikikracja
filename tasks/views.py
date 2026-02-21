@@ -93,9 +93,18 @@ class TaskListView(LoginRequiredMixin, TemplateView):
             if task.priority_category != "rejected" and task.status == Task.Status.CANCELLED
         ]
 
+        all_tasks = active_tasks + finished_tasks
+        if self.request.user.is_authenticated:
+            user_votes = TaskVote.objects.filter(
+                user=self.request.user,
+                task_id__in=[task.id for task in all_tasks],
+            ).values_list("task_id", "value")
+            vote_by_task_id = dict(user_votes)
+            for task in all_tasks:
+                task.user_vote_value = vote_by_task_id.get(task.id)
+
         # Add chat room pulse class for tasks with unseen messages
         if self.request.user.is_authenticated:
-            all_tasks = active_tasks + finished_tasks
             for task in all_tasks:
                 chat_room = task.chat_room
                 if (chat_room and 

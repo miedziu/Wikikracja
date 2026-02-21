@@ -1,8 +1,5 @@
 # PILNE
 - okres próbny: głowowania wszystkie są zablokowane, finanse i emaile do ludzi nie są widoczne
-- Dobrowolny formularz dla nowej osoby ponieważ nic nie wiemy o kimś kto chce przystąpić: coś o sobie, co lubisz, jakie masz hobby, itd. Ja wprawdzie sprawdzam czy osoba żyje ale to za mało - wszyscy powinni móc wyrobić sobie opinie o kandydacie.
-- Zadania - małe guziczki za/przeciw w widoku listy.
-- Jeśli ktoś próbuje zapisać się do grupy po raz drugi (na ten sam email) to powinien dostać infomrację, że jego kandydatura jeszcze jest w kolejce
 - kalendarz. Powiadomienia whatsapp o spotkaniu
 - On the Candidates list there should be icon next each candidate. Icon should have following states: email confirmed, email not confirmed, invited (by existing member)
 - Dokończyć Fixtures i dodać je do skryptu instalacyjnego. Fixtures z przepisami, pokojami i ogłoszeniami. Start: (To jest publiczna strona startowa dostępna dla osób niezalogowanych) i Footer: (To jest publiczna stopka twojej strony).
@@ -314,3 +311,8 @@ socket.send(JSON.stringify({
   - pogrubić login w emailu - to jest w module venv/lib/python3.6/site-packages/django/contrib/admin/templates/registration/password_reset_email.htm
   - nasz człowiek w parlamencie
   - 2021-03 dodać ankiety do błahych decyzji - zamiast tego zrobić up_vote/down_vote do chatu - wypowiedź z największą ilością (większość?) up votów tworzy nowy pokój
+
+# ZROBIONE
+- Dobrowolny formularz dla nowej osoby, która sama się zapisuje. Adnotacja: "Wszystkie pola są dobrowolne. Potrzebujemy tego ponieważ nic nie wiemy o nowych osobach." Pola w formualrzu:  dlaczego chcesz należeć do grupy, imię, nazwisko, telefon, miasto, zawód, hobby, biznes, umiejętności, wiedza.
+- Zadania - małe guziczki za/przeciw w widoku listy.
+- Jeśli ktoś próbuje zapisać się do grupy po raz drugi (na ten sam email) to powinien dostać infomrację, że jego kandydatura jeszcze jest w kolejce.

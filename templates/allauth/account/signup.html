@@ -19,6 +19,19 @@
   {% csrf_token %}
 
   {{ form.email|as_crispy_field }}
+  <p class="mt-3 mb-2 font-weight-bold">
+    Wszystkie pola są dobrowolne. Potrzebujemy tego ponieważ nic nie wiemy o nowych osobach.
+  </p>
+  {{ form.why|as_crispy_field }}
+  {{ form.first_name|as_crispy_field }}
+  {{ form.last_name|as_crispy_field }}
+  {{ form.phone|as_crispy_field }}
+  {{ form.city|as_crispy_field }}
+  {{ form.job|as_crispy_field }}
+  {{ form.hobby|as_crispy_field }}
+  {{ form.business|as_crispy_field }}
+  {{ form.skills|as_crispy_field }}
+  {{ form.knowledge|as_crispy_field }}
   {{ form.captcha }}
 
   {% if redirect_field_value %}

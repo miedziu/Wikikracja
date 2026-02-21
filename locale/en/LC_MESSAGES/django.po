@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-18 22:56+0100\n"
+"POT-Creation-Date: 2026-02-21 15:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,8 +115,8 @@ msgstr ""
 #: .\board\templates\board\board.html:63
 #: .\bookkeeping\templates\bookkeeping\category_list.html:38
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:60
-#: .\bookkeeping\templates\bookkeeping\report_list.html:69
-#: .\bookkeeping\templates\bookkeeping\report_list.html:104
+#: .\bookkeeping\templates\bookkeeping\report_list.html:75
+#: .\bookkeeping\templates\bookkeeping\report_list.html:116
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:53
 msgid "No records found."
 msgstr ""
@@ -259,7 +259,7 @@ msgstr ""
 #: .\bookkeeping\forms.py:60 .\bookkeeping\models.py:37
 #: .\bookkeeping\templates\bookkeeping\partner_confirm_delete.html:36
 #: .\bookkeeping\templates\bookkeeping\report_list.html:52
-#: .\bookkeeping\templates\bookkeeping\report_list.html:87
+#: .\bookkeeping\templates\bookkeeping\report_list.html:93
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:25
 msgid "Category"
 msgstr ""
@@ -313,7 +313,8 @@ msgstr ""
 
 #: .\bookkeeping\models.py:18
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:26
-#: .\obywatele\models.py:26 .\obywatele\templates\obywatele\my_profile.html:30
+#: .\obywatele\forms.py:129 .\obywatele\models.py:26
+#: .\obywatele\templates\obywatele\my_profile.html:30
 #: .\obywatele\templates\obywatele\start.html:34
 #: .\obywatele\templates\obywatele\szczegoly.html:53
 msgid "City"
@@ -500,11 +501,16 @@ msgid "Summary"
 msgstr ""
 
 #: .\bookkeeping\templates\bookkeeping\report_list.html:53
-#: .\bookkeeping\templates\bookkeeping\report_list.html:88
+#: .\bookkeeping\templates\bookkeeping\report_list.html:94
 msgid "Sum"
 msgstr ""
 
-#: .\bookkeeping\templates\bookkeeping\report_list.html:80
+#: .\bookkeeping\templates\bookkeeping\report_list.html:66
+#: .\bookkeeping\templates\bookkeeping\report_list.html:107
+msgid "Total"
+msgstr ""
+
+#: .\bookkeeping\templates\bookkeeping\report_list.html:86
 msgid "All Years Summary"
 msgstr ""
 
@@ -1226,7 +1232,7 @@ msgid "Rejected"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:186 .\glosowania\views.py:363
-#: .\obywatele\forms.py:154 .\obywatele\views.py:586
+#: .\obywatele\forms.py:188 .\obywatele\views.py:586
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
 msgstr ""
@@ -1579,10 +1585,12 @@ msgid "Result"
 msgstr ""
 
 #: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:100
+#: .\tasks\templates\tasks\_task_cards.html:85
 msgid "For"
 msgstr ""
 
 #: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:99
+#: .\tasks\templates\tasks\_task_cards.html:91
 msgid "Against"
 msgstr ""
 
@@ -1762,7 +1770,7 @@ msgstr ""
 
 #: .\home\templates\home\base.html:73 .\home\templates\home\home.html:17
 #: .\home\templates\home\login.html:34
-#: .\templates\allauth\account\signup.html:27
+#: .\templates\allauth\account\signup.html:40
 msgid "Sign Up"
 msgstr ""
 
@@ -1917,11 +1925,67 @@ msgstr ""
 msgid "New email address confirmation"
 msgstr ""
 
-#: .\obywatele\forms.py:140
+#: .\obywatele\forms.py:125 .\obywatele\models.py:40
+msgid "Why do you want to join?"
+msgstr ""
+
+#: .\obywatele\forms.py:126 .\obywatele\templates\obywatele\change_name.html:9
+#: .\obywatele\templates\obywatele\my_profile.html:7
+#: .\obywatele\templates\obywatele\poczekalnia.html:20
+#: .\obywatele\templates\obywatele\start.html:44
+msgid "First name"
+msgstr ""
+
+#: .\obywatele\forms.py:127 .\obywatele\templates\obywatele\change_name.html:10
+#: .\obywatele\templates\obywatele\my_profile.html:8
+#: .\obywatele\templates\obywatele\poczekalnia.html:21
+#: .\obywatele\templates\obywatele\start.html:54
+msgid "Last name"
+msgstr ""
+
+#: .\obywatele\forms.py:128 .\obywatele\models.py:25
+msgid "Phone number"
+msgstr ""
+
+#: .\obywatele\forms.py:130 .\obywatele\models.py:37
+#: .\obywatele\templates\obywatele\my_profile.html:42
+#: .\obywatele\templates\obywatele\szczegoly.html:93
+msgid "Job"
+msgstr ""
+
+#: .\obywatele\forms.py:131 .\obywatele\models.py:28
+#: .\obywatele\templates\obywatele\my_profile.html:46
+#: .\obywatele\templates\obywatele\szczegoly.html:57
+msgid "Hobby"
+msgstr ""
+
+#: .\obywatele\forms.py:132 .\obywatele\models.py:36
+#: .\obywatele\templates\obywatele\my_profile.html:50
+#: .\obywatele\templates\obywatele\szczegoly.html:89
+msgid "Business"
+msgstr ""
+
+#: .\obywatele\forms.py:133 .\obywatele\models.py:33
+#: .\obywatele\templates\obywatele\my_profile.html:74
+#: .\obywatele\templates\obywatele\szczegoly.html:77
+msgid "Skills"
+msgstr ""
+
+#: .\obywatele\forms.py:134 .\obywatele\models.py:34
+#: .\obywatele\templates\obywatele\my_profile.html:78
+#: .\obywatele\templates\obywatele\szczegoly.html:81
+msgid "Knowledge"
+msgstr ""
+
+#: .\obywatele\forms.py:147
+msgid "Your candidacy is still in the queue. Please wait for verification."
+msgstr ""
+
+#: .\obywatele\forms.py:174
 msgid "New person requested membership"
 msgstr ""
 
-#: .\obywatele\forms.py:141
+#: .\obywatele\forms.py:175
 #, python-format
 msgid "User %(username)s just requested membership"
 msgstr ""
@@ -1980,10 +2044,6 @@ msgstr ""
 msgid "Phone number i.e. +48 123 456 789"
 msgstr ""
 
-#: .\obywatele\models.py:25
-msgid "Phone number"
-msgstr ""
-
 #: .\obywatele\models.py:26
 msgid "Where one spend most of their time"
 msgstr ""
@@ -1999,11 +2059,6 @@ msgstr ""
 
 #: .\obywatele\models.py:28
 msgid "Hobbies one have"
-msgstr ""
-
-#: .\obywatele\models.py:28 .\obywatele\templates\obywatele\my_profile.html:46
-#: .\obywatele\templates\obywatele\szczegoly.html:57
-msgid "Hobby"
 msgstr ""
 
 #: .\obywatele\models.py:29
@@ -2046,18 +2101,8 @@ msgstr ""
 msgid "Practical skills one have"
 msgstr ""
 
-#: .\obywatele\models.py:33 .\obywatele\templates\obywatele\my_profile.html:74
-#: .\obywatele\templates\obywatele\szczegoly.html:77
-msgid "Skills"
-msgstr ""
-
 #: .\obywatele\models.py:34
 msgid "Knowledge one have"
-msgstr ""
-
-#: .\obywatele\models.py:34 .\obywatele\templates\obywatele\my_profile.html:78
-#: .\obywatele\templates\obywatele\szczegoly.html:81
-msgid "Knowledge"
 msgstr ""
 
 #: .\obywatele\models.py:35
@@ -2073,18 +2118,8 @@ msgstr ""
 msgid "If running a business"
 msgstr ""
 
-#: .\obywatele\models.py:36 .\obywatele\templates\obywatele\my_profile.html:50
-#: .\obywatele\templates\obywatele\szczegoly.html:89
-msgid "Business"
-msgstr ""
-
 #: .\obywatele\models.py:37
 msgid "Profession"
-msgstr ""
-
-#: .\obywatele\models.py:37 .\obywatele\templates\obywatele\my_profile.html:42
-#: .\obywatele\templates\obywatele\szczegoly.html:93
-msgid "Job"
 msgstr ""
 
 #: .\obywatele\models.py:38
@@ -2109,10 +2144,6 @@ msgstr ""
 msgid "In your own words please explain why do you want join our group"
 msgstr ""
 
-#: .\obywatele\models.py:40
-msgid "Why do you want to join?"
-msgstr ""
-
 #: .\obywatele\models.py:46
 msgid "Citizen"
 msgstr ""
@@ -2128,20 +2159,6 @@ msgstr ""
 
 #: .\obywatele\templates\obywatele\change_name.html:7
 msgid "Change your name"
-msgstr ""
-
-#: .\obywatele\templates\obywatele\change_name.html:9
-#: .\obywatele\templates\obywatele\my_profile.html:7
-#: .\obywatele\templates\obywatele\poczekalnia.html:20
-#: .\obywatele\templates\obywatele\start.html:44
-msgid "First name"
-msgstr ""
-
-#: .\obywatele\templates\obywatele\change_name.html:10
-#: .\obywatele\templates\obywatele\my_profile.html:8
-#: .\obywatele\templates\obywatele\poczekalnia.html:21
-#: .\obywatele\templates\obywatele\start.html:54
-msgid "Last name"
 msgstr ""
 
 #: .\obywatele\templates\obywatele\change_username.html:7
@@ -2416,17 +2433,22 @@ msgid "Take task"
 msgstr ""
 
 #: .\tasks\templates\tasks\_task_cards.html:72
-#: .\tasks\templates\tasks\task_detail.html:73
-msgid "Votes"
-msgstr ""
-
-#: .\tasks\templates\tasks\_task_cards.html:72
 #: .\tasks\templates\tasks\task_detail.html:66
 msgid "Owner"
 msgstr ""
 
 #: .\tasks\templates\tasks\_task_cards.html:76
 msgid "n/a"
+msgstr ""
+
+#: .\tasks\templates\tasks\_task_cards.html:85
+#: .\tasks\templates\tasks\task_detail.html:88
+msgid "Vote up"
+msgstr ""
+
+#: .\tasks\templates\tasks\_task_cards.html:91
+#: .\tasks\templates\tasks\task_detail.html:97
+msgid "Vote down"
 msgstr ""
 
 #: .\tasks\templates\tasks\task_close.html:6
@@ -2462,12 +2484,8 @@ msgstr ""
 msgid "Nobody"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_detail.html:88
-msgid "Vote up"
-msgstr ""
-
-#: .\tasks\templates\tasks\task_detail.html:97
-msgid "Vote down"
+#: .\tasks\templates\tasks\task_detail.html:73
+msgid "Votes"
 msgstr ""
 
 #: .\tasks\templates\tasks\task_detail.html:126
