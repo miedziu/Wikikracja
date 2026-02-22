@@ -10,28 +10,16 @@
 
 {% block content %}
 <div class="font-weight-bold">
-<p>{% blocktrans %}Account is created in 2 steps:{% endblocktrans %}</p>
-<p>1. {% blocktrans %}Right after filling out below form you need to confirm your email. Click the link from email you will receive.{% endblocktrans %}</p>
-<p>2. {% blocktrans %}Then you have to wait until group approve your application. When this happens you will be notified by email.{% endblocktrans %}</p>
-<p> {% blocktrans %} Somebody may contact you to ask about your interests and expectations. {% endblocktrans %}</p>
+<p>{% blocktrans %}Account is created in 4 steps:{% endblocktrans %}</p>
+<p>1. {% blocktrans %}Enter your email and solve captcha.{% endblocktrans %}</p>
+<p>2. {% blocktrans %}Confirm your email by clicking the link sent to your inbox.{% endblocktrans %}</p>
+<p>3. {% blocktrans %}Fill out onboarding questions (available right after signup).{% endblocktrans %}</p>
+<p>4. {% blocktrans %}Wait until group approves your application.{% endblocktrans %}</p>
 </div>
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
 
   {{ form.email|as_crispy_field }}
-  <p class="mt-3 mb-2 font-weight-bold">
-    {% blocktrans %}All fields below are optional. We are asking for those information to get to know you better. Those information will help us to make desission.{% endblocktrans %}
-  </p>
-  {{ form.why|as_crispy_field }}
-  {{ form.first_name|as_crispy_field }}
-  {{ form.last_name|as_crispy_field }}
-  {{ form.phone|as_crispy_field }}
-  {{ form.city|as_crispy_field }}
-  {{ form.job|as_crispy_field }}
-  {{ form.hobby|as_crispy_field }}
-  {{ form.business|as_crispy_field }}
-  {{ form.skills|as_crispy_field }}
-  {{ form.knowledge|as_crispy_field }}
   {{ form.captcha }}
 
   {% if redirect_field_value %}

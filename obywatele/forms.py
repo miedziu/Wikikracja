@@ -120,18 +120,17 @@ class ProfileForm(forms.ModelForm):
                   'job', 'gift', 'other', 'why')
 
 
-class CustomSignupForm(SignupForm):
-    email = forms.CharField(max_length=100, label='Email', required=True)
-    why = forms.CharField(max_length=662, label=_('Why do you want to join?'), required=False)
+class OnboardingDetailsForm(forms.ModelForm):
     first_name = forms.CharField(max_length=150, label=_('First name'), required=False)
     last_name = forms.CharField(max_length=150, label=_('Last name'), required=False)
-    phone = forms.CharField(max_length=72, label=_('Phone number'), required=False)
-    city = forms.CharField(max_length=72, label=_('City'), required=False)
-    job = forms.CharField(max_length=622, label=_('Job'), required=False)
-    hobby = forms.CharField(max_length=622, label=_('Hobby'), required=False)
-    business = forms.CharField(max_length=622, label=_('Business'), required=False)
-    skills = forms.CharField(max_length=622, label=_('Skills'), required=False)
-    knowledge = forms.CharField(max_length=622, label=_('Knowledge'), required=False)
+
+    class Meta:
+        model = Uzytkownik
+        fields = ('why', 'phone', 'city', 'job', 'hobby', 'business', 'skills', 'knowledge')
+
+
+class CustomSignupForm(SignupForm):
+    email = forms.CharField(max_length=100, label='Email', required=True)
     captcha = CaptchaField()
 
     def __init__(self, *args, **kwargs):
@@ -152,22 +151,16 @@ class CustomSignupForm(SignupForm):
     def save(self, request: HttpRequest):
         user = super(CustomSignupForm, self).save(request)
         user.email = self.cleaned_data['email']
-        user.first_name = self.cleaned_data.get('first_name', '')
-        user.last_name = self.cleaned_data.get('last_name', '')
         if not User.objects.filter(username=user.username).exists():
             user.set_unusable_password()
         user.save()
 
         profile = user.uzytkownik
-        profile.why = self.cleaned_data.get('why')
-        profile.phone = self.cleaned_data.get('phone')
-        profile.city = self.cleaned_data.get('city')
-        profile.job = self.cleaned_data.get('job')
-        profile.hobby = self.cleaned_data.get('hobby')
-        profile.business = self.cleaned_data.get('business')
-        profile.skills = self.cleaned_data.get('skills')
-        profile.knowledge = self.cleaned_data.get('knowledge')
+        profile.onboarding_status = Uzytkownik.OnboardingStatus.EMAIL_ENTERED
         profile.save()
+
+        request.session['onboarding_user_id'] = user.id
+        request.session.modified = True
     
         HOST = get_site_domain()
         SendEmailToAll(
