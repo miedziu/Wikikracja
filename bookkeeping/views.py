@@ -130,6 +130,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
                 'partner': item.partner,
                 'category': item.category,
                 'amount': item.amount,
+                'note': item.note,
                 'obj': item
             })
         
@@ -141,6 +142,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
                 'partner': item.partner,
                 'category': item.category,
                 'amount': item.amount,
+                'note': item.note,
                 'obj': item
             })
         

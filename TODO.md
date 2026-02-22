@@ -1,9 +1,10 @@
 # PILNE
+- Dodać opcję wyłączania powiadomień email (Unsubscribe)
 - Osoby, które głosują Za zadaniem mogą zostać poproszone o pomoc
-- Dodać opcję wyłączania powiadomień email
 - Dodać opcję likwidacji własnego konta
-- On the Candidates list there should be icon next each candidate. Icon should have following states: email confirmed, email not confirmed, invited (by existing member)
+- Wersjonowanie Ogłoszeń i Przepisów. Wydaje się, że to skomplikuje kod.
 
+- backup kontaktów, przepisów, ogłoszeń, itd. Każdy powinien móc zrobić w postaci fixtures i md.
 - okres próbny: wszystkie głosowania są zablokowane, finanse i emaile do ludzi nie są widoczne
 - Powinna być możliwość samodzielnego usunięcie z grupy ale też powinien być okres karencji po którym potwierdza się chęć odejścia. W okresie karencji będziemy mieli szansę zapytać co jest nie tak.
 - Temat grace period (okres karencji) pojawił się też przy normalnym usuwaniu użytkowników oraz przy czasowej banicji (jako konsekwencji złamania przepisu). Może da się upiec 3 pieczenie przy jednym ogniu.

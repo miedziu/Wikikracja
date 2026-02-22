@@ -38,12 +38,12 @@ class Room(models.Model):
     # Name that user will see in chats list
     def displayed_name(self, user):
         if self.public:
-            # Clip public room names to 20 characters for display
-            return self.title[:20] if len(self.title) > 20 else self.title
+            # Clip public room names to 40 characters for display
+            return self.title[:40] if len(self.title) > 40 else self.title
         if self.get_other(user) is not None:
             username = self.get_other(user).username
             # Clip long usernames to match room title length
-            return username[:20] if len(username) > 20 else username
+            return username[:40] if len(username) > 40 else username
         else:
             return ("--")
 

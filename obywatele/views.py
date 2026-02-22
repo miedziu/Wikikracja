@@ -42,6 +42,12 @@ l = logging.getLogger(__name__)
 signer = TimestampSigner()
 
 
+def is_email_confirmed_for_candidate(user: User, profile: Uzytkownik) -> bool:
+    if profile.polecajacy:
+        return True
+    return EmailAddress.objects.filter(user=user, verified=True).exists()
+
+
 def get_onboarding_user_from_request(request: HttpRequest):
     onboarding_user_id = request.session.get('onboarding_user_id')
 
@@ -159,6 +165,7 @@ def obywatele(request: HttpRequest):
     allowed_sort_fields = {
         'username': 'username',
         'email': 'email',
+        'phone': 'uzytkownik__phone',
         'last_login': 'last_login',
         'city': 'uzytkownik__city',
         'first_name': 'first_name',
@@ -168,6 +175,7 @@ def obywatele(request: HttpRequest):
     blank_sort_fields = {
         'username': 'username_is_blank',
         'email': 'email_is_blank',
+        'phone': 'phone_is_blank',
         'last_login': 'last_login_is_blank',
         'city': 'city_is_blank',
         'first_name': 'first_name_is_blank',
@@ -206,6 +214,11 @@ def obywatele(request: HttpRequest):
                 default=Value(0),
                 output_field=IntegerField(),
             ),
+            phone_is_blank=Case(
+                When(Q(uzytkownik__phone__isnull=True) | Q(uzytkownik__phone__exact=''), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
             last_login_is_blank=Case(
                 When(last_login__isnull=True, then=Value(1)),
                 default=Value(0),
@@ -238,6 +251,7 @@ def obywatele(request: HttpRequest):
     default_directions = {
         'username': 'asc',
         'email': 'asc',
+        'phone': 'asc',
         'last_login': 'desc',
         'city': 'asc',
         'first_name': 'asc',
@@ -288,7 +302,7 @@ def poczekalnia(request: HttpRequest):
         rate, created = Rate.objects.get_or_create(kandydat=candidate_profile, obywatel=citizen_profile)
         # Add rating directly to user object as a custom attribute
         user.rating = rate.rate
-        user.email_confirmed = user.id in verified_user_ids
+        user.email_confirmed = (user.id in verified_user_ids) or bool(candidate_profile.polecajacy)
         user.form_completed = candidate_profile.onboarding_status == Uzytkownik.OnboardingStatus.FORM_COMPLETED
         users_with_ratings.append(user)
         
@@ -554,7 +568,7 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
 
     candidate_profile = get_object_or_404(Uzytkownik, pk=pk)
     candidate_user = User.objects.get(pk=pk)
-    email_confirmed = EmailAddress.objects.filter(user=candidate_user, verified=True).exists()
+    email_confirmed = is_email_confirmed_for_candidate(candidate_user, candidate_profile)
     form_completed = candidate_profile.onboarding_status == Uzytkownik.OnboardingStatus.FORM_COMPLETED
     citizen_profile = Uzytkownik.objects.get(pk=request.user.id)
     citizen_reputation = citizen_profile.reputation
