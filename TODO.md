@@ -1,4 +1,5 @@
 # PILNE
+- Osoby, które głosują Za zadaniem mogą zostać poproszone o pomoc
 - Dodać opcję wyłączania powiadomień email
 - Dodać opcję likwidacji własnego konta
 - On the Candidates list there should be icon next each candidate. Icon should have following states: email confirmed, email not confirmed, invited (by existing member)
