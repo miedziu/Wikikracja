@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-22 13:10+0100\n"
+"POT-Creation-Date: 2026-02-22 23:11+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -116,7 +116,7 @@ msgstr "Utwórz ogłoszenie"
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:60
 #: .\bookkeeping\templates\bookkeeping\report_list.html:75
 #: .\bookkeeping\templates\bookkeeping\report_list.html:116
-#: .\bookkeeping\templates\bookkeeping\transaction_list.html:53
+#: .\bookkeeping\templates\bookkeeping\transaction_list.html:67
 msgid "No records found."
 msgstr "Brak wpisów."
 
@@ -178,7 +178,7 @@ msgstr "Czy na pewno chcesz skasować ten ogłoszenie?"
 #: .\board\templates\board\post_detail.html:15
 #: .\bookkeeping\templates\bookkeeping\category_list.html:32
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:54
-#: .\bookkeeping\templates\bookkeeping\transaction_list.html:47
+#: .\bookkeeping\templates\bookkeeping\transaction_list.html:56
 #: .\elibrary\templates\elibrary\book_detail.html:34
 #: .\events\templates\events\event_detail.html:16
 #: .\glosowania\templates\glosowania\szczegoly.html:70
@@ -198,7 +198,7 @@ msgstr "Prywatne"
 #: .\bookkeeping\templates\bookkeeping\category_list.html:31
 #: .\bookkeeping\templates\bookkeeping\partner_confirm_delete.html:58
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:53
-#: .\bookkeeping\templates\bookkeeping\transaction_list.html:46
+#: .\bookkeeping\templates\bookkeeping\transaction_list.html:55
 #: .\elibrary\templates\elibrary\book_detail.html:35
 #: .\events\templates\events\event_detail.html:13
 #: .\events\templates\events\event_list.html:82
@@ -222,7 +222,7 @@ msgstr "Wróć"
 #: .\bookkeeping\templates\bookkeeping\category_confirm_delete.html:48
 #: .\bookkeeping\templates\bookkeeping\partner_confirm_delete.html:48
 #: .\bookkeeping\templates\bookkeeping\transaction_confirm_delete.html:26
-#: .\bookkeeping\templates\bookkeeping\transaction_list.html:35
+#: .\bookkeeping\templates\bookkeeping\transaction_list.html:43
 msgid "Incoming"
 msgstr "Przychodzący"
 
@@ -230,7 +230,7 @@ msgstr "Przychodzący"
 #: .\bookkeeping\templates\bookkeeping\category_confirm_delete.html:50
 #: .\bookkeeping\templates\bookkeeping\partner_confirm_delete.html:50
 #: .\bookkeeping\templates\bookkeeping\transaction_confirm_delete.html:28
-#: .\bookkeeping\templates\bookkeeping\transaction_list.html:37
+#: .\bookkeeping\templates\bookkeeping\transaction_list.html:45
 msgid "Outgoing"
 msgstr "Wychodzący"
 
@@ -311,7 +311,7 @@ msgstr "Adres"
 #: .\bookkeeping\models.py:18
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:26
 #: .\obywatele\models.py:36 .\obywatele\templates\obywatele\my_profile.html:30
-#: .\obywatele\templates\obywatele\start.html:34
+#: .\obywatele\templates\obywatele\start.html:44
 #: .\obywatele\templates\obywatele\szczegoly.html:55
 msgid "City"
 msgstr "Miasto"
@@ -1226,7 +1226,7 @@ msgid "Rejected"
 msgstr "Odrzucone"
 
 #: .\glosowania\management\commands\vote.py:186 .\glosowania\views.py:363
-#: .\obywatele\forms.py:181 .\obywatele\views.py:667
+#: .\obywatele\forms.py:181 .\obywatele\views.py:681
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
 msgstr "Dlaczego otrzymałeś ten e-mail? Tutaj jest wyjaśnienie: {url}"
@@ -1913,14 +1913,14 @@ msgstr "Potwierdź nowy email"
 #: .\obywatele\forms.py:124 .\obywatele\templates\obywatele\change_name.html:9
 #: .\obywatele\templates\obywatele\my_profile.html:7
 #: .\obywatele\templates\obywatele\poczekalnia.html:22
-#: .\obywatele\templates\obywatele\start.html:44
+#: .\obywatele\templates\obywatele\start.html:54
 msgid "First name"
 msgstr "Imię"
 
 #: .\obywatele\forms.py:125 .\obywatele\templates\obywatele\change_name.html:10
 #: .\obywatele\templates\obywatele\my_profile.html:8
 #: .\obywatele\templates\obywatele\poczekalnia.html:23
-#: .\obywatele\templates\obywatele\start.html:54
+#: .\obywatele\templates\obywatele\start.html:64
 msgid "Last name"
 msgstr "Nazwisko"
 
@@ -2003,7 +2003,7 @@ msgstr "Nazwa użytkownika"
 msgid "Phone number i.e. +48 123 456 789"
 msgstr "Numer telefonu np. +48 123 456 789"
 
-#: .\obywatele\models.py:35
+#: .\obywatele\models.py:35 .\obywatele\templates\obywatele\start.html:34
 msgid "Phone number"
 msgstr "Numer telefonu"
 
@@ -2254,7 +2254,7 @@ msgid "Your email address is confirmed."
 msgstr "Twój email został już potwierdzony."
 
 #: .\obywatele\templates\obywatele\onboarding_waiting.html:17
-#: .\obywatele\views.py:323
+#: .\obywatele\views.py:337
 msgid "Your onboarding form has been saved."
 msgstr "Twoje zgłoszenie zostało zapisane."
 
@@ -2319,7 +2319,7 @@ msgid "Candidate since"
 msgstr "Kandydat od"
 
 #: .\obywatele\templates\obywatele\poczekalnia.html:25
-#: .\obywatele\templates\obywatele\start.html:64
+#: .\obywatele\templates\obywatele\start.html:74
 msgid "Last login"
 msgstr "Ostatnie logowanie"
 
@@ -2341,11 +2341,11 @@ msgid "You are neutral about this candidate"
 msgstr "Masz stosunek neutralny do tego kandydata"
 
 #: .\obywatele\templates\obywatele\poczekalnia.html:48
-#: .\obywatele\templates\obywatele\start.html:84
+#: .\obywatele\templates\obywatele\start.html:94
 msgid "Copy email"
 msgstr "Skopiuj email"
 
-#: .\obywatele\templates\obywatele\start.html:91
+#: .\obywatele\templates\obywatele\start.html:102
 msgid "Never"
 msgstr "Nigdy"
 
@@ -2377,31 +2377,31 @@ msgstr "Neutralny"
 msgid "I do not accept"
 msgstr "Nie akceptuję"
 
-#: .\obywatele\views.py:109
+#: .\obywatele\views.py:115
 msgid "Your new email has been saved."
 msgstr "Twój nowy email został zapisany."
 
-#: .\obywatele\views.py:128 .\obywatele\views.py:146
+#: .\obywatele\views.py:134 .\obywatele\views.py:152
 msgid "Your name has been saved."
 msgstr "Twój imię i nazwisko zostały zapisane."
 
-#: .\obywatele\views.py:307 .\obywatele\views.py:343
+#: .\obywatele\views.py:321 .\obywatele\views.py:357
 msgid "Could not find your onboarding account."
 msgstr "Nie udało się znaleźć Twojego konta rejestracyjnego."
 
-#: .\obywatele\views.py:368
+#: .\obywatele\views.py:382
 msgid "Email already exist"
 msgstr "Email już istnieje"
 
-#: .\obywatele\views.py:403
+#: .\obywatele\views.py:417
 msgid "The new user has been saved"
 msgstr "Nowy użytkownik został zapisany."
 
-#: .\obywatele\views.py:407
+#: .\obywatele\views.py:421
 msgid "New citizen has been proposed"
 msgstr "Został zaproponowany nowy użytkownik"
 
-#: .\obywatele\views.py:408
+#: .\obywatele\views.py:422
 msgid ""
 "proposed new citizen\n"
 "You can approve him/her here:"
@@ -2409,35 +2409,35 @@ msgstr ""
 "zaproponował/a nową osobę\n"
 "Możesz ją zatwierdzić tutaj:"
 
-#: .\obywatele\views.py:421
+#: .\obywatele\views.py:435
 msgid "Please correct the highlighted errors."
 msgstr "Popraw podświetlone błędy."
 
-#: .\obywatele\views.py:478
+#: .\obywatele\views.py:492
 msgid "Changes was saved"
 msgstr "Zmiany zostały zapisane"
 
-#: .\obywatele\views.py:491
+#: .\obywatele\views.py:505
 msgid "Form is not valid!"
 msgstr "Formularz zawiera błędy"
 
-#: .\obywatele\views.py:566
+#: .\obywatele\views.py:580
 msgid "positive"
 msgstr "pozytywny"
 
-#: .\obywatele\views.py:573
+#: .\obywatele\views.py:587
 msgid "negative"
 msgstr "negatywny"
 
-#: .\obywatele\views.py:580
+#: .\obywatele\views.py:594
 msgid "neutral"
 msgstr "obojętny"
 
-#: .\obywatele\views.py:704
+#: .\obywatele\views.py:718
 msgid "Fill out your onboarding form"
 msgstr "Wypełnij formularz rejestracyjny"
 
-#: .\obywatele\views.py:706
+#: .\obywatele\views.py:720
 #, python-format
 msgid "Your email has been confirmed. Please fill out your onboarding form here: %(link)s"
 msgstr "Twoj email został potwierdzony. Możesz wypełnić formularz rejestracyjny tutaj: %(link)s"
