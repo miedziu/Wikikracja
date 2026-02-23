@@ -10,10 +10,11 @@
 
 {% block content %}
 <div class="font-weight-bold">
-<p>{% blocktrans %}Account is created in 2 steps:{% endblocktrans %}</p>
-<p>1. {% blocktrans %}Right after filling out below form you need to confirm your email. Click the link from email you will receive.{% endblocktrans %}</p>
-<p>2. {% blocktrans %}Then you have to wait until group approve your application. When this happens you will be notified by email.{% endblocktrans %}</p>
-<p> {% blocktrans %} Somebody may contact you to ask about your interests and expectations. {% endblocktrans %}</p>
+<p>{% blocktrans %}Account is created in 4 steps:{% endblocktrans %}</p>
+<p>1. {% blocktrans %}Enter your email and solve captcha.{% endblocktrans %}</p>
+<p>2. {% blocktrans %}Confirm your email by clicking the link sent to your inbox.{% endblocktrans %}</p>
+<p>3. {% blocktrans %}Fill out onboarding questions (available right after signup).{% endblocktrans %}</p>
+<p>4. {% blocktrans %}Wait until group approves your application.{% endblocktrans %}</p>
 </div>
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}

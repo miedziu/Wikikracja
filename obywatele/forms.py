@@ -121,6 +121,15 @@ class ProfileForm(forms.ModelForm):
                   'job', 'gift', 'other', 'why')
 
 
+class OnboardingDetailsForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=150, label=_('First name'), required=False)
+    last_name = forms.CharField(max_length=150, label=_('Last name'), required=False)
+
+    class Meta:
+        model = Uzytkownik
+        fields = ('why', 'phone', 'city', 'job', 'hobby', 'business', 'skills', 'knowledge')
+
+
 class CustomSignupForm(SignupForm):
     email = forms.CharField(max_length=100, label='Email', required=True)
     captcha = CaptchaField()
@@ -128,6 +137,17 @@ class CustomSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super(CustomSignupForm, self).__init__(*args, **kwargs)
         self.fields.pop('password1')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        existing_user = User.objects.filter(email__iexact=email).first()
+
+        if existing_user and not existing_user.is_active:
+            raise forms.ValidationError(
+                _('Your candidacy is still in the queue. Please wait for verification.')
+            )
+
+        return email
  
     def save(self, request: HttpRequest):
         user = super(CustomSignupForm, self).save(request)
@@ -135,6 +155,13 @@ class CustomSignupForm(SignupForm):
         if not User.objects.filter(username=user.username).exists():
             user.set_unusable_password()
         user.save()
+
+        profile = user.uzytkownik
+        profile.onboarding_status = Uzytkownik.OnboardingStatus.EMAIL_ENTERED
+        profile.save()
+
+        request.session['onboarding_user_id'] = user.id
+        request.session.modified = True
     
         HOST = get_site_domain()
         SendEmailToAll(
