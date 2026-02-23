@@ -1,0 +1,33 @@
+{% extends "home/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h1>{% trans "Onboarding form" %}</h1>
+
+{% if not email_confirmed %}
+  <div class="alert alert-info">
+    {% trans "Remember: your email is not confirmed yet. Please confirm it using the link from your inbox." %}
+  </div>
+{% endif %}
+
+<p class="font-weight-bold">
+  {% trans "Please fill in the questions below. This helps the group evaluate your application." %}
+</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.first_name|as_crispy_field }}
+  {{ form.last_name|as_crispy_field }}
+  {{ form.why|as_crispy_field }}
+  {{ form.phone|as_crispy_field }}
+  {{ form.city|as_crispy_field }}
+  {{ form.job|as_crispy_field }}
+  {{ form.hobby|as_crispy_field }}
+  {{ form.business|as_crispy_field }}
+  {{ form.skills|as_crispy_field }}
+  {{ form.knowledge|as_crispy_field }}
+
+  <button type="submit" class="btn btn-info btn-sm">{% trans "Save form" %}</button>
+</form>
+{% endblock %}

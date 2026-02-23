@@ -15,10 +15,12 @@ from datetime import timedelta as td
 from django.utils.translation import gettext_lazy as _
 from random import choice
 from string import ascii_letters, digits
-from obywatele.forms import UserForm, ProfileForm, EmailChangeForm, NameChangeForm, UsernameChangeForm
+import logging
+from obywatele.forms import UserForm, ProfileForm, EmailChangeForm, NameChangeForm, UsernameChangeForm, OnboardingDetailsForm
 from obywatele.models import Uzytkownik, Rate
 from django.utils import translation
 from django.core.mail import EmailMessage
+from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 import threading
 import time
 from obywatele.tables import UzytkownikTable
@@ -26,7 +28,8 @@ from obywatele.filters import UzytkownikFilter
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
 # from django_tables2.export import TableExport
-from allauth.account.signals import user_signed_up
+from allauth.account.signals import user_signed_up, email_confirmed
+from allauth.account.models import EmailAddress
 from django.dispatch import receiver
 from chat import signals
 from django.contrib.auth.models import Group, Permission
@@ -34,9 +37,38 @@ from zzz.utils import build_site_url, get_site_domain
 
 HOST = get_site_domain()
 
-import logging
 log = logging.getLogger(__name__)
-logging.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=logging.INFO)
+# logging.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=logging.INFO)
+
+signer = TimestampSigner()
+
+
+def is_email_confirmed_for_candidate(user: User, profile: Uzytkownik) -> bool:
+    if profile.polecajacy:
+        return True
+    return EmailAddress.objects.filter(user=user, verified=True).exists()
+
+
+def get_onboarding_user_from_request(request: HttpRequest):
+    onboarding_user_id = request.session.get('onboarding_user_id')
+
+    uid = request.GET.get('uid')
+    token = request.GET.get('token')
+    if uid and token:
+        try:
+            signed_value = signer.unsign(token, max_age=s.DELETE_INACTIVE_USER_AFTER * 24 * 60 * 60)
+            if signed_value == str(uid):
+                onboarding_user_id = int(uid)
+                request.session['onboarding_user_id'] = onboarding_user_id
+                request.session.modified = True
+        except (BadSignature, SignatureExpired, ValueError):
+            onboarding_user_id = None
+
+    if not onboarding_user_id:
+        return None
+
+    return User.objects.filter(pk=onboarding_user_id, is_active=False).first()
+
 
 def population():
     try:
@@ -134,6 +166,7 @@ def obywatele(request: HttpRequest):
     allowed_sort_fields = {
         'username': 'username',
         'email': 'email',
+        'phone': 'uzytkownik__phone',
         'last_login': 'last_login',
         'city': 'uzytkownik__city',
         'first_name': 'first_name',
@@ -143,6 +176,7 @@ def obywatele(request: HttpRequest):
     blank_sort_fields = {
         'username': 'username_is_blank',
         'email': 'email_is_blank',
+        'phone': 'phone_is_blank',
         'last_login': 'last_login_is_blank',
         'city': 'city_is_blank',
         'first_name': 'first_name_is_blank',
@@ -181,6 +215,11 @@ def obywatele(request: HttpRequest):
                 default=Value(0),
                 output_field=IntegerField(),
             ),
+            phone_is_blank=Case(
+                When(Q(uzytkownik__phone__isnull=True) | Q(uzytkownik__phone__exact=''), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
             last_login_is_blank=Case(
                 When(last_login__isnull=True, then=Value(1)),
                 default=Value(0),
@@ -213,6 +252,7 @@ def obywatele(request: HttpRequest):
     default_directions = {
         'username': 'asc',
         'email': 'asc',
+        'phone': 'asc',
         'last_login': 'desc',
         'city': 'asc',
         'first_name': 'asc',
@@ -248,6 +288,9 @@ def obywatele(request: HttpRequest):
 def poczekalnia(request: HttpRequest):
     # zliczaj_obywateli(request)
     uid = User.objects.filter(is_active=False)
+    verified_user_ids = set(
+        EmailAddress.objects.filter(user__in=uid, verified=True).values_list('user_id', flat=True)
+    )
     
     # Get the current user's profile
     citizen_profile = Uzytkownik.objects.get(uid=request.user)
@@ -260,6 +303,8 @@ def poczekalnia(request: HttpRequest):
         rate, created = Rate.objects.get_or_create(kandydat=candidate_profile, obywatel=citizen_profile)
         # Add rating directly to user object as a custom attribute
         user.rating = rate.rate
+        user.email_confirmed = (user.id in verified_user_ids) or bool(candidate_profile.polecajacy)
+        user.form_completed = candidate_profile.onboarding_status == Uzytkownik.OnboardingStatus.FORM_COMPLETED
         users_with_ratings.append(user)
         
     return render(request, 'obywatele/poczekalnia.html', {
@@ -269,6 +314,54 @@ def poczekalnia(request: HttpRequest):
         'delete_inactive_user_after': s.DELETE_INACTIVE_USER_AFTER,
         'required_reputation': required_reputation(),
         })
+
+
+def onboarding_details(request: HttpRequest):
+    user = get_onboarding_user_from_request(request)
+    if not user:
+        error(request, _('Could not find your onboarding account.'))
+        return redirect('account_signup')
+
+    profile = user.uzytkownik
+
+    if request.method == 'POST':
+        form = OnboardingDetailsForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            user.first_name = form.cleaned_data.get('first_name', '')
+            user.last_name = form.cleaned_data.get('last_name', '')
+            user.save()
+
+            profile.onboarding_status = Uzytkownik.OnboardingStatus.FORM_COMPLETED
+            profile.save()
+
+            success(request, _('Your onboarding form has been saved.'))
+            return redirect('obywatele:onboarding_waiting')
+    else:
+        form = OnboardingDetailsForm(
+            instance=profile,
+            initial={
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+            }
+        )
+
+    return render(request, 'obywatele/onboarding_details.html', {
+        'form': form,
+        'email_confirmed': EmailAddress.objects.filter(user=user, verified=True).exists(),
+    })
+
+
+def onboarding_waiting(request: HttpRequest):
+    user = get_onboarding_user_from_request(request)
+    if not user:
+        error(request, _('Could not find your onboarding account.'))
+        return redirect('account_signup')
+
+    profile = user.uzytkownik
+    return render(request, 'obywatele/onboarding_waiting.html', {
+        'email_confirmed': EmailAddress.objects.filter(user=user, verified=True).exists(),
+    })
 
 
 @login_required
@@ -476,6 +569,8 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
 
     candidate_profile = get_object_or_404(Uzytkownik, pk=pk)
     candidate_user = User.objects.get(pk=pk)
+    email_confirmed = is_email_confirmed_for_candidate(candidate_user, candidate_profile)
+    form_completed = candidate_profile.onboarding_status == Uzytkownik.OnboardingStatus.FORM_COMPLETED
     citizen_profile = Uzytkownik.objects.get(pk=request.user.id)
     citizen_reputation = citizen_profile.reputation
     polecajacy = citizen_profile.polecajacy
@@ -523,6 +618,8 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
             'prev': prev,
             'next': next,
             'active': obj.is_active,
+            'email_confirmed': email_confirmed,
+            'form_completed': form_completed,
         })
 
 
@@ -606,3 +703,26 @@ def DeactivateNewUser(sender, **kwargs):
     u = User.objects.get(username=kwargs['user'])
     u.is_active=False
     u.save()
+
+
+@receiver(email_confirmed)
+def set_onboarding_email_confirmed(sender, request, email_address, **kwargs):
+    user = email_address.user
+    profile = user.uzytkownik
+
+    if profile.onboarding_status == Uzytkownik.OnboardingStatus.EMAIL_ENTERED:
+        profile.onboarding_status = Uzytkownik.OnboardingStatus.EMAIL_CONFIRMED
+        profile.save()
+
+    onboarding_token = signer.sign(str(user.id))
+    onboarding_link = build_site_url(f'/obywatele/onboarding/?uid={user.id}&token={onboarding_token}')
+    subject = f'[{HOST}] ' + _('Fill out your onboarding form')
+    message = _(
+        'Your email has been confirmed. Please fill out your onboarding form here: %(link)s'
+    ) % {'link': onboarding_link}
+
+    try:
+        time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
+        send_mail(subject, message, s.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+    except Exception as e:
+        l.error(f'Failed sending onboarding email after confirmation: {e}')

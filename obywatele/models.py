@@ -11,6 +11,11 @@ import pytz
 
 
 class Uzytkownik(models.Model):
+    class OnboardingStatus(models.TextChoices):
+        EMAIL_ENTERED = 'email_entered', _('Email entered')
+        EMAIL_CONFIRMED = 'email_confirmed', _('Email confirmed')
+        FORM_COMPLETED = 'form_completed', _('Form completed')
+
     uid = models.OneToOneField(User,
                                on_delete=models.CASCADE,
                                editable=False,
@@ -19,6 +24,11 @@ class Uzytkownik(models.Model):
                                )
 
     reputation = models.SmallIntegerField(null=True, default=0)
+    onboarding_status = models.CharField(
+        max_length=32,
+        choices=OnboardingStatus.choices,
+        default=OnboardingStatus.EMAIL_ENTERED,
+    )
     polecajacy = models.CharField(editable=False, null=True, max_length=64)
     data_przyjecia = models.DateField(null=True, editable=False)
     

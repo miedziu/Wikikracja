@@ -43,7 +43,7 @@ class Decyzja(models.Model):
         max_length=2000,
         null=True,
         verbose_name=_('Reasoning'),
-        help_text=_('What events or thoughts inspired this bill? What are the expected results?'))
+        help_text=_('Why do we need this law? What events or thoughts inspired this bill? What are the expected results?'))
     args_for = models.TextField(
         # TODO: This field should be filled out by anyone - like comments or chat:
         max_length=1500,

@@ -17,6 +17,8 @@
       {{ b.uid }} | {{ b.uid.email }}<br>
       {% trans 'Recommended by' %}: {{ b.polecajacy|default:"-" }}<br>
       {% trans 'Joined at' %}: {{ b.data_przyjecia|date:"Y-m-d"|default:"-" }}<br>
+      {% trans 'Email confirmed' %}: {% if email_confirmed %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}<br>
+      {% trans 'Form completed' %}: {% if form_completed %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}<br>
       
       <!--Podgląd własnego profilu-->
       {% if b.id == d.id %}

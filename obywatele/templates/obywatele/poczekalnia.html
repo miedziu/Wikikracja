@@ -17,6 +17,8 @@
 			<tr>
 				<th scope="col">{% trans 'Nick' %}</th>
 				<!-- <th scope="col">{% trans 'Email' %}</th> -->
+				<th scope="col">{% trans 'Email confirmed' %}</th>
+				<th scope="col">{% trans 'Form completed' %}</th>
 				<th scope="col">{% trans 'First name' %}</th>
 				<th scope="col">{% trans 'Last name' %}</th>
 				<th scope="col">{% trans 'Candidate since' %}</th>
@@ -39,6 +41,8 @@
 							{{ i.username }}
 						</span>
 					</td>
+					<td>{% if i.email_confirmed %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
+					<td>{% if i.form_completed %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}</td>
 					<!-- <td class="email-cell">
 						{{ i.email }}
 						<button class="btn btn-sm btn-light copy-btn" data-email="{{ i.email }}" title="{% trans 'Copy email' %}">

@@ -17,6 +17,7 @@ urlpatterns: List[URLPattern | URLResolver] = [
     path('login/', hv.RememberLoginView.as_view(), name='login'),
     path('haslo/', hv.haslo, name='haslo'),
     path('change_email/', ov.change_email, name='change_email'),
+    path('accounts/confirm-email/', RedirectView.as_view(url='/obywatele/onboarding/', permanent=False)),
     path('accounts/', include('allauth.urls')),
     path('admin/', admin.site.urls),
     path('admin/filebrowser/', site.urls),

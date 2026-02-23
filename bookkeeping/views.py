@@ -130,6 +130,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
                 'partner': item.partner,
                 'category': item.category,
                 'amount': item.amount,
+                'note': item.note,
                 'obj': item
             })
         
@@ -141,6 +142,7 @@ class TransactionListView(LoginRequiredMixin, ListView):
                 'partner': item.partner,
                 'category': item.category,
                 'amount': item.amount,
+                'note': item.note,
                 'obj': item
             })
         
@@ -266,6 +268,16 @@ class ReportView(LoginRequiredMixin, View):
                 total=Sum('amount')
             ).values_list('category', 'total')
         )
+
+        # Calculate overall totals across all categories
+        total_net = (
+            sum(value or 0 for value in incoming_by_category.values())
+            - sum(value or 0 for value in outgoing_by_category.values())
+        )
+        all_years_total_net = (
+            sum(value or 0 for value in all_years_incoming_by_category.values())
+            - sum(value or 0 for value in all_years_outgoing_by_category.values())
+        )
         
         # Process all categories including uncategorized (None)
         all_category_ids = set(list(outgoing_by_category.keys()) + list(incoming_by_category.keys()))
@@ -335,6 +347,8 @@ class ReportView(LoginRequiredMixin, View):
         context = {
             'category_movements': category_movements,
             'all_years_category_movements': all_years_category_movements,
+            'total_net': total_net,
+            'all_years_total_net': all_years_total_net,
             'year': year,
             'available_years': available_years,
         }
