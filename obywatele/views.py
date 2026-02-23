@@ -15,7 +15,6 @@ from datetime import timedelta as td
 from django.utils.translation import gettext_lazy as _
 from random import choice
 from string import ascii_letters, digits
-import logging
 from obywatele.forms import UserForm, ProfileForm, EmailChangeForm, NameChangeForm, UsernameChangeForm
 from obywatele.models import Uzytkownik, Rate
 from django.utils import translation
@@ -35,9 +34,9 @@ from zzz.utils import build_site_url, get_site_domain
 
 HOST = get_site_domain()
 
-# l.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=l.INFO)
-l = logging.getLogger(__name__)
-
+import logging
+log = logging.getLogger(__name__)
+logging.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=logging.INFO)
 
 def population():
     try:

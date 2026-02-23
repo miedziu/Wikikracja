@@ -17,9 +17,10 @@ from datetime import timedelta as td
 from django.utils import timezone
 from django.http import HttpRequest
 from .forms import RememberLoginForm
-import logging as l
+import logging
 
-l.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=l.INFO)
+log = logging.getLogger(__name__)
+logging.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=logging.INFO)
 
 def home(request: HttpRequest):
     ongoing = Decyzja.objects.filter(status=3).order_by('data_referendum_start')
@@ -33,11 +34,10 @@ def home(request: HttpRequest):
 
     posts = Post.objects.filter(updated__gte=timezone.now()-td(days=30)).order_by('-updated')
     books = Book.objects.filter(uploaded__gte=timezone.now()-td(days=30))
-
     try:
         start = Post.objects.get(title='Start')
     except Exception as e:
-        l.info(f'Add Board Message title Start. Exception: {e}')
+        log.info(f'Add Board Message title Start. Exception: {e}')
         start=''
         
     # data_referendum_start = ZliczajWszystko.kolejka
