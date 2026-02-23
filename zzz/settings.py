@@ -179,6 +179,7 @@ AUTHENTICATION_BACKENDS = [
 
 INSTALLED_APPS = (
     'zzz.apps.SchedulerConfig',
+    'daphne',
     'channels',
     'django.contrib.auth',
     'django.contrib.contenttypes',
