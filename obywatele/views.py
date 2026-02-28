@@ -484,6 +484,7 @@ def my_assets(request: HttpRequest):
             profile.job = form.cleaned_data['job']
             profile.gift = form.cleaned_data['gift']
             profile.other = form.cleaned_data['other']
+            profile.why = form.cleaned_data['why']
             profile.save()
 
             return render(
@@ -524,6 +525,7 @@ def my_assets(request: HttpRequest):
             'business': profile.business,
             'job': profile.job,
             'other': profile.other,
+            'why': profile.why,
             }
         )
 

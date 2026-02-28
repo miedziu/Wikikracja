@@ -85,6 +85,10 @@
 							<th scope="col">{% trans "Other" %}</th>
 							<td scope="col">{{ profile.other|default:"-" }}</td>
 						</tr>
+						<tr>
+							<th scope="col">{% trans "Why do you want to join?" %}</th>
+							<td scope="col">{{ profile.why|default:"-" }}</td>
+						</tr>
 					</tbody>
 				</table>
 			</p>

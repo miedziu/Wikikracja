@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-26 12:03+0100\n"
+"POT-Creation-Date: 2026-02-28 15:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1237,7 +1237,7 @@ msgid "Rejected"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:188 .\glosowania\views.py:363
-#: .\obywatele\forms.py:182 .\obywatele\views.py:682
+#: .\obywatele\forms.py:182 .\obywatele\views.py:684
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
 msgstr ""
@@ -2158,7 +2158,7 @@ msgstr ""
 msgid "In your own words please explain why do you want join our group"
 msgstr ""
 
-#: .\obywatele\models.py:50
+#: .\obywatele\models.py:50 .\obywatele\templates\obywatele\my_profile.html:90
 msgid "Why do you want to join?"
 msgstr ""
 
@@ -2437,31 +2437,31 @@ msgstr ""
 msgid "Please correct the highlighted errors."
 msgstr ""
 
-#: .\obywatele\views.py:493
+#: .\obywatele\views.py:494
 msgid "Changes was saved"
 msgstr ""
 
-#: .\obywatele\views.py:506
+#: .\obywatele\views.py:507
 msgid "Form is not valid!"
 msgstr ""
 
-#: .\obywatele\views.py:581
+#: .\obywatele\views.py:583
 msgid "positive"
 msgstr ""
 
-#: .\obywatele\views.py:588
+#: .\obywatele\views.py:590
 msgid "negative"
 msgstr ""
 
-#: .\obywatele\views.py:595
+#: .\obywatele\views.py:597
 msgid "neutral"
 msgstr ""
 
-#: .\obywatele\views.py:719
+#: .\obywatele\views.py:721
 msgid "Fill out your onboarding form"
 msgstr ""
 
-#: .\obywatele\views.py:721
+#: .\obywatele\views.py:723
 #, python-format
 msgid "Your email has been confirmed. Please fill out your onboarding form here: %(link)s"
 msgstr ""
