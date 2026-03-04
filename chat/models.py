@@ -7,6 +7,8 @@ class Room(models.Model):
     """
     A room for people to chat in.
     """
+    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+
     # Allowed users
     allowed = models.ManyToManyField(User, related_name="rooms")
 
@@ -37,13 +39,14 @@ class Room(models.Model):
 
     # Name that user will see in chats list
     def displayed_name(self, user):
+        title_len = 90
         if self.public:
-            # Clip public room names to 40 characters for display
-            return self.title[:45] if len(self.title) > 45 else self.title
+            # Clip public room names to title_len characters for display
+            return self.title[:title_len] if len(self.title) > title_len else self.title
         if self.get_other(user) is not None:
             username = self.get_other(user).username
             # Clip long usernames to match room title length
-            return username[:45] if len(username) > 45 else username
+            return username[:title_len] if len(username) > title_len else username
         else:
             return ("--")
 
@@ -85,6 +88,7 @@ class Room(models.Model):
 
 
 class Message(models.Model):
+    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     # 'sender' must be 'null=True' for anonymouse messages in email (search for 'if m.anonymous:').
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     time = models.DateTimeField(auto_now=True)
@@ -98,6 +102,7 @@ class Message(models.Model):
 
 
 class MessageVote(models.Model):
+    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     user = models.ForeignKey(User, related_name="votes", on_delete=models.CASCADE)
     message = models.ForeignKey(Message, related_name="votes", on_delete=models.CASCADE)
 
@@ -116,17 +121,20 @@ class MessageHistory(models.Model):
     All states of given message will be associated with this object.
     They can be easily retrieved like MessageHistory#entries.
     """
+    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     message = models.OneToOneField(Message, on_delete=models.CASCADE)
 
 
 class MessageHistoryEntry(models.Model):
     """ Stores state of message that is no longer relevant """
+    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     history = models.ForeignKey(MessageHistory, on_delete=models.CASCADE, related_name="entries")
     text = models.TextField()
     time = models.DateTimeField(auto_now=True)
 
 
 class MessageAttachment(models.Model):
+    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     type = models.CharField(max_length=255)
     filename = models.CharField(max_length=255)
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name="attachments")
