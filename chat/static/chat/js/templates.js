@@ -80,8 +80,10 @@ const message_template = `
 
     <div class='body'>
       <div class='attachment-image-container'>
-        <% for (let filename of attachments?.images || []) { %>
-          <img class='attached-image' src='/media/uploads/<%-filename %>'>
+        <% if (attachments && attachments.images) { %>
+          <% for (let filename of attachments.images) { %>
+            <img class='attached-image' src='/media/uploads/<%-filename %>'>
+          <% } %>
         <% } %>
       </div>
       <span class='text'><%-message%></span>

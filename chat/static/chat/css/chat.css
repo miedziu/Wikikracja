@@ -253,10 +253,11 @@
 
 /* Attached image inside message */
 .attachment-image-container .attached-image {
-    width: 150px;
-    height: 150px;
-    background-color: gray;
-    object-fit: cover;
+    max-width: 300px;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
     margin: 2px;
 }
 
