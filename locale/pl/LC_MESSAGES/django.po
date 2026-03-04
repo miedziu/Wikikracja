@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-02 10:19+0100\n"
+"POT-Creation-Date: 2026-03-04 12:56+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -2149,6 +2149,7 @@ msgid "In your own words please explain why do you want join our group"
 msgstr "Wyjaśnij własnymi słowami dlaczego chcesz dołączyć do naszej grupy"
 
 #: .\obywatele\models.py:50 .\obywatele\templates\obywatele\my_profile.html:90
+#: .\obywatele\templates\obywatele\szczegoly.html:107
 msgid "Why do you want to join?"
 msgstr "Dlaczego chcesz należeć do grupy?"
 

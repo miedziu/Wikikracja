@@ -183,10 +183,15 @@
     display: block;
     /* margin-bottom: .1rem; */
 
-    &>div {
-        display: flex;
-        gap: .1rem;
-    }
+/* Attached image inside message */
+.attachment-image-container .attached-image {
+    max-width: 300px;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 2px;
+}
 
     input[type="file"] {
         display: none;
