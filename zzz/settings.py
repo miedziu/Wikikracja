@@ -84,7 +84,7 @@ USE_L10N = True
 USE_TZ = True
 LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
 DATE_FORMAT = "Y-m-d"
-INTERNAL_IPS = '127.0.0.1'
+INTERNAL_IPS = ['127.0.0.1', "192.168.1.3"]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'  # TODO: template?
 ASGI_APPLICATION = 'zzz.routing.application'
@@ -140,7 +140,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-MIDDLEWARE = (
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -160,7 +160,7 @@ MIDDLEWARE = (
     # XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
     'allauth.account.middleware.AccountMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
-)
+]
 
 TEMPLATES = [
     {
@@ -187,7 +187,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'zzz.apps.SchedulerConfig',
     'daphne',
     'channels',
@@ -224,13 +224,22 @@ INSTALLED_APPS = (
     'captcha',
     'django_browser_reload',
     "django_watchfiles",
-)
+]
 
+if DEBUG:
+    INSTALLED_APPS = [
+        *INSTALLED_APPS,
+        "debug_toolbar",
+    ]
+    MIDDLEWARE = [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        *MIDDLEWARE,
+    ]
 
 # Just for suppressing "Using selector: EpollSelector"
 import logging
-logging.getLogger('asyncio').setLevel(logging.INFO)
-# logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
+logging.getLogger('asyncio').setLevel(logging.DEBUG)
+logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
 
 LOGGING = {
     'version': 1,
@@ -247,6 +256,11 @@ LOGGING = {
             'formatter': 'verbose',
             'stream': 'ext://sys.stdout',
         },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'django_queries.log',
+        },
     },
     'loggers': {
         '': {
@@ -259,11 +273,17 @@ LOGGING = {
         #     'level': 'INFO',
         #     'propagate': True
         # },
-        # 'django.db.backends': {
-        #     'level': 'DEBUG',
+        # 'django.channels.server': {
         #     'handlers': ['console'],
-        #     'propagate': True
+        #     'level': 'DEBUG',
+        #     'propagate': False
+        # },
+        # 'django.db.backends': {
+        #     'handlers': ['console', 'file'],
+        #     'level': 'DEBUG',
+        #     'propagate': False
         # }
+       
         # 'glosowania': {
         #     'handlers': ['console'],
         #     'level': 'INFO',

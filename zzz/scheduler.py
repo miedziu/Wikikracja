@@ -12,8 +12,9 @@ def start_scheduler():
     Start APScheduler to run management commands on schedule.
     Replaces cron jobs:
     - 0 9,12,15,18,21 * * * -> chat_messages
+    - * 5 15 25 35 45 55 * * * -> chat_rooms (every 10 minutes)
     - 5 8 * * * -> vote
-    - * * * * * -> count_citizens (every minute)
+    - */10 * * * * -> count_citizens (every 10 minutes)
     - 0 * * * * -> update_site (every hour)
     """
     scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)
@@ -29,6 +30,18 @@ def start_scheduler():
     )
     log.info("Scheduled job: chat_messages at 9, 12, 15, 18, 21")
     
+    # Chat rooms - runs every 10 minutes
+    scheduler.add_job(
+        run_chat_rooms,
+        # trigger=CronTrigger(minute='*'),
+        trigger=CronTrigger(minute='5,15,25,33,35,45,55'),
+        id='chat_rooms',
+        name='Create/Delete/Archive chat rooms',
+        replace_existing=True,
+        max_instances=1,
+    )
+    log.info("Scheduled job: chat_rooms every 10 minutes")
+    
     # Vote - runs daily at 08:05
     scheduler.add_job(
         run_vote,
@@ -43,13 +56,13 @@ def start_scheduler():
     # Count citizens - runs every minute
     scheduler.add_job(
         run_count_citizens,
-        trigger=CronTrigger(minute='*'),
+        trigger=CronTrigger(hour='*/10'),
         id='count_citizens',
         name='Count citizens and manage reputation',
         replace_existing=True,
         max_instances=1,
     )
-    log.info("Scheduled job: count_citizens every minute")
+    log.info("Scheduled job: count_citizens every 10 minutes")
     
     # Update site - runs every hour
     scheduler.add_job(
@@ -67,7 +80,6 @@ def start_scheduler():
     
     return scheduler
 
-
 def run_chat_messages():
     """Execute chat_messages management command"""
     try:
@@ -77,6 +89,14 @@ def run_chat_messages():
     except Exception as e:
         log.error(f"Error running chat_messages: {e}", exc_info=True)
 
+def run_chat_rooms():
+    """Execute chat_rooms management command"""
+    try:
+        log.info("Running chat_rooms command")
+        call_command('chat_rooms')
+        log.info("chat_rooms command completed")
+    except Exception as e:
+        log.error(f"Error running chat_rooms: {e}", exc_info=True)
 
 def run_vote():
     """Execute vote management command"""
@@ -87,7 +107,6 @@ def run_vote():
     except Exception as e:
         log.error(f"Error running vote: {e}", exc_info=True)
 
-
 def run_count_citizens():
     """Execute count_citizens management command"""
     try:
@@ -96,7 +115,6 @@ def run_count_citizens():
         log.info("count_citizens command completed")
     except Exception as e:
         log.error(f"Error running count_citizens: {e}", exc_info=True)
-
 
 def run_update_site():
     """Execute update_site management command"""

@@ -18,6 +18,7 @@ import time
 import logging
 log = logging.getLogger('django')
 
+# count_citizens command
 class Command(BaseCommand):
     help = 'Count citizens\' reputation and activate/deactivate users based on reputation thresholds'
 
