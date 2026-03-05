@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-05 10:47+0100\n"
+"POT-Creation-Date: 2026-03-05 11:12+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -1107,7 +1107,7 @@ msgid "Rejected"
 msgstr "Odrzucone"
 
 #: .\glosowania\management\commands\vote.py:188 .\glosowania\views.py:363
-#: .\obywatele\forms.py:182 .\obywatele\views.py:683
+#: .\obywatele\forms.py:182 .\obywatele\views.py:681
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
 msgstr "Dlaczego otrzymałeś ten e-mail? Tutaj jest wyjaśnienie: {url}"
@@ -2312,23 +2312,23 @@ msgstr "Zmiany zostały zapisane"
 msgid "Form is not valid!"
 msgstr "Formularz zawiera błędy"
 
-#: .\obywatele\views.py:582
+#: .\obywatele\views.py:581
 msgid "positive"
 msgstr "pozytywny"
 
-#: .\obywatele\views.py:589
+#: .\obywatele\views.py:588
 msgid "negative"
 msgstr "negatywny"
 
-#: .\obywatele\views.py:596
+#: .\obywatele\views.py:595
 msgid "neutral"
 msgstr "obojętny"
 
-#: .\obywatele\views.py:720
+#: .\obywatele\views.py:718
 msgid "Fill out your onboarding form"
 msgstr "Wypełnij formularz rejestracyjny"
 
-#: .\obywatele\views.py:722
+#: .\obywatele\views.py:720
 #, python-format
 msgid "Your email has been confirmed. Please fill out your onboarding form here: %(link)s"
 msgstr "Twoj email został potwierdzony. Możesz wypełnić formularz rejestracyjny tutaj: %(link)s"
