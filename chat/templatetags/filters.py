@@ -25,4 +25,5 @@ def has_messages(user):
             .annotate(messages_count=Count('messages'))
             .filter(messages_count__gt=0)
         )
-    return "chat-has-messages" if rooms_with_new_messages.count() > 0 else ""
+    count = rooms_with_new_messages.count()
+    return "chat-has-messages" if count > 0 else ""

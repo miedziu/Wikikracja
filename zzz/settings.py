@@ -135,14 +135,9 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 X_FRAME_OPTIONS = 'DENY'
 # Dlaczego?
 
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # above all other middleware apart from Django’s SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -159,7 +154,6 @@ MIDDLEWARE = [
     # X_FRAME_OPTIONS = 'ALLOW'
     # XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
     'allauth.account.middleware.AccountMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 TEMPLATES = [
@@ -201,7 +195,6 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount',
     'django.contrib.staticfiles',
     'django.contrib.admindocs',
-    'django_extensions',
     'django_bootstrap5',
     'crispy_forms',
     'crispy_bootstrap5',
@@ -229,16 +222,20 @@ INSTALLED_APPS = [
 if DEBUG:
     INSTALLED_APPS = [
         *INSTALLED_APPS,
-        "debug_toolbar",
+        'django_extensions',
+        'debug_toolbar',
     ]
     MIDDLEWARE = [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
         *MIDDLEWARE,
+        'django_browser_reload.middleware.BrowserReloadMiddleware',
     ]
+
+DEBUG_AM = True # My(Miedziu) Debug profile/settings for better focus, default after "else"
 
 # Just for suppressing "Using selector: EpollSelector"
 import logging
-logging.getLogger('asyncio').setLevel(logging.DEBUG)
+logging.getLogger('asyncio').setLevel(logging.ERROR if DEBUG_AM else logging.DEBUG)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
 
 LOGGING = {
@@ -251,7 +248,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG' if DEBUG_AM else 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
             'stream': 'ext://sys.stdout',
@@ -265,7 +262,7 @@ LOGGING = {
     'loggers': {
         '': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'ERROR' if DEBUG_AM else 'INFO',
             'propagate': True
         },
         # 'django': {
@@ -273,17 +270,18 @@ LOGGING = {
         #     'level': 'INFO',
         #     'propagate': True
         # },
-        # 'django.channels.server': {
-        #     'handlers': ['console'],
-        #     'level': 'DEBUG',
-        #     'propagate': False
-        # },
-        # 'django.db.backends': {
+        # Urls:
+        'django.channels.server': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True
+        },
+        # SQL logs:
+        # 'django.db.backends': { 
         #     'handlers': ['console', 'file'],
         #     'level': 'DEBUG',
-        #     'propagate': False
+        #     'propagate': True
         # }
-       
         # 'glosowania': {
         #     'handlers': ['console'],
         #     'level': 'INFO',
