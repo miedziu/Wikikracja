@@ -107,19 +107,16 @@
 
         /* Container for attached images inside message */
         .attachment-image-container {
-            display: flex;
-            justify-content: start;
-            flex-wrap: wrap;
-            flex-basis: min-content;
-            width: 100%;
+            cursor: pointer;
+            width: fit-content;
 
             /* Attached image inside message */
             .attached-image {
-                width: 150px;
-                height: 150px;
-                background-color: gray;
-                object-fit: cover;
-                margin: 2px;
+                max-height: 30dvh;
+                height: auto;
+                max-width: 30dvh;
+                width: auto;
+                object-fit: contain;
             }
         }
 
@@ -127,7 +124,6 @@
             overflow-wrap: break-word;
         }
     }
-
 
     /* Container for vote buttons */
     .msg-vote {
@@ -179,19 +175,14 @@
     }
 }
 
-/* Attached image inside message */
-.attachment-image-container .attached-image {
-    max-width: 300px;
-    max-height: 300px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    margin: 2px;
-}
-
 #room .chat-controls {
     display: block;
-    /* margin-bottom: .1rem; */
+    margin-bottom: .1rem;
+
+    &>div {
+        display: flex;
+        gap: .1rem;
+    }
 
     input[type="file"] {
         display: none;

@@ -272,7 +272,6 @@ socket.send(JSON.stringify({
 - Do woli: Jeśli dostajesz minusy a mimo to nie przyznajesz się do błędu to dostajesz dużego Minusa. Ale jeśli po dłuższym czasie WIĘKSZOŚĆ przyzna, że Miałeś rację to dostajesz ogromnego plusa. Wielkość plus jest proporcjonalna do czasu jaki upłynął od pierwotnej opinii. Takie podejście będzie premiowało to czy i, który z uczestników typuje z większym wyprzedzeniem przyszłe wydarzenia. Ci, których przewidywania się nie sprawdziły będą wraz z upływem czasu tracili na wartości (po to aby zachęcić do przyznawania się do błędu - przyznanie zatrzymuje licznik).
 - settings.SECURE_SSL_HOST
 - https://beeware.org/
-- pycryptodome==3.6.1 > 3.6.6 ale to czeka na upgrade djangosecure z 0.0.11 na coś nowszego.
 - Emaile nie są tłumaczone na angielski
 - 2021-02 Generowanie userów na podstawie listy mieszkańców, listy emaili, numerów mieszkań. Kod zapraszający wygenerowany z konta osoby zapraszającej. Można podać fejkowy email i w ten sposób wygenerować hasło. Kliknięcie kodu oznaczałoby zgodę itp. Trochę mi tego brakuje. https://django-registration.readthedocs.io/en/3.1.1/ + dodatkowe pole z kodem. Tutorial: https://dev.to/coderasha/create-advanced-user-sign-up-view-in-django-step-by-step-k9m
 - Przykład sukcesu: https://wiadomosci.gazeta.pl/wiadomosci/7,114881,26810291,legalna-aborcja-w-argentynie-dzialaczki-kosciol-wiedzial.amp

@@ -12,7 +12,8 @@ export default class WsApi {
 
         this.socket = new ReconnectingWebSocket(ws_path);
 
-        $(window).on('beforeunload', () => {
+        $(window).on('beforeunload', () => {            
+            console.log("beforeunload: Closing connecton " + ws_path);
             this.socket.close();
         });
 

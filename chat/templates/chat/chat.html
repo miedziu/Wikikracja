@@ -4,11 +4,11 @@
 {% load filters %}
 
 {% block content_fullscreen %}
-  <link rel="stylesheet" href="{% static 'chat/css/photoswipe/photoswipe.css' %}">
-  <link rel="stylesheet" href="{% static 'chat/css/photoswipe/default-skin.css' %}">
+  <link rel="stylesheet" href="{% static 'chat/css/photoswipe/photoswipe.css' %}" />
+  <link rel="stylesheet" href="{% static 'chat/css/photoswipe/default-skin.css' %}" />
   <script src="{% static 'chat/js/photoswipe/photoswipe.min.js' %}"></script>
   <script src="{% static 'chat/js/photoswipe/photoswipe-ui-default.min.js' %}"></script>
- 
+
   <script>
     $(document).ready(function () {
       $('#toggleButtonPubActive').click(function () {
@@ -24,13 +24,13 @@
         $('#content-prv-archive').slideToggle(300)
       })
     })
-
-    window.onload = function() {
-      let acc = document.getElementsByClassName("accordion");
+    
+    window.onload = function () {
+      let acc = document.getElementsByClassName('accordion')
       for (var i = 0; i < acc.length; i++) {
-        acc[i].addEventListener("click", function() {
-          this.classList.toggle("activated");
-        });
+        acc[i].addEventListener('click', function () {
+          this.classList.toggle('activated')
+        })
       }
     }
   </script>
@@ -134,7 +134,7 @@
 
   <!-- ======================================================================== -->
 
-  <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="pswp" tabindex="-1" role="dialog">
     <div class="pswp__bg"></div>
 
     <!-- Slides wrapper with overflow:hidden. -->
@@ -155,10 +155,10 @@
           <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
           <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
 
-          <!--                                              
+          <!--                                               
            Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR 
            element will get class pswp__preloader
-           active when preloader is running -->
+           active when preloader is running  -->
           <div class="pswp__preloader">
             <div class="pswp__preloader__icn">
               <div class="pswp__preloader__cut">

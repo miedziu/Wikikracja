@@ -51,8 +51,17 @@ Try the live demo: **https://demo.wikikracja.pl/**
    cd wikikracja
    ```
 
+2. **Create & activate virtual env**
+   ```bash   
+   python -m venv venv
+
+   source venv/bin/activate # Linux / macOS
+   venv\Scripts\Activate.ps1 # Windows
+   ```
+
 3. **Install dependencies (manual option)**
-   ```bash
+   ```bash   
+   python -m pip install --upgrade pip
    python -m pip install -r requirements.txt
    ```
 
@@ -66,6 +75,8 @@ Try the live demo: **https://demo.wikikracja.pl/**
    ```bash
    ./scripts/start_dev.sh                       # Linux / macOS
    ./scripts/build_docker_localy_on_windows.ps1 # Windows
+   or: 
+   python ./scripts/start_dev.py
    ```
 
    Or manually:
