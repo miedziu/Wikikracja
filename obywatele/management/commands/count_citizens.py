@@ -45,8 +45,10 @@ class Command(BaseCommand):
     def count_reputation(self):
         """Count everyone's reputation from Rate model and update the Uzytkownik model"""
         for i in Uzytkownik.objects.all():
-            if i.uid is None:
-                log.warning(f"Deleting orphaned Uzytkownik profile id={i.id} (uid is None)")
+            if i.uid_id is None or not User.objects.filter(pk=i.uid_id).exists():
+                log.warning(
+                    f"Deleting orphaned Uzytkownik profile id={i.id} (uid_id={i.uid_id})"
+                )
                 i.delete()
                 continue
             
