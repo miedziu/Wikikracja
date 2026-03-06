@@ -630,34 +630,6 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
         })
 
 
-def zliczaj_obywateli(request: HttpRequest):  # TODO: Remove this function if everything works
-    """
-    View that runs the count_citizens management command to process user reputation
-    and activate/deactivate users based on reputation thresholds.
-    
-    The logic has been moved to a management command for better maintainability
-    and to allow scheduling via cron.
-    """
-    from django.core.management import call_command
-    from io import StringIO
-    
-    # Capture command output
-    stdout = StringIO()
-    stderr = StringIO()
-    
-    try:
-        # Run the management command with the current request host for context
-        call_command('count_citizens', stdout=stdout, stderr=stderr)
-        if stdout.getvalue():
-            log.info(stdout.getvalue())
-        if stderr.getvalue():
-            log.error(stderr.getvalue())
-    except Exception as e:
-        log.error(f"Error running count_citizens command: {str(e)}")
-    
-    return redirect('obywatele:poczekalnia')
-
-
 @login_required
 def change_password(request: HttpRequest):
     if request.method == 'POST':

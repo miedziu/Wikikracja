@@ -25,6 +25,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('Starting citizen count and reputation check...')
         
+        # Clean up duplicate users FIRST
+        self.cleanup_duplicate_users()
+        
         # Count reputation for all users
         self.count_reputation()
         
@@ -42,6 +45,45 @@ class Command(BaseCommand):
         
         self.stdout.write(self.style.SUCCESS('Successfully processed citizens'))
 
+    def cleanup_duplicate_users(self):
+        """Remove duplicate users with the same email before processing"""
+        from collections import defaultdict
+        
+        # Find all users grouped by email (case-insensitive)
+        email_to_users = defaultdict(list)
+        for user in User.objects.all():
+            email_to_users[user.email.lower()].append(user)
+        
+        # Process duplicates
+        for email, users in email_to_users.items():
+            if len(users) > 1:
+                log.warning(f'Found {len(users)} users with email {email}')
+                
+                # Sort: active first, then by date_joined (newest first)
+                users.sort(key=lambda u: (not u.is_active, -u.date_joined.timestamp()))
+                
+                # Keep the first one (active and newest)
+                user_to_keep = users[0]
+                users_to_delete = users[1:]
+                
+                log.info(f'Keeping user {user_to_keep.username} (id={user_to_keep.id}, active={user_to_keep.is_active})')
+                
+                for user in users_to_delete:
+                    log.info(f'Deleting duplicate user {user.username} (id={user.id}, active={user.is_active})')
+                    
+                    # Delete associated profile if exists
+                    try:
+                        if hasattr(user, 'uzytkownik'):
+                            user.uzytkownik.delete()
+                    except Exception as e:
+                        log.error(f'Error deleting profile for user {user.id}: {e}')
+                    
+                    # Delete the user
+                    try:
+                        user.delete()
+                    except Exception as e:
+                        log.error(f'Error deleting user {user.id}: {e}')
+    
     def count_reputation(self):
         """Count everyone's reputation from Rate model and update the Uzytkownik model"""
         for i in Uzytkownik.objects.all():
@@ -70,9 +112,21 @@ class Command(BaseCommand):
         inactive_users = list(Uzytkownik.objects.filter(uid__is_active=False))
         req_rep = required_reputation()
         activated_user_ids = set()
+        activated_emails = set()  # Track by email to prevent duplicate activations
         
         for i in inactive_users:
+            # CRITICAL: Skip if uid is None or invalid
+            if i.uid is None or i.uid_id is None or i.uid_id <= 0:
+                log.warning(f'Skipping Uzytkownik id={i.id} with invalid uid_id={i.uid_id}')
+                continue
+            
+            # Skip if already activated in this run (by ID or email)
             if i.uid.id in activated_user_ids:
+                continue
+            
+            # CRITICAL: Skip if email already activated (prevents duplicate emails)
+            if i.uid.email.lower() in activated_emails:
+                log.warning(f'Skipping user {i.uid.username} - email {i.uid.email} already activated in this run')
                 continue
                 
             if i.reputation is None:
@@ -80,15 +134,23 @@ class Command(BaseCommand):
                 continue
                 
             if i.reputation > req_rep:
+                # CRITICAL: Log before activation to detect duplicates
+                log.info(f'ACTIVATING: user_id={i.uid.id}, email={i.uid.email}, username={i.uid.username}, uzytkownik_id={i.id}')
+                
                 activated_user_ids.add(i.uid.id)
+                activated_emails.add(i.uid.email.lower())
                 i.uid.is_active = True  # Uzytkownik.uid -> User
                 
                 password = password_generator()
                 i.uid.set_password(password)
                 i.data_przyjecia = now()
+                
+                # Log the generated password for debugging
+                log.info(f'Generated password for {i.uid.email}: {password}')
+                
                 i.uid.save()
                 i.save()
-                log.info(f'Activating user {i.uid}')
+                log.info(f'ACTIVATED: user_id={i.uid.id}, email={i.uid.email}')
 
                 # Create one2one chat rooms for new person with Signals
                 signals.user_accepted.send(sender='user_accepted', user=i)

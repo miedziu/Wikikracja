@@ -19,6 +19,8 @@ from django.apps import AppConfig
 
 log = logging.getLogger(__name__)
 
+# Global flag to prevent multiple scheduler instances
+_scheduler_started = False
 
 class SchedulerConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -30,6 +32,12 @@ class SchedulerConfig(AppConfig):
         This is where we start the APScheduler for background tasks.
         """
         import os
+        global _scheduler_started
+        
+        # Prevent multiple scheduler instances
+        if _scheduler_started:
+            log.warning("Scheduler already started, skipping duplicate initialization")
+            return
         
         # Only start scheduler in the main process, not in Django management commands
         # and not during migrations or other special operations
@@ -37,6 +45,7 @@ class SchedulerConfig(AppConfig):
             try:
                 from zzz.scheduler import start_scheduler
                 start_scheduler()
+                _scheduler_started = True
                 log.info("APScheduler initialized from SchedulerConfig.ready()")
             except Exception as e:
                 log.error(f"Failed to start APScheduler: {e}", exc_info=True)
