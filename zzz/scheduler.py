@@ -11,36 +11,35 @@ def start_scheduler():
     """
     Start APScheduler to run management commands on schedule.
     Replaces cron jobs:
-    - 0 9,12,15,18,21 * * * -> chat_messages
-    - * 5 15 25 35 45 55 * * * -> chat_rooms (every 10 minutes)
+    - 1 12,18 * * * -> chat_messages
+    - */5 * * * * -> chat_rooms (every 5 minutes)
     - 5 8 * * * -> vote
-    - */10 * * * * -> count_citizens (every 10 minutes)
-    - 0 * * * * -> update_site (every hour)
+    - */5 * * * * -> count_citizens (every 5 minutes)
+    - 2 * * * * -> update_site (every hour)
     """
     scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)
     
-    # Chat messages - runs at 9, 12, 15, 18, 21
+    # Chat messages - runs at 12, 18
     scheduler.add_job(
         run_chat_messages,
-        trigger=CronTrigger(hour='9,12,15,18,21', minute=0),
+        trigger=CronTrigger(hour='12,18', minute=1),
         id='chat_messages',
         name='Send chat message emails',
         replace_existing=True,
         max_instances=1,
     )
-    log.info("Scheduled job: chat_messages at 9, 12, 15, 18, 21")
+    log.info("Scheduled job: chat_messages at 12, 18")
     
-    # Chat rooms - runs every 10 minutes
+    # Chat rooms - runs every 5 minutes
     scheduler.add_job(
         run_chat_rooms,
-        # trigger=CronTrigger(minute='*'),
-        trigger=CronTrigger(minute='5,15,25,33,35,45,55'),
+        trigger=CronTrigger(minute='*/5'),
         id='chat_rooms',
         name='Create/Delete/Archive chat rooms',
         replace_existing=True,
         max_instances=1,
     )
-    log.info("Scheduled job: chat_rooms every 10 minutes")
+    log.info("Scheduled job: chat_rooms every 5 minutes")
     
     # Vote - runs daily at 08:05
     scheduler.add_job(
@@ -53,21 +52,21 @@ def start_scheduler():
     )
     log.info("Scheduled job: vote at 08:05 daily")
     
-    # Count citizens - runs every minute
+    # Count citizens - runs every 5 minutes
     scheduler.add_job(
         run_count_citizens,
-        trigger=CronTrigger(hour='*/10'),
+        trigger=CronTrigger(minute='*/5'),
         id='count_citizens',
         name='Count citizens and manage reputation',
         replace_existing=True,
         max_instances=1,
     )
-    log.info("Scheduled job: count_citizens every 10 minutes")
+    log.info("Scheduled job: count_citizens every 5 minutes")
     
     # Update site - runs every hour
     scheduler.add_job(
         run_update_site,
-        trigger=CronTrigger(minute=0),
+        trigger=CronTrigger(minute=2),
         id='update_site',
         name='Update Site domain and name from environment variables',
         replace_existing=True,
