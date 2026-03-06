@@ -60,7 +60,10 @@ def dodaj(request: HttpRequest):
 
 @login_required
 def edit(request: HttpRequest, pk: int):
-    decision = Decyzja.objects.get(pk=pk)
+    try:
+        decision = Decyzja.objects.get(pk=pk)
+    except Decyzja.DoesNotExist:
+        return redirect('glosowania:index')
 
     if request.method == 'POST':
         form = DecyzjaForm(request.POST)
@@ -108,7 +111,10 @@ def details(request:HttpRequest, pk: int):
     szczegoly = get_object_or_404(Decyzja, pk=pk)
 
     if request.GET.get('sign'):
-        nowy_projekt = Decyzja.objects.get(pk=pk)
+        try:
+            nowy_projekt = Decyzja.objects.get(pk=pk)
+        except Decyzja.DoesNotExist:
+            return redirect('glosowania:index')
         osoba_podpisujaca = request.user
         podpis = ZebranePodpisy(projekt=nowy_projekt, podpis_uzytkownika=osoba_podpisujaca)
         nowy_projekt.ile_osob_podpisalo += 1
@@ -119,7 +125,10 @@ def details(request:HttpRequest, pk: int):
         return redirect('glosowania:details', pk)
 
     if request.GET.get('withdraw'):
-        nowy_projekt = Decyzja.objects.get(pk=pk)
+        try:
+            nowy_projekt = Decyzja.objects.get(pk=pk)
+        except Decyzja.DoesNotExist:
+            return redirect('glosowania:index')
         osoba_podpisujaca = request.user
         podpis = ZebranePodpisy.objects.get(projekt=nowy_projekt, podpis_uzytkownika=osoba_podpisujaca)
         podpis.delete()
@@ -130,7 +139,10 @@ def details(request:HttpRequest, pk: int):
         return redirect('glosowania:details', pk)
 
     if request.GET.get('tak'):
-        nowy_projekt = Decyzja.objects.get(pk=pk)
+        try:
+            nowy_projekt = Decyzja.objects.get(pk=pk)
+        except Decyzja.DoesNotExist:
+            return redirect('glosowania:index')
         osoba_glosujaca = request.user
         glos = KtoJuzGlosowal(
                               projekt=nowy_projekt,
@@ -161,7 +173,10 @@ def details(request:HttpRequest, pk: int):
         return redirect('glosowania:details', pk)
 
     if request.GET.get('nie'):
-        nowy_projekt = Decyzja.objects.get(pk=pk)
+        try:
+            nowy_projekt = Decyzja.objects.get(pk=pk)
+        except Decyzja.DoesNotExist:
+            return redirect('glosowania:index')
         osoba_glosujaca = request.user
         glos = KtoJuzGlosowal(projekt=nowy_projekt, ktory_uzytkownik_juz_zaglosowal=osoba_glosujaca)
         nowy_projekt.przeciw += 1

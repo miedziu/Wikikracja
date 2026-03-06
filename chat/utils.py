@@ -209,7 +209,11 @@ def send_message_to_room(room_title, message_text, sender=None, anonymous=True):
         from .consumers import ChatConsumer
 
         # Create the message in the database
-        room = Room.objects.get(title=room_title)
+        try:
+            room = Room.objects.get(title=room_title)
+        except Room.DoesNotExist:
+            logger.error(f"Room '{room_title}' does not exist")
+            return None
         message = Message.objects.create(
             sender=sender,
             text=message_text,

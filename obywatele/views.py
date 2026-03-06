@@ -293,13 +293,20 @@ def poczekalnia(request: HttpRequest):
     )
     
     # Get the current user's profile
-    citizen_profile = Uzytkownik.objects.get(uid=request.user)
+    try:
+        citizen_profile = Uzytkownik.objects.get(uid=request.user)
+    except Uzytkownik.DoesNotExist:
+        error(request, _('Your profile does not exist. Please contact administrator.'))
+        return redirect('home:index')
     
     # Get ratings from the current user for all candidates
     # Process users and add rating directly to each user object for easy access in template
     users_with_ratings = []
     for user in uid:
-        candidate_profile = Uzytkownik.objects.get(uid=user)
+        try:
+            candidate_profile = Uzytkownik.objects.get(uid=user)
+        except Uzytkownik.DoesNotExist:
+            continue
         rate, created = Rate.objects.get_or_create(kandydat=candidate_profile, obywatel=citizen_profile)
         # Add rating directly to user object as a custom attribute
         user.rating = rate.rate

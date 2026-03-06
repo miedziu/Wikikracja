@@ -634,8 +634,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     
     @database_sync_to_async
     def get_room(self, room_id):
-        r = Room.objects.get(id=room_id)
-        return r
+        try:
+            r = Room.objects.get(id=room_id)
+            return r
+        except Room.DoesNotExist:
+            log.error(f"Room with ID {room_id} does not exist")
+            return None
 
     @database_sync_to_async
     def find_room_with(self, *users):
@@ -661,8 +665,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def get_user_by_name(self, user):
-        u = User.objects.get(username=user)
-        return u
+        try:
+            u = User.objects.get(username=user)
+            return u
+        except User.DoesNotExist:
+            log.error(f"User {user} does not exist")
+            return None
 
     @database_sync_to_async
     def save_message(self, message):
@@ -687,7 +695,11 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def get_message(self, message_id):
-        return Message.objects.get(pk=message_id)
+        try:
+            return Message.objects.get(pk=message_id)
+        except Message.DoesNotExist:
+            log.error(f"Message with ID {message_id} does not exist")
+            return None
 
     @database_sync_to_async
     def add_vote(self, event: str, message_id: int):
@@ -709,7 +721,11 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def get_room_by_message(self, message_id: int):
-        return Message.objects.get(pk=message_id).room
+        try:
+            return Message.objects.get(pk=message_id).room
+        except Message.DoesNotExist:
+            log.error(f"Message with ID {message_id} does not exist")
+            return None
 
     @database_sync_to_async
     def edit_message_and_history(self, message_id: int, new_message: str):
