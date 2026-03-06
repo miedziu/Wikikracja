@@ -67,17 +67,20 @@ class Command(BaseCommand):
     
     def activate_eligible_users(self):
         """Activate users with sufficient reputation"""
-        inactive_users = Uzytkownik.objects.filter(uid__is_active=False)
+        inactive_users = list(Uzytkownik.objects.filter(uid__is_active=False))
         req_rep = required_reputation()
-        self.stdout.write(f'Checking {inactive_users.count()} inactive users. Required reputation: {req_rep}')
+        activated_user_ids = set()
         
         for i in inactive_users:
-            self.stdout.write(f'User {i.uid.username} (id={i.uid.id}): reputation={i.reputation}, required={req_rep}')
-            if i.reputation is None:
-                self.stdout.write(f'  WARNING: User {i.uid.username} has None reputation, skipping')
+            if i.uid.id in activated_user_ids:
                 continue
+                
+            if i.reputation is None:
+                log.warning(f'User {i.uid.username} has None reputation, skipping activation')
+                continue
+                
             if i.reputation > req_rep:
-                self.stdout.write(f'  ACTIVATING user {i.uid.username}')
+                activated_user_ids.add(i.uid.id)
                 i.uid.is_active = True  # Uzytkownik.uid -> User
                 
                 password = password_generator()
@@ -108,16 +111,16 @@ class Command(BaseCommand):
 {_('Welcome')} {uname} \n\
 {_('Your account on')} {host} {_('is now active')} \n\n\
 {_('Login')}: {uemail} \n\
-{_('Password')}: {password} \n\n\
+{_('Password')}: {password}\n\n\
 {_('You may login here')}: {host}/login/\n\n\
 {_('You may change password here')}: {host}/haslo/\
 """
                 try:
                     time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
                     send_mail(subject, message, s.DEFAULT_FROM_EMAIL, [uemail], fail_silently=False)
-                    self.stdout.write(f'Sent welcome email to {uemail}')
+                    log.info(f'Sent welcome email to {uemail}')
                 except Exception as e:
-                    self.stderr.write(f'Failed to send welcome email to {uemail}: {str(e)}')
+                    log.error(f'Failed to send welcome email to {uemail}: {str(e)}')
     
     def block_ineligible_users(self):
         """Block users with insufficient reputation"""
@@ -145,9 +148,9 @@ class Command(BaseCommand):
                 try:
                     time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
                     send_mail(subject, message, sender, bcc, fail_silently=False)
-                    self.stdout.write(f'Sent account blocked notification to {i.uid.email}')
+                    log.info(f'Sent account blocked notification to {i.uid.email}')
                 except Exception as e:
-                    self.stderr.write(f'Failed to send account blocked notification to {i.uid.email}: {str(e)}')
+                    log.error(f'Failed to send account blocked notification to {i.uid.email}: {str(e)}')
 
                 SendEmailToAll(
                     _('Citizen has been banned'),
@@ -184,6 +187,6 @@ class Command(BaseCommand):
                     
                     # Finally delete the user
                     user.delete()
-                    self.stdout.write(f'Deleted inactive user: {user.username}')
+                    log.info(f'Deleted inactive user: {user.username}')
                 except Exception as e:
-                    self.stderr.write(f'Failed to delete user {user.id}: {str(e)}')
+                    log.error(f'Failed to delete user {user.id}: {str(e)}')

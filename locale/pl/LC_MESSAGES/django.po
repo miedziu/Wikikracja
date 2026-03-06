@@ -2335,7 +2335,7 @@ msgstr "Wypełnij formularz rejestracyjny"
 #: .\obywatele\views.py:720
 #, python-format
 msgid "Your email has been confirmed. Please fill out your onboarding form here: %(link)s"
-msgstr "Twoj email został potwierdzony. Możesz wypełnić formularz rejestracyjny tutaj: %(link)s"
+msgstr "Twoj email został potwierdzony. Wypełnij proszę formularz rejestracyjny (jeśli jeszcze tego nie zrobiłeś/aś): %(link)s"
 
 #: .\tasks\forms.py:37
 msgid "Invalid closing status."
