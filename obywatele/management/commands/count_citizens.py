@@ -67,8 +67,17 @@ class Command(BaseCommand):
     
     def activate_eligible_users(self):
         """Activate users with sufficient reputation"""
-        for i in Uzytkownik.objects.filter(uid__is_active=False):
-            if i.reputation > required_reputation():
+        inactive_users = Uzytkownik.objects.filter(uid__is_active=False)
+        req_rep = required_reputation()
+        self.stdout.write(f'Checking {inactive_users.count()} inactive users. Required reputation: {req_rep}')
+        
+        for i in inactive_users:
+            self.stdout.write(f'User {i.uid.username} (id={i.uid.id}): reputation={i.reputation}, required={req_rep}')
+            if i.reputation is None:
+                self.stdout.write(f'  WARNING: User {i.uid.username} has None reputation, skipping')
+                continue
+            if i.reputation > req_rep:
+                self.stdout.write(f'  ACTIVATING user {i.uid.username}')
                 i.uid.is_active = True  # Uzytkownik.uid -> User
                 
                 password = password_generator()

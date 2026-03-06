@@ -76,6 +76,7 @@ def population():
         return population
     except:
         log.error(f"Population zero, I don't know what to do.")
+        return 0
 
 
 def required_reputation():
