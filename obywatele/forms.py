@@ -142,10 +142,15 @@ class CustomSignupForm(SignupForm):
         email = self.cleaned_data['email']
         existing_user = User.objects.filter(email__iexact=email).first()
 
-        if existing_user and not existing_user.is_active:
-            raise forms.ValidationError(
-                _('Your candidacy is still in the queue. Please wait for verification.')
-            )
+        if existing_user:
+            if not existing_user.is_active:
+                raise forms.ValidationError(
+                    _('Your candidacy is still in the queue. Please wait for verification.')
+                )
+            else:
+                raise forms.ValidationError(
+                    _('An account with this email address already exists.')
+                )
 
         return email
  
@@ -154,7 +159,18 @@ class CustomSignupForm(SignupForm):
         user.email = self.cleaned_data['email']
         if not User.objects.filter(username=user.username).exists():
             user.set_unusable_password()
-        user.save()
+        
+        try:
+            user.save()
+        except Exception as e:
+            # Handle unique constraint violation
+            # Delete this user if a duplicate with the same email already exists
+            existing = User.objects.filter(email__iexact=user.email).exclude(id=user.id).first()
+            if existing:
+                user.delete()
+                user = existing
+            else:
+                raise
 
         profile = user.uzytkownik
         profile.onboarding_status = Uzytkownik.OnboardingStatus.EMAIL_ENTERED

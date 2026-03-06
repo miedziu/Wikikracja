@@ -62,6 +62,7 @@ CSRF_COOKIE_SAMESITE = "Lax"
 # Session cookie settings - must match CSRF settings for WebSocket to work
 SESSION_COOKIE_SECURE = False if DEBUG else True
 SESSION_COOKIE_SAMESITE = "Lax"
+# SESSION_COOKIE_HTTPONLY = True
 
 # Reverse proxy configuration (required when behind Traefik/nginx)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -84,7 +85,7 @@ USE_L10N = True
 USE_TZ = True
 LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
 DATE_FORMAT = "Y-m-d"
-INTERNAL_IPS = '127.0.0.1'
+INTERNAL_IPS = ['127.0.0.1', '192.168.1.3', '192.168.178.79', '10.1.77.31', '10.0.0.0/8']
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'  # TODO: template?
 ASGI_APPLICATION = 'zzz.routing.application'
@@ -135,14 +136,9 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 X_FRAME_OPTIONS = 'DENY'
 # Dlaczego?
 
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
-
-MIDDLEWARE = (
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # above all other middleware apart from Django’s SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -159,8 +155,7 @@ MIDDLEWARE = (
     # X_FRAME_OPTIONS = 'ALLOW'
     # XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
     'allauth.account.middleware.AccountMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
-)
+]
 
 TEMPLATES = [
     {
@@ -187,7 +182,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'zzz.apps.SchedulerConfig',
     'daphne',
     'channels',
@@ -201,7 +196,6 @@ INSTALLED_APPS = (
     # 'allauth.socialaccount',
     'django.contrib.staticfiles',
     'django.contrib.admindocs',
-    'django_extensions',
     'django_bootstrap5',
     'crispy_forms',
     'crispy_bootstrap5',
@@ -224,13 +218,26 @@ INSTALLED_APPS = (
     'captcha',
     'django_browser_reload',
     "django_watchfiles",
-)
+]
 
+if DEBUG:
+    INSTALLED_APPS = [
+        *INSTALLED_APPS,
+        'debug_toolbar',
+        'django_extensions',
+    ]
+    MIDDLEWARE = [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+        *MIDDLEWARE,
+        'django_browser_reload.middleware.BrowserReloadMiddleware',
+    ]
+
+DEBUG_AM = True # Mine (Miedziu) Debug profile/settings for better focus, default after "else"
 
 # Just for suppressing "Using selector: EpollSelector"
 import logging
-logging.getLogger('asyncio').setLevel(logging.INFO)
-# logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
+logging.getLogger('asyncio').setLevel(logging.ERROR if DEBUG_AM else logging.DEBUG)
+logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
 
 LOGGING = {
     'version': 1,
@@ -242,16 +249,21 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG' if DEBUG_AM else 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
             'stream': 'ext://sys.stdout',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'django_queries.log',
         },
     },
     'loggers': {
         '': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'ERROR' if DEBUG_AM else 'INFO',
             'propagate': True
         },
         # 'django': {
@@ -259,9 +271,16 @@ LOGGING = {
         #     'level': 'INFO',
         #     'propagate': True
         # },
-        # 'django.db.backends': {
+        # Urls:
+        'django.channels.server': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True
+        },
+        # SQL logs:
+        # 'django.db.backends': { 
+        #     'handlers': ['console', 'file'],
         #     'level': 'DEBUG',
-        #     'handlers': ['console'],
         #     'propagate': True
         # }
         # 'glosowania': {
@@ -314,10 +333,9 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/board/'
 ACCOUNT_SIGNUP_REDIRECT_URL = '/obywatele/onboarding/'
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*'] #, 'password2*'*/]
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/obywatele/onboarding/'

@@ -10,6 +10,7 @@ from datetime import datetime
 from obywatele.models import Uzytkownik, Rate
 from obywatele.views import required_reputation, password_generator, SendEmailToAll
 from django.db.models import Sum
+from django.db import IntegrityError
 from chat import signals
 from zzz.utils import get_site_domain
 import time
@@ -17,11 +18,15 @@ import time
 import logging
 log = logging.getLogger('django')
 
+# count_citizens command
 class Command(BaseCommand):
     help = 'Count citizens\' reputation and activate/deactivate users based on reputation thresholds'
 
     def handle(self, *args, **options):
         self.stdout.write('Starting citizen count and reputation check...')
+        
+        # Clean up duplicate users FIRST
+        self.cleanup_duplicate_users()
         
         # Count reputation for all users
         self.count_reputation()
@@ -40,26 +45,127 @@ class Command(BaseCommand):
         
         self.stdout.write(self.style.SUCCESS('Successfully processed citizens'))
 
+    def cleanup_duplicate_users(self):
+        """Remove duplicate users with the same email before processing"""
+        from collections import defaultdict
+        
+        # Find all users grouped by email (case-insensitive)
+        email_to_users = defaultdict(list)
+        for user in User.objects.all():
+            email_to_users[user.email.lower()].append(user)
+        
+        # Process duplicates
+        for email, users in email_to_users.items():
+            if len(users) > 1:
+                log.warning(f'Found {len(users)} users with email {email}')
+                
+                # Sort: active first, then by date_joined (newest first)
+                users.sort(key=lambda u: (not u.is_active, -u.date_joined.timestamp()))
+                
+                # Keep the first one (active and newest)
+                user_to_keep = users[0]
+                users_to_delete = users[1:]
+                
+                log.info(f'Keeping user {user_to_keep.username} (id={user_to_keep.id}, active={user_to_keep.is_active})')
+                
+                for user in users_to_delete:
+                    log.info(f'Deleting duplicate user {user.username} (id={user.id}, active={user.is_active})')
+                    
+                    # Delete associated profile if exists
+                    try:
+                        if hasattr(user, 'uzytkownik'):
+                            user.uzytkownik.delete()
+                    except Exception as e:
+                        log.error(f'Error deleting profile for user {user.id}: {e}')
+                    
+                    # Delete the user
+                    try:
+                        user.delete()
+                    except Exception as e:
+                        log.error(f'Error deleting user {user.id}: {e}')
+    
     def count_reputation(self):
         """Count everyone's reputation from Rate model and update the Uzytkownik model"""
         for i in Uzytkownik.objects.all():
+            if i.uid_id is None or not User.objects.filter(pk=i.uid_id).exists():
+                log.warning(
+                    f"Deleting orphaned Uzytkownik profile id={i.id} (uid_id={i.uid_id})"
+                )
+                i.delete()
+                continue
+            
             if Rate.objects.filter(kandydat=i).exists():
                 reputation = Rate.objects.filter(kandydat=i).aggregate(Sum('rate'))
                 i.reputation = list(reputation.values())[0]
+            else:
+                i.reputation = 0
+            
+            try:
                 i.save()
+            except IntegrityError as e:
+                log.error(
+                    f"Skipping reputation update for profile id={i.id}, uid_id={i.uid_id}: {e}"
+                )
     
     def activate_eligible_users(self):
         """Activate users with sufficient reputation"""
-        for i in Uzytkownik.objects.filter(uid__is_active=False):
-            if i.reputation > required_reputation():
-                i.uid.is_active = True  # Uzytkownik.uid -> User
+        from django.db import transaction
+        
+        inactive_users = list(Uzytkownik.objects.filter(uid__is_active=False))
+        req_rep = required_reputation()
+        activated_user_ids = set()
+        activated_emails = set()  # Track by email to prevent duplicate activations
+        
+        for i in inactive_users:
+            # CRITICAL: Skip if uid is None or invalid
+            if i.uid is None or i.uid_id is None or i.uid_id <= 0:
+                log.warning(f'Skipping Uzytkownik id={i.id} with invalid uid_id={i.uid_id}')
+                continue
+            
+            # Skip if already activated in this run (by ID or email)
+            if i.uid.id in activated_user_ids:
+                continue
+            
+            # CRITICAL: Skip if email already activated (prevents duplicate emails)
+            if i.uid.email.lower() in activated_emails:
+                log.warning(f'Skipping user {i.uid.username} - email {i.uid.email} already activated in this run')
+                continue
                 
+            if i.reputation is None:
+                log.warning(f'User {i.uid.username} has None reputation, skipping activation')
+                continue
+                
+            if i.reputation > req_rep:
+                # Generate password first
                 password = password_generator()
-                i.uid.set_password(password)
+                
+                # Atomically activate user only if still inactive (prevents race condition)
+                # This returns number of rows updated - will be 0 if user already active
+                from django.contrib.auth.hashers import make_password
+                rows_updated = User.objects.filter(
+                    id=i.uid.id,
+                    is_active=False
+                ).update(
+                    is_active=True,
+                    password=make_password(password)
+                )
+                
+                # If no rows updated, user was already activated by another process
+                if rows_updated == 0:
+                    log.info(f'User {i.uid.username} (id={i.uid.id}) already activated by another process, skipping')
+                    continue
+                
+                # User was successfully activated by THIS process
+                log.info(f'ACTIVATING: user_id={i.uid.id}, email={i.uid.email}, username={i.uid.username}, uzytkownik_id={i.id}')
+                
+                activated_user_ids.add(i.uid.id)
+                activated_emails.add(i.uid.email.lower())
                 i.data_przyjecia = now()
-                i.uid.save()
                 i.save()
-                log.info(f'Activating user {i.uid}')
+                
+                # Log the generated password for debugging
+                log.info(f'Generated password for {i.uid.email}: {password}')
+                log.info(f'ACTIVATED: user_id={i.uid.id}, email={i.uid.email}')
 
                 # Create one2one chat rooms for new person with Signals
                 signals.user_accepted.send(sender='user_accepted', user=i)
@@ -82,16 +188,16 @@ class Command(BaseCommand):
 {_('Welcome')} {uname} \n\
 {_('Your account on')} {host} {_('is now active')} \n\n\
 {_('Login')}: {uemail} \n\
-{_('Password')}: {password} \n\n\
+{_('Password')}: {password}\n\n\
 {_('You may login here')}: {host}/login/\n\n\
 {_('You may change password here')}: {host}/haslo/\
 """
                 try:
                     time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
                     send_mail(subject, message, s.DEFAULT_FROM_EMAIL, [uemail], fail_silently=False)
-                    self.stdout.write(f'Sent welcome email to {uemail}')
+                    log.info(f'Sent welcome email to {uemail}')
                 except Exception as e:
-                    self.stderr.write(f'Failed to send welcome email to {uemail}: {str(e)}')
+                    log.error(f'Failed to send welcome email to {uemail}: {str(e)}')
     
     def block_ineligible_users(self):
         """Block users with insufficient reputation"""
@@ -119,9 +225,9 @@ class Command(BaseCommand):
                 try:
                     time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
                     send_mail(subject, message, sender, bcc, fail_silently=False)
-                    self.stdout.write(f'Sent account blocked notification to {i.uid.email}')
+                    log.info(f'Sent account blocked notification to {i.uid.email}')
                 except Exception as e:
-                    self.stderr.write(f'Failed to send account blocked notification to {i.uid.email}: {str(e)}')
+                    log.error(f'Failed to send account blocked notification to {i.uid.email}: {str(e)}')
 
                 SendEmailToAll(
                     _('Citizen has been banned'),
@@ -158,6 +264,6 @@ class Command(BaseCommand):
                     
                     # Finally delete the user
                     user.delete()
-                    self.stdout.write(f'Deleted inactive user: {user.username}')
+                    log.info(f'Deleted inactive user: {user.username}')
                 except Exception as e:
-                    self.stderr.write(f'Failed to delete user {user.id}: {str(e)}')
+                    log.error(f'Failed to delete user {user.id}: {str(e)}')

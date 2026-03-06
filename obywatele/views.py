@@ -76,6 +76,7 @@ def population():
         return population
     except:
         log.error(f"Population zero, I don't know what to do.")
+        return 0
 
 
 def required_reputation():
@@ -293,13 +294,20 @@ def poczekalnia(request: HttpRequest):
     )
     
     # Get the current user's profile
-    citizen_profile = Uzytkownik.objects.get(uid=request.user)
+    try:
+        citizen_profile = Uzytkownik.objects.get(uid=request.user)
+    except Uzytkownik.DoesNotExist:
+        error(request, _('Your profile does not exist. Please contact administrator.'))
+        return redirect('home:index')
     
     # Get ratings from the current user for all candidates
     # Process users and add rating directly to each user object for easy access in template
     users_with_ratings = []
     for user in uid:
-        candidate_profile = Uzytkownik.objects.get(uid=user)
+        try:
+            candidate_profile = Uzytkownik.objects.get(uid=user)
+        except Uzytkownik.DoesNotExist:
+            continue
         rate, created = Rate.objects.get_or_create(kandydat=candidate_profile, obywatel=citizen_profile)
         # Add rating directly to user object as a custom attribute
         user.rating = rate.rate
@@ -378,7 +386,7 @@ def dodaj(request: HttpRequest):
             last_name = user_form.cleaned_data['last_name']
 
             mail = user_form.cleaned_data['email']
-            if User.objects.filter(email=mail).exists():
+            if User.objects.filter(email__iexact=mail).exists():
                 # is_valid doesn't check if email exist
                 message = _('Email already exist')
                 error(request, (message))
@@ -386,13 +394,12 @@ def dodaj(request: HttpRequest):
 
             else:
                 # If everything is ok
-                user_form.save()
-                candidate = User.objects.get(username=nick)
+                candidate = user_form.save()
                 candidate.is_active = False
                 candidate.save()
 
                 # CANDIDATE
-                candidate_profile = Uzytkownik.objects.get(id=candidate.id)
+                candidate_profile = candidate.uzytkownik
                 candidate_profile.polecajacy = request.user.username
                 candidate_profile.phone = profile_form.cleaned_data['phone']
                 candidate_profile.responsibilities = profile_form.cleaned_data['responsibilities']
@@ -408,7 +415,7 @@ def dodaj(request: HttpRequest):
 
                 # Since you proposed new person,
                 # you probably also want to accept him/her
-                citizen = Uzytkownik.objects.get(pk=request.user.id)
+                citizen = request.user.uzytkownik
                 rate = Rate()
                 rate.obywatel = citizen
                 rate.kandydat = candidate_profile
@@ -420,7 +427,7 @@ def dodaj(request: HttpRequest):
 
                 SendEmailToAll(
                           _('New citizen has been proposed'),
-                          f'{request.user.username} ' + str(_('proposed new citizen\nYou can approve him/her here:')) + f' {build_site_url(f"/obywatele/poczekalnia/{candidate_profile.id}")}'
+                          f'{request.user.username} ' + str(_('proposed new citizen\nYou can approve him/her here:')) + f' {build_site_url(f"/obywatele/poczekalnia/{candidate.id}")}'
                 )
 
                 return redirect('obywatele:poczekalnia')
@@ -569,12 +576,11 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
     '''
     # zliczaj_obywateli(request)  # run reputation counting because a lot can change in the meanwhile
 
-    candidate_profile = get_object_or_404(Uzytkownik, pk=pk)
+    candidate_profile = get_object_or_404(Uzytkownik, uid_id=pk)
     candidate_user = User.objects.get(pk=pk)
     email_confirmed = is_email_confirmed_for_candidate(candidate_user, candidate_profile)
     form_completed = candidate_profile.onboarding_status == Uzytkownik.OnboardingStatus.FORM_COMPLETED
-    citizen_profile = Uzytkownik.objects.get(pk=request.user.id)
-    citizen_reputation = citizen_profile.reputation
+    citizen_profile = request.user.uzytkownik
     polecajacy = citizen_profile.polecajacy
 
     rate = Rate.objects.get_or_create(kandydat=candidate_profile, obywatel=citizen_profile)[0]
@@ -613,7 +619,6 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
         {
             'b': candidate_profile,
             'd': citizen_profile,
-            'tr': citizen_reputation,
             'wr': required_reputation(),
             'rate': r1,
             'p': polecajacy,
@@ -623,34 +628,6 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
             'email_confirmed': email_confirmed,
             'form_completed': form_completed,
         })
-
-
-def zliczaj_obywateli(request: HttpRequest):  # TODO: Remove this function if everything works
-    """
-    View that runs the count_citizens management command to process user reputation
-    and activate/deactivate users based on reputation thresholds.
-    
-    The logic has been moved to a management command for better maintainability
-    and to allow scheduling via cron.
-    """
-    from django.core.management import call_command
-    from io import StringIO
-    
-    # Capture command output
-    stdout = StringIO()
-    stderr = StringIO()
-    
-    try:
-        # Run the management command with the current request host for context
-        call_command('count_citizens', stdout=stdout, stderr=stderr)
-        if stdout.getvalue():
-            log.info(stdout.getvalue())
-        if stderr.getvalue():
-            log.error(stderr.getvalue())
-    except Exception as e:
-        log.error(f"Error running count_citizens command: {str(e)}")
-    
-    return redirect('obywatele:poczekalnia')
 
 
 @login_required
@@ -702,9 +679,14 @@ def SendEmailToAll(subject, message):
 
 @receiver(user_signed_up)
 def DeactivateNewUser(sender, **kwargs):
-    u = User.objects.get(username=kwargs['user'])
-    u.is_active=False
-    u.save()
+    try:
+        u = User.objects.get(username=kwargs['user'])
+        u.is_active=False
+        u.save()
+    except User.DoesNotExist:
+        log.error(f"User {kwargs['user']} does not exist in DeactivateNewUser signal")
+    except User.MultipleObjectsReturned:
+        log.error(f"Multiple users found with username {kwargs['user']} in DeactivateNewUser signal")
 
 
 @receiver(email_confirmed)

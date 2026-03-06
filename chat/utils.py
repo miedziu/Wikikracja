@@ -25,6 +25,7 @@ def get_room_or_error(room_id, user):
     # Find the room they requested (by ID)
     try:
         room = Room.objects.get(pk=room_id)
+        # room = Room.objects.filter(pk=room_id, allowed=user.id).first()
     except Room.DoesNotExist:
         # raise ClientError("ROOM_INVALID")  # Blocks user from clicking on different room so not the best approach
         room = Room.objects.first()
@@ -208,7 +209,11 @@ def send_message_to_room(room_title, message_text, sender=None, anonymous=True):
         from .consumers import ChatConsumer
 
         # Create the message in the database
-        room = Room.objects.get(title=room_title)
+        try:
+            room = Room.objects.get(title=room_title)
+        except Room.DoesNotExist:
+            logger.error(f"Room '{room_title}' does not exist")
+            return None
         message = Message.objects.create(
             sender=sender,
             text=message_text,

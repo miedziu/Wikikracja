@@ -44,9 +44,10 @@ class Room(models.Model):
             # Clip public room names to title_len characters for display
             return self.title[:title_len] if len(self.title) > title_len else self.title
         if self.get_other(user) is not None:
-            username = self.get_other(user).username
+            get_user=self.get_other(user)
+            username = get_user and get_user.username
             # Clip long usernames to match room title length
-            return username[:title_len] if len(username) > title_len else username
+            return username and (username[:title_len] if len(username) > title_len else username)
         else:
             return ("--")
 
@@ -99,6 +100,10 @@ class Message(models.Model):
 
     class Meta:
         unique_together = ('sender', 'text', 'room', 'time')
+        indexes = [
+            models.Index(fields=['room', '-time'], name='chat_message_room_time_idx'),
+            models.Index(fields=['room', 'time'], name='chat_message_room_time_asc_idx'),
+        ]
 
 
 class MessageVote(models.Model):
@@ -112,6 +117,9 @@ class MessageVote(models.Model):
     class Meta:
         # can be removed in future to make possible reactions or something like that
         unique_together = ('user', 'message')
+        indexes = [
+            models.Index(fields=['message', 'vote'], name='chat_messagevote_msg_vote_idx'),
+        ]
 
 
 # Store changes history separately,
@@ -138,3 +146,8 @@ class MessageAttachment(models.Model):
     type = models.CharField(max_length=255)
     filename = models.CharField(max_length=255)
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name="attachments")
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['message'], name='chat_messageattachment_msg_idx'),
+        ]

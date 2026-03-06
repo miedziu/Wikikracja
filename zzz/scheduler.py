@@ -6,28 +6,51 @@ from django.core.management import call_command
 
 log = logging.getLogger(__name__)
 
+# Global scheduler instance (singleton)
+_scheduler_instance = None
+
 
 def start_scheduler():
     """
     Start APScheduler to run management commands on schedule.
     Replaces cron jobs:
-    - 0 9,12,15,18,21 * * * -> chat_messages
+    - 1 12,18 * * * -> chat_messages
+    - */5 * * * * -> chat_rooms (every 5 minutes)
     - 5 8 * * * -> vote
-    - * * * * * -> count_citizens (every minute)
-    - 0 * * * * -> update_site (every hour)
+    - */5 * * * * -> count_citizens (every 5 minutes)
+    - 2 * * * * -> update_site (every hour)
     """
-    scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)
+    global _scheduler_instance
     
-    # Chat messages - runs at 9, 12, 15, 18, 21
+    # Return existing scheduler if already started
+    if _scheduler_instance is not None:
+        log.info("Scheduler already started, returning existing instance")
+        return _scheduler_instance
+    
+    scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)
+    _scheduler_instance = scheduler
+    
+    # Chat messages - runs at 12, 18
     scheduler.add_job(
         run_chat_messages,
-        trigger=CronTrigger(hour='9,12,15,18,21', minute=0),
+        trigger=CronTrigger(hour='12,18', minute=1),
         id='chat_messages',
         name='Send chat message emails',
         replace_existing=True,
         max_instances=1,
     )
-    log.info("Scheduled job: chat_messages at 9, 12, 15, 18, 21")
+    log.info("Scheduled job: chat_messages at 12, 18")
+    
+    # Chat rooms - runs every 5 minutes
+    scheduler.add_job(
+        run_chat_rooms,
+        trigger=CronTrigger(minute='*/5'),
+        id='chat_rooms',
+        name='Create/Delete/Archive chat rooms',
+        replace_existing=True,
+        max_instances=1,
+    )
+    log.info("Scheduled job: chat_rooms every 5 minutes")
     
     # Vote - runs daily at 08:05
     scheduler.add_job(
@@ -40,21 +63,21 @@ def start_scheduler():
     )
     log.info("Scheduled job: vote at 08:05 daily")
     
-    # Count citizens - runs every minute
+    # Count citizens - runs every 5 minutes
     scheduler.add_job(
         run_count_citizens,
-        trigger=CronTrigger(minute='*'),
+        trigger=CronTrigger(minute='*/5'),
         id='count_citizens',
         name='Count citizens and manage reputation',
         replace_existing=True,
         max_instances=1,
     )
-    log.info("Scheduled job: count_citizens every minute")
+    log.info("Scheduled job: count_citizens every 5 minutes")
     
     # Update site - runs every hour
     scheduler.add_job(
         run_update_site,
-        trigger=CronTrigger(minute=0),
+        trigger=CronTrigger(minute=2),
         id='update_site',
         name='Update Site domain and name from environment variables',
         replace_existing=True,
@@ -67,7 +90,6 @@ def start_scheduler():
     
     return scheduler
 
-
 def run_chat_messages():
     """Execute chat_messages management command"""
     try:
@@ -77,6 +99,14 @@ def run_chat_messages():
     except Exception as e:
         log.error(f"Error running chat_messages: {e}", exc_info=True)
 
+def run_chat_rooms():
+    """Execute chat_rooms management command"""
+    try:
+        log.info("Running chat_rooms command")
+        call_command('chat_rooms')
+        log.info("chat_rooms command completed")
+    except Exception as e:
+        log.error(f"Error running chat_rooms: {e}", exc_info=True)
 
 def run_vote():
     """Execute vote management command"""
@@ -87,7 +117,6 @@ def run_vote():
     except Exception as e:
         log.error(f"Error running vote: {e}", exc_info=True)
 
-
 def run_count_citizens():
     """Execute count_citizens management command"""
     try:
@@ -96,7 +125,6 @@ def run_count_citizens():
         log.info("count_citizens command completed")
     except Exception as e:
         log.error(f"Error running count_citizens: {e}", exc_info=True)
-
 
 def run_update_site():
     """Execute update_site management command"""

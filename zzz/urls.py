@@ -35,11 +35,13 @@ urlpatterns: List[URLPattern | URLResolver] = [
     path('events/',         include('events.urls', namespace='events')),
     path('tasks/',          include('tasks.urls', namespace='tasks')),
     path("__reload__/",     include("django_browser_reload.urls")),
-]
+] 
 
 # Serve static files only in DEBUG mode (WhiteNoise handles this in production)
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    from debug_toolbar.toolbar import debug_toolbar_urls
+    urlpatterns += debug_toolbar_urls()
 
 # Media files (user uploads) - must be served in all environments
 # In production, Django will serve these (inefficient but works)

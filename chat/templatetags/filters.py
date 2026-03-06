@@ -1,5 +1,8 @@
 from django import template
 
+from chat.models import Room
+from django.db.models import Count
+
 register = template.Library()
 
 
@@ -16,10 +19,11 @@ def seen_by(room, user):
 
 @register.filter("has_messages")
 def has_messages(user):
-    for room in user.rooms.all():
-        seen_by_user = room.seen_by.filter(id=user.id)
-
-    return "chat-has-messages" if \
-        [room for room in user.rooms.all() if not room.seen_by.filter(id=user.id).exists() and
-         room.messages.all().count() > 0] \
-        else ""
+    rooms_with_new_messages = (
+            Room.objects.filter(allowed=user.id)
+            .exclude(seen_by=user.id)
+            .annotate(messages_count=Count('messages'))
+            .filter(messages_count__gt=0)
+        )
+    count = rooms_with_new_messages.count()
+    return "chat-has-messages" if count > 0 else ""
