@@ -55,12 +55,15 @@ class Command(BaseCommand):
             if Rate.objects.filter(kandydat=i).exists():
                 reputation = Rate.objects.filter(kandydat=i).aggregate(Sum('rate'))
                 i.reputation = list(reputation.values())[0]
-                try:
-                    i.save()
-                except IntegrityError as e:
-                    log.error(
-                        f"Skipping reputation update for profile id={i.id}, uid_id={i.uid_id}: {e}"
-                    )
+            else:
+                i.reputation = 0
+            
+            try:
+                i.save()
+            except IntegrityError as e:
+                log.error(
+                    f"Skipping reputation update for profile id={i.id}, uid_id={i.uid_id}: {e}"
+                )
     
     def activate_eligible_users(self):
         """Activate users with sufficient reputation"""
