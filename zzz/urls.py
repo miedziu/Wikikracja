@@ -7,7 +7,6 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from filebrowser.sites import site
 from django.views.generic import RedirectView
-from debug_toolbar.toolbar import debug_toolbar_urls
 
 from typing import List
 from django.urls import URLPattern, URLResolver
@@ -41,6 +40,7 @@ urlpatterns: List[URLPattern | URLResolver] = [
 # Serve static files only in DEBUG mode (WhiteNoise handles this in production)
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    from debug_toolbar.toolbar import debug_toolbar_urls
     urlpatterns += debug_toolbar_urls()
 
 # Media files (user uploads) - must be served in all environments
