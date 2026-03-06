@@ -109,6 +109,8 @@ class Command(BaseCommand):
     
     def activate_eligible_users(self):
         """Activate users with sufficient reputation"""
+        from django.db import transaction
+        
         inactive_users = list(Uzytkownik.objects.filter(uid__is_active=False))
         req_rep = required_reputation()
         activated_user_ids = set()
@@ -134,23 +136,44 @@ class Command(BaseCommand):
                 continue
                 
             if i.reputation > req_rep:
-                # CRITICAL: Log before activation to detect duplicates
-                log.info(f'ACTIVATING: user_id={i.uid.id}, email={i.uid.email}, username={i.uid.username}, uzytkownik_id={i.id}')
+                # Use database transaction with select_for_update to prevent race conditions
+                user_activated = False
+                password = None
                 
-                activated_user_ids.add(i.uid.id)
-                activated_emails.add(i.uid.email.lower())
-                i.uid.is_active = True  # Uzytkownik.uid -> User
+                try:
+                    with transaction.atomic():
+                        # Re-fetch user with lock to prevent concurrent activation
+                        user = User.objects.select_for_update().get(id=i.uid.id)
+                        
+                        # Double-check if user is still inactive (another process might have activated)
+                        if user.is_active:
+                            log.info(f'User {user.username} already activated by another process, skipping')
+                        else:
+                            # CRITICAL: Log before activation to detect duplicates
+                            log.info(f'ACTIVATING: user_id={user.id}, email={user.email}, username={user.username}, uzytkownik_id={i.id}')
+                            
+                            activated_user_ids.add(user.id)
+                            activated_emails.add(user.email.lower())
+                            user.is_active = True
+                            
+                            password = password_generator()
+                            user.set_password(password)
+                            i.data_przyjecia = now()
+                            
+                            # Log the generated password for debugging
+                            log.info(f'Generated password for {user.email}: {password}')
+                            
+                            user.save()
+                            i.save()
+                            log.info(f'ACTIVATED: user_id={user.id}, email={user.email}')
+                            user_activated = True
+                except User.DoesNotExist:
+                    log.error(f'User {i.uid_id} does not exist')
+                    continue
                 
-                password = password_generator()
-                i.uid.set_password(password)
-                i.data_przyjecia = now()
-                
-                # Log the generated password for debugging
-                log.info(f'Generated password for {i.uid.email}: {password}')
-                
-                i.uid.save()
-                i.save()
-                log.info(f'ACTIVATED: user_id={i.uid.id}, email={i.uid.email}')
+                # Only send email and create rooms if user was actually activated
+                if not user_activated:
+                    continue
 
                 # Create one2one chat rooms for new person with Signals
                 signals.user_accepted.send(sender='user_accepted', user=i)
