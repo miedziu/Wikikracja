@@ -26,12 +26,29 @@
 
 	<script src="{% static 'chat/js/jquery-4.0.0.min.js' %}"></script>
 
+	<style>
+		body {
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.page-main {
+			flex: 1 0 auto;
+		}
+
+		.page-footer {
+			margin-top: auto;
+		}
+	</style>
+
   {% bootstrap_messages %}
   {% bootstrap_javascript %}
 
 </head>
 
 <body>
+	<div class="page-main">
 	<nav class="navbar navbar-expand-md navbar-dark bg-primary justify-content-end">
 		<button class="navbar-toggler mx-2 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 		{{ request.site.name }}
@@ -121,8 +138,10 @@
 		<p>{% block content %}{% endblock content %}</p>
 	</div>
 
-	{% if request.resolver_match.url_name != 'chat' %}
-		<div class="container">
+	</div>
+
+	{% if request.resolver_match.namespace != 'chat' %}
+		<div class="container page-footer">
 			{{ footer.text|safe }}
 		</div>
 	{% endif %}

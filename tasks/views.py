@@ -208,7 +208,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         context["helping_votes"] = (
             TaskVote.objects.filter(task=task, value=TaskVote.Value.UP)
             .select_related("user")
-            .order_by("-updated_at")
+            .order_by("updated_at", "id")
         )
         if self.request.user.is_authenticated:
             vote = TaskVote.objects.filter(task=task, user=self.request.user).first()

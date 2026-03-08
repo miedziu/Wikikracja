@@ -5,9 +5,6 @@ import logging
 logging.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=logging.INFO)
 
 def footer(request: HttpRequest):
-    try:
-        footer = Post.objects.get(title='Footer')
-    except Exception as e: # type: ignore
-        footer = ''
+    footer = Post.objects.filter(title__iexact='Footer').order_by('-updated').first()
         
     return {'footer': footer}
