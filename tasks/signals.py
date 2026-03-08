@@ -1,6 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
 from django.utils import timezone
 from django.urls import reverse
 import logging
@@ -51,7 +52,7 @@ def create_task_chat_room(sender, instance, created, **kwargs):
         
         task_path = reverse('tasks:detail', kwargs={'pk': instance.pk})
         task_url = f"https://{domain}{task_path}"
-        message_text = f'Discussion room for task: {task_url}'
+        message_text = _('Discussion room for task: %(task_url)s') % {'task_url': task_url}
         
         Message.objects.create(
             sender=instance.created_by,

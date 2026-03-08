@@ -224,7 +224,7 @@ def details(request:HttpRequest, pk: int):
     next = Decyzja.objects.filter(pk__gt=obj.pk, status = szczegoly.status).order_by('pk').first()
     
     # Find associated chat room
-    room_title = f"#{szczegoly.pk}:{szczegoly.title[:20]}"
+    room_title = _("Vote #%(id)s: %(title)s") % {"id": szczegoly.pk, "title": szczegoly.title[:20]}
 
     chat_room = Room.objects.filter(title=room_title).first()
     
@@ -422,7 +422,7 @@ def proposition(request: HttpRequest):
     
     # Add chat room info for each voting
     for voting in votings:
-        room_title = f"#{voting.pk}:{voting.title[:20]}"
+        room_title = _("Vote #%(id)s: %(title)s") % {"id": voting.pk, "title": voting.title[:20]}
         chat_room = Room.objects.filter(title=room_title).first()
         voting.chat_room = chat_room
         
@@ -445,7 +445,7 @@ def discussion(request: HttpRequest):
     
     # Add chat room info for each voting
     for voting in votings:
-        room_title = f"#{voting.pk}:{voting.title[:20]}"
+        room_title = _("Vote #%(id)s: %(title)s") % {"id": voting.pk, "title": voting.title[:20]}
         chat_room = Room.objects.filter(title=room_title).first()
         voting.chat_room = chat_room
         
@@ -468,7 +468,7 @@ def referendum(request: HttpRequest):
     
     # Add chat room info for each voting
     for voting in votings:
-        room_title = f"#{voting.pk}:{voting.title[:20]}"
+        room_title = _("Vote #%(id)s: %(title)s") % {"id": voting.pk, "title": voting.title[:20]}
         chat_room = Room.objects.filter(title=room_title).first()
         voting.chat_room = chat_room
         

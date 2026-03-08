@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 21:34+0100\n"
+"POT-Creation-Date: 2026-03-08 08:24+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -1224,6 +1224,13 @@ msgstr "Argument"
 msgid "Arguments"
 msgstr "Argumenty"
 
+#: .\glosowania\signals.py:21 .\glosowania\views.py:227
+#: .\glosowania\views.py:425 .\glosowania\views.py:448
+#: .\glosowania\views.py:471
+#, python-format
+msgid "Vote #%(id)s: %(title)s"
+msgstr "Głosowanie #%(id)s: %(title)s"
+
 #: .\glosowania\signals.py:43
 #, python-brace-format
 msgid ""
@@ -1231,9 +1238,9 @@ msgid ""
 "View details: {details_url}\n"
 "Discuss the proposal, share your thoughts, and ask questions here."
 msgstr ""
-"Ten czat został stworzony dla projektu #{id}.\n"
+"Ten czat został stworzony dla projektu Głosowania #{id}.\n"
 "Wyświetl szczegóły: {details_url}\n"
-"Dyskusja, dzielenie się opiniami, pytania."
+"Dyskutuj, dziel się opiniami, pytaj tutaj."
 
 #: .\glosowania\templates\glosowania\approved.html:21
 #: .\glosowania\templates\glosowania\discussion.html:52
@@ -2353,6 +2360,11 @@ msgstr "Ukończone"
 msgid "Cancelled"
 msgstr "Anulowane"
 
+#: .\tasks\models.py:76
+#, python-format
+msgid "Task #%(id)s: %(title)s"
+msgstr "Zadanie #%(id)s: %(title)s"
+
 #: .\tasks\models.py:128 .\tasks\templates\tasks\task_detail.html:74
 #: .\tasks\templates\tasks\task_detail.html:147
 msgid "Success"
@@ -2362,6 +2374,11 @@ msgstr "Sukces"
 #: .\tasks\templates\tasks\task_detail.html:153
 msgid "Failure"
 msgstr "Porażka"
+
+#: .\tasks\signals.py:55
+#, python-format
+msgid "Discussion room for task: %(task_url)s"
+msgstr "Pokój dyskusyjny dla zadania: %(task_url)s"
 
 #: .\tasks\templates\tasks\_task_cards.html:57
 #: .\tasks\templates\tasks\task_detail.html:116

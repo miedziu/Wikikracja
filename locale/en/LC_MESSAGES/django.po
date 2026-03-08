@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 21:34+0100\n"
+"POT-Creation-Date: 2026-03-08 08:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1239,6 +1239,13 @@ msgstr ""
 msgid "Arguments"
 msgstr ""
 
+#: .\glosowania\signals.py:21 .\glosowania\views.py:227
+#: .\glosowania\views.py:425 .\glosowania\views.py:448
+#: .\glosowania\views.py:471
+#, python-format
+msgid "Vote #%(id)s: %(title)s"
+msgstr ""
+
 #: .\glosowania\signals.py:43
 #, python-brace-format
 msgid ""
@@ -2379,6 +2386,11 @@ msgstr ""
 msgid "Cancelled"
 msgstr "Cancel"
 
+#: .\tasks\models.py:76
+#, python-format
+msgid "Task #%(id)s: %(title)s"
+msgstr ""
+
 #: .\tasks\models.py:128 .\tasks\templates\tasks\task_detail.html:74
 #: .\tasks\templates\tasks\task_detail.html:147
 msgid "Success"
@@ -2387,6 +2399,11 @@ msgstr ""
 #: .\tasks\models.py:129 .\tasks\templates\tasks\task_detail.html:75
 #: .\tasks\templates\tasks\task_detail.html:153
 msgid "Failure"
+msgstr ""
+
+#: .\tasks\signals.py:55
+#, python-format
+msgid "Discussion room for task: %(task_url)s"
 msgstr ""
 
 #: .\tasks\templates\tasks\_task_cards.html:57
