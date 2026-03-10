@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 01:39+0100\n"
+"POT-Creation-Date: 2026-03-10 02:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1845,7 +1845,6 @@ msgstr ""
 
 #: .\obywatele\forms.py:109 .\obywatele\forms.py:131
 #: .\obywatele\templates\obywatele\my_profile.html:33
-#: .\obywatele\templates\obywatele\start.html:34
 #: .\obywatele\templates\obywatele\szczegoly.html:47
 msgid "Communicator or Phone number"
 msgstr ""
@@ -2292,6 +2291,10 @@ msgstr ""
 #: .\obywatele\templates\obywatele\poczekalnia.html:48
 #: .\obywatele\templates\obywatele\start.html:94
 msgid "Copy email"
+msgstr ""
+
+#: .\obywatele\templates\obywatele\start.html:34
+msgid "Contact"
 msgstr ""
 
 #: .\obywatele\templates\obywatele\start.html:102

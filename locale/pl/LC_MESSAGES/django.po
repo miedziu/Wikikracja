@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 01:39+0100\n"
+"POT-Creation-Date: 2026-03-10 02:00+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -1821,7 +1821,6 @@ msgstr "Nazwisko"
 
 #: .\obywatele\forms.py:109 .\obywatele\forms.py:131
 #: .\obywatele\templates\obywatele\my_profile.html:33
-#: .\obywatele\templates\obywatele\start.html:34
 #: .\obywatele\templates\obywatele\szczegoly.html:47
 msgid "Communicator or Phone number"
 msgstr "Komunikator lub numer telefonu"
@@ -2267,6 +2266,10 @@ msgstr "Masz stosunek neutralny do tego kandydata"
 #: .\obywatele\templates\obywatele\start.html:94
 msgid "Copy email"
 msgstr "Skopiuj email"
+
+#: .\obywatele\templates\obywatele\start.html:34
+msgid "Contact"
+msgstr "Kontakt"
 
 #: .\obywatele\templates\obywatele\start.html:102
 msgid "Never"
