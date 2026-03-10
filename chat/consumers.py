@@ -863,12 +863,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def get_rooms_with_notifications_enabled(self):
-        u_id = self.scope['user'].id
-        not_muted = []
-        for user_room in Room.objects.all():
-            if not user_room.allowed.filter(id=u_id).exists():
-                continue
-            if user_room.muted_by.filter(id=u_id).exists():
-                continue
-            not_muted.append(user_room)
-        return not_muted
+        """
+        Returns list of rooms where:
+        1. User is in the allowed list
+        2. User has NOT muted notifications for the room
+        
+        Optimized to use a single database query instead of iterating over all rooms.
+        """
+        user = self.scope['user']
+        return list(Room.objects.filter(allowed=user).exclude(muted_by=user))
