@@ -112,6 +112,13 @@ CHANNEL_LAYERS = {
     },
 }
 
+CACHES={
+    'default':{
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': REDIS_HOST
+    }
+}
+
 WYMAGANYCH_PODPISOW = env_int("WYMAGANYCH_PODPISOW", 2)
 CZAS_NA_ZEBRANIE_PODPISOW = env_int("CZAS_NA_ZEBRANIE_PODPISOW", 365)
 DYSKUSJA = env_int("DYSKUSJA", 3)
@@ -214,8 +221,6 @@ INSTALLED_APPS = [
     'events',
     'tasks',
     'captcha',
-    'django_browser_reload',
-    "django_watchfiles",
 ]
 
 if DEBUG:
@@ -223,6 +228,8 @@ if DEBUG:
         *INSTALLED_APPS,
         'debug_toolbar',
         'django_extensions',
+        'django_browser_reload',
+        "django_watchfiles",
     ]
     MIDDLEWARE = [
         'debug_toolbar.middleware.DebugToolbarMiddleware',
