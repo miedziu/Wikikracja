@@ -23,7 +23,14 @@ class Command(BaseCommand):
     help = 'Count citizens\' reputation and activate/deactivate users based on reputation thresholds'
 
     def handle(self, *args, **options):
-        self.stdout.write('Starting citizen count and reputation check...')
+        logging.basicConfig(
+            filename='/var/log/wiki.log',
+            datefmt='%d-%b-%y %H:%M:%S',
+            format='%(asctime)s %(levelname)s %(funcName)s() %(message)s',
+            level=logging.INFO,
+        )
+        ts = timezone.now().strftime('%Y-%m-%d %H:%M:%S%z')
+        self.stdout.write(f'[{ts}] Starting citizen count and reputation check...')
         
         # Clean up duplicate users FIRST
         self.cleanup_duplicate_users()
@@ -43,7 +50,8 @@ class Command(BaseCommand):
         # Delete inactive users after grace period
         self.delete_inactive_users()
         
-        self.stdout.write(self.style.SUCCESS('Successfully processed citizens'))
+        ts = timezone.now().strftime('%Y-%m-%d %H:%M:%S%z')
+        self.stdout.write(self.style.SUCCESS(f'[{ts}] Successfully processed citizens'))
 
     def cleanup_duplicate_users(self):
         """Remove duplicate users with the same email before processing"""
