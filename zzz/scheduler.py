@@ -14,12 +14,12 @@ log = logging.getLogger(__name__)
 # Global scheduler instance (singleton)
 _scheduler_instance = None
 _lock_file = None  # File handle for fcntl lock (if using fcntl)
-
+LOCK_FILE_NAME = 'scheduler.lock'
 
 def _acquire_lock():
     """Acquire a cross-process lock to ensure only one scheduler starts."""
     global _lock_file
-    lock_path = os.path.join(settings.BASE_DIR, 'scheduler.lock')
+    lock_path = os.path.join(settings.BASE_DIR, LOCK_FILE_NAME)
     try:
         # Try using fcntl (Linux/Unix) if available
         import fcntl
@@ -96,7 +96,7 @@ def _release_lock():
             _lock_file = None
     else:
         # PID file lock: remove lock file if we own it
-        lock_path = os.path.join(settings.BASE_DIR, 'scheduler.lock')
+        lock_path = os.path.join(settings.BASE_DIR, LOCK_FILE_NAME)
         try:
             if os.path.exists(lock_path):
                 with open(lock_path, 'r') as f:

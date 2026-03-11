@@ -46,3 +46,4 @@ notatki.md
 out.sql
 out.csv
 data/*
+scheduler.lock
