@@ -29,7 +29,7 @@ class Command(BaseCommand):
             format='%(asctime)s %(levelname)s %(funcName)s() %(message)s',
             level=logging.INFO,
         )
-        ts = timezone.now().strftime('%Y-%m-%d %H:%M:%S%z')
+        ts = now().strftime('%Y-%m-%d %H:%M:%S%z')
         self.stdout.write(f'[{ts}] Starting citizen count and reputation check...')
         
         # Clean up duplicate users FIRST
@@ -50,7 +50,7 @@ class Command(BaseCommand):
         # Delete inactive users after grace period
         self.delete_inactive_users()
         
-        ts = timezone.now().strftime('%Y-%m-%d %H:%M:%S%z')
+        ts = now().strftime('%Y-%m-%d %H:%M:%S%z')
         self.stdout.write(self.style.SUCCESS(f'[{ts}] Successfully processed citizens'))
 
     def cleanup_duplicate_users(self):
