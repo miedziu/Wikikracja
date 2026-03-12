@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+
+User = get_user_model()
 from django.core.validators import FileExtensionValidator
 # from taggit.managers import TaggableManager
 from django.urls import reverse
@@ -8,7 +10,6 @@ from django.utils import timezone
 
 
 class Book(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     title = models.CharField(null=True, blank=True, max_length=200, verbose_name=_('Title'))
     author = models.CharField(null=True, blank=True, max_length=200, verbose_name=_('Author'))
     abstract = models.TextField(null=True, blank=True, max_length=5000, verbose_name=_('Abstract'))

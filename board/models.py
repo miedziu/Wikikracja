@@ -1,9 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
+User = get_user_model()
+
 class Post(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     title = models.CharField(max_length=200, verbose_name=_("Title"))
     subtitle = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Subtitle"))
     text = models.TextField(verbose_name=_("Text"))

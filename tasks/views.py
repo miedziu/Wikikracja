@@ -105,13 +105,7 @@ class TaskListView(LoginRequiredMixin, TemplateView):
         # Add chat room pulse class for tasks with unseen messages
         if self.request.user.is_authenticated:
             for task in all_tasks:
-                chat_room = task.chat_room
-                if (chat_room and 
-                    chat_room.messages.exists() and 
-                    not chat_room.seen_by.filter(id=self.request.user.id).exists()):
-                    task.chat_room_pulse_class = "chat-room-pulse"
-                else:
-                    task.chat_room_pulse_class = ""
+                task.chat_room_pulse_class = task.get_chat_room_pulse_class(self.request.user)
 
         context.update(
             {
@@ -215,13 +209,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
             context["user_vote_value"] = vote.value if vote else None
             
             # Check if chat room has unseen messages
-            chat_room = task.chat_room
-            if (chat_room and 
-                chat_room.messages.exists() and 
-                not chat_room.seen_by.filter(id=self.request.user.id).exists()):
-                task.chat_room_pulse_class = "chat-room-pulse"
-            else:
-                task.chat_room_pulse_class = ""
+            task.chat_room_pulse_class = task.get_chat_room_pulse_class(self.request.user)
         context["task"] = task
         return context
 

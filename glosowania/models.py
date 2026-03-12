@@ -1,16 +1,14 @@
-import os
 from django.db import models
-# import datetime
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+
+User = get_user_model()
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_comma_separated_integer_list
 import re
 
-base_dir = os.path.abspath('.')
-
 def does_it_exist(value):
-    x = re.split(r'\W+', value.strip(' ').strip(',').strip(' ').strip(',').strip(' ').strip(',').strip(' ').strip(','))
+    x = re.split(r'\W+', value.strip(' ,'))
     for i in x:
         try:
             existing = Decyzja.objects.get(pk=int(i))  # all existing for now
@@ -19,7 +17,6 @@ def does_it_exist(value):
     return True
 
 class Decyzja(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     author = models.ForeignKey(
         'auth.User',
         on_delete=models.SET_NULL,
@@ -96,7 +93,6 @@ class Argument(models.Model):
         ('AGAINST', _('Negative')),
     ]
     
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     decyzja = models.ForeignKey(
         Decyzja,
         on_delete=models.CASCADE,
@@ -141,7 +137,6 @@ class Argument(models.Model):
 
 class ZebranePodpisy(models.Model):
     '''Lista podpisów pod wnioskiem o referendum'''
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     projekt = models.ForeignKey(Decyzja, on_delete=models.SET_NULL, null=True)
 
     # Lets note who signed proposal:
@@ -152,7 +147,6 @@ class ZebranePodpisy(models.Model):
 
 
 class KtoJuzGlosowal(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     projekt = models.ForeignKey(Decyzja, on_delete=models.CASCADE)
     ktory_uzytkownik_juz_zaglosowal = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -167,7 +161,6 @@ class VoteCode(models.Model):
     - Jednorazowy kod
     - Tak/Nie
     '''
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     project = models.ForeignKey(Decyzja, on_delete=models.CASCADE)
     code = models.CharField(editable=False, null=True, max_length=20)
     vote = models.BooleanField(editable=False, null=True)

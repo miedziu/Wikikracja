@@ -1,4 +1,5 @@
 # PILNE
+- Chat room dla Task i Vote znika za szybko
 - Dodać opcję wyłączania powiadomień email (Unsubscribe). Dodać opcję likwidacji własnego konta
 - Wersjonowanie Ogłoszeń i Przepisów. Wydaje się, że to skomplikuje kod.
 - Ludzie piszą do grupy. Grupy piszą do siebie.

@@ -73,47 +73,31 @@ def start_scheduler():
     
     return scheduler
 
+def _run_command(command_name):
+    """Generic command runner with error handling"""
+    try:
+        log.info(f"Running {command_name} command")
+        call_command(command_name)
+        log.info(f"{command_name} command completed")
+    except Exception as e:
+        log.error(f"Error running {command_name}: {e}", exc_info=True)
+
 def run_chat_messages():
     """Execute chat_messages management command"""
-    try:
-        log.info("Running chat_messages command")
-        call_command('chat_messages')
-        log.info("chat_messages command completed")
-    except Exception as e:
-        log.error(f"Error running chat_messages: {e}", exc_info=True)
+    _run_command('chat_messages')
 
 def run_chat_rooms():
     """Execute chat_rooms management command"""
-    try:
-        log.info("Running chat_rooms command")
-        call_command('chat_rooms')
-        log.info("chat_rooms command completed")
-    except Exception as e:
-        log.error(f"Error running chat_rooms: {e}", exc_info=True)
+    _run_command('chat_rooms')
 
 def run_vote():
     """Execute vote management command"""
-    try:
-        log.info("Running vote command")
-        call_command('vote')
-        log.info("vote command completed")
-    except Exception as e:
-        log.error(f"Error running vote: {e}", exc_info=True)
+    _run_command('vote')
 
 def run_count_citizens():
     """Execute count_citizens management command"""
-    try:
-        log.info("Running count_citizens command")
-        call_command('count_citizens')
-        log.info("count_citizens command completed")
-    except Exception as e:
-        log.error(f"Error running count_citizens: {e}", exc_info=True)
+    _run_command('count_citizens')
 
 def run_update_site():
     """Execute update_site management command"""
-    try:
-        log.info("Running update_site command")
-        call_command('update_site')
-        log.info("update_site command completed")
-    except Exception as e:
-        log.error(f"Error running update_site: {e}", exc_info=True)
+    _run_command('update_site')
