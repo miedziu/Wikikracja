@@ -25,6 +25,8 @@ class Command(BaseCommand):
 
         HOST = get_site_domain()
 
+        threads = []
+
         def SendEmail(recipients: list[str], message: str) -> None:
 
             subject = _("{HOST} New messages on chat").format(HOST=HOST)
@@ -49,13 +51,16 @@ class Command(BaseCommand):
                     log.error(f'Failed to send email to {recipients}; subject: {email_message.subject}; error: {e}', exc_info=True)
 
             t = threading.Thread(target=_send_with_delay)
-            t.setDaemon(True)
+            threads.append(t)
             t.start()
 
         user_list = Uzytkownik.objects.filter(uid__is_active=True)
+        log.info(f'chat_messages: found {user_list.count()} active users')
         for u in user_list:
-            room_allowed = Room.objects.filter(allowed=u.uid, archived=False).exclude(muted_by=u.uid).exclude(seen_by=u.uid)
+            room_allowed = Room.objects.filter(allowed=u.uid, archived=False).exclude(muted_by=u.uid)
+            log.info(f'chat_messages: user={u.uid} last_broadcast={u.last_broadcast} rooms_allowed={room_allowed.count()}')
             message_list = Message.objects.filter(time__gte=u.last_broadcast, room__in=room_allowed).exclude(sender=u.uid)
+            log.info(f'chat_messages: user={u.uid} new_messages={message_list.count()}')
             if not message_list:
                 log.info(f'No new messages for user {u.uid}')
                 continue
@@ -88,3 +93,6 @@ class Command(BaseCommand):
                 SendEmail([u.uid.email,], body)
             u.last_broadcast = dt.now(pytz.timezone('Europe/Warsaw')) # TODO: Wziąć to z settings.py
             u.save()
+
+        for t in threads:
+            t.join()

@@ -269,10 +269,10 @@ See `docker-compose.yml` for a production-ready setup with Redis.
 
 ```bash
 # Run management commands
-python manage.py vote
-python manage.py count_citizens
 python manage.py chat_messages
 python manage.py chat_rooms
+python manage.py count_citizens
+python manage.py vote
 ```
 
 ## License

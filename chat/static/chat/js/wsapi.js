@@ -20,16 +20,18 @@ export default class WsApi {
         this.socket.onmessage = (e) => {
             let data = JSON.parse(e.data);
 
-            // Handle errors
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-
             if (data.__TRACE_ID) {
-                this.receiveAsync(data);
+                if (data.error) {
+                    this.rejectAsync(data);
+                } else {
+                    this.receiveAsync(data);
+                }
             } else {
-                onSocketMessage(data);
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    onSocketMessage(data);
+                }
             }
         }
 
@@ -82,6 +84,16 @@ export default class WsApi {
             return;
         }
         this.promises[ID].resolve(obj);
+        delete this.promises[ID];
+    }
+
+    rejectAsync(obj) {
+        let ID = obj.__TRACE_ID;
+        if (this.promises[ID] === undefined) {
+            alert(obj.error);
+            return;
+        }
+        this.promises[ID].reject(obj.error);
         delete this.promises[ID];
     }
 

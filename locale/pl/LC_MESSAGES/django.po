@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 13:04+0100\n"
+"POT-Creation-Date: 2026-03-13 13:56+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -542,21 +542,21 @@ msgstr "Nie można usunąć kategorii, ponieważ jest w użyciu. Usuń najpierw 
 msgid "Cannot delete partner because it is in use. Remove all transactions that use it first."
 msgstr "Nie można usunąć partnera, ponieważ jest w użyciu. Usuń najpierw wszystkie transakcje, które go wykorzystują."
 
-#: .\chat\management\commands\chat_messages.py:35
+#: .\chat\management\commands\chat_messages.py:32
 #, python-brace-format
 msgid "{HOST} New messages on chat"
 msgstr "{HOST} Nowe wiadomości na czacie"
 
-#: .\chat\management\commands\chat_messages.py:36
+#: .\chat\management\commands\chat_messages.py:33
 #, python-brace-format
 msgid "New messages on {HOST}/chat"
 msgstr "Nowe wiadomości na {HOST}/chat"
 
-#: .\chat\management\commands\chat_messages.py:37
+#: .\chat\management\commands\chat_messages.py:34
 msgid "You can disable those messages by unchecking bell icon next to chat room name."
 msgstr "Możesz wyłączyć te powiadomienia odznaczając ikonę dzwonka obok nazwy pokoju."
 
-#: .\chat\management\commands\chat_messages.py:38
+#: .\chat\management\commands\chat_messages.py:35
 #, python-brace-format
 msgid "Go to chat to do so {HOST}/chat"
 msgstr "Skocz do czatu żeby to zrobić {HOST}/chat"

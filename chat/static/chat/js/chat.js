@@ -103,7 +103,26 @@ export async function onRoomTryJoin(room_id) {
     }
 
     RoomLock.lock();
-    let response = await WS_API.joinRoom(room_id);
+    let response;
+    try {
+        response = await WS_API.joinRoom(room_id);
+    } catch (error) {
+        RoomLock.unlock();
+        if (error === 'ROOM_INVALID') {
+            delete localStorage.lastUsedRoomID;
+            DOM_API.getRoomLinkDiv(room_id).removeClass("joined");
+            let roomElements = $('.room-link[data-room-id]');
+            if (roomElements.length > 0) {
+                let fallbackId = parseInt($(roomElements[0]).data('room-id'));
+                if (fallbackId != room_id) {
+                    onRoomTryJoin(fallbackId);
+                }
+            }
+        } else {
+            alert(error);
+        }
+        return;
+    }
     RoomLock.unlock();
 
     localStorage.lastUsedRoomID = room_id;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 13:04+0100\n"
+"POT-Creation-Date: 2026-03-13 13:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -545,21 +545,21 @@ msgstr ""
 msgid "Cannot delete partner because it is in use. Remove all transactions that use it first."
 msgstr ""
 
-#: .\chat\management\commands\chat_messages.py:35
+#: .\chat\management\commands\chat_messages.py:32
 #, python-brace-format
 msgid "{HOST} New messages on chat"
 msgstr ""
 
-#: .\chat\management\commands\chat_messages.py:36
+#: .\chat\management\commands\chat_messages.py:33
 #, python-brace-format
 msgid "New messages on {HOST}/chat"
 msgstr ""
 
-#: .\chat\management\commands\chat_messages.py:37
+#: .\chat\management\commands\chat_messages.py:34
 msgid "You can disable those messages by unchecking bell icon next to chat room name."
 msgstr ""
 
-#: .\chat\management\commands\chat_messages.py:38
+#: .\chat\management\commands\chat_messages.py:35
 #, python-brace-format
 msgid "Go to chat to do so {HOST}/chat"
 msgstr ""
