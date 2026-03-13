@@ -191,8 +191,9 @@ class Command(BaseCommand):
     
     def block_ineligible_users(self):
         """Block users with insufficient reputation"""
+        req_rep = required_reputation()
         for i in Uzytkownik.objects.filter(uid__is_active=True):
-            if i.reputation < required_reputation():
+            if i.reputation < req_rep:
                 i.uid.is_active = False
                 i.uid.save()
                 i.save()

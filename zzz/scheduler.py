@@ -1,10 +1,14 @@
 import logging
+import threading
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.conf import settings
 from django.core.management import call_command
 
 log = logging.getLogger(__name__)
+
+# Needed in case chat_rooms and count_citizens run concurrently. Both writing a lot to database.
+_db_lock = threading.Lock()
 
 def start_scheduler():
     """
@@ -84,20 +88,25 @@ def _run_command(command_name):
 
 def run_chat_messages():
     """Execute chat_messages management command"""
-    _run_command('chat_messages')
+    with _db_lock:
+        _run_command('chat_messages')
 
 def run_chat_rooms():
     """Execute chat_rooms management command"""
-    _run_command('chat_rooms')
+    with _db_lock:
+        _run_command('chat_rooms')
 
 def run_vote():
     """Execute vote management command"""
-    _run_command('vote')
+    with _db_lock:
+        _run_command('vote')
 
 def run_count_citizens():
     """Execute count_citizens management command"""
-    _run_command('count_citizens')
+    with _db_lock:
+        _run_command('count_citizens')
 
 def run_update_site():
     """Execute update_site management command"""
-    _run_command('update_site')
+    with _db_lock:
+        _run_command('update_site')
