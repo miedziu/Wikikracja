@@ -224,17 +224,11 @@ def details(request:HttpRequest, pk: int):
     prev = Decyzja.objects.filter(pk__lt=obj.pk, status = szczegoly.status).order_by('-pk').first()
     next = Decyzja.objects.filter(pk__gt=obj.pk, status = szczegoly.status).order_by('pk').first()
     
-    # Find associated chat room
-    room_title = _("Vote #%(id)s: %(title)s") % {"id": szczegoly.pk, "title": szczegoly.title[:20]}
-
-    chat_room = Room.objects.filter(title=room_title).first()
+    # Find associated chat room using model method
+    chat_room = szczegoly.get_chat_room()
     
     # Check if chat room has unseen messages
-    chat_room_pulse_class = ""
-    if chat_room and request.user.is_authenticated:
-        if (chat_room.messages.exists() and 
-            not chat_room.seen_by.filter(id=request.user.id).exists()):
-            chat_room_pulse_class = "chat-room-pulse"
+    chat_room_pulse_class = szczegoly.get_chat_room_pulse_class(request.user)
     
     # Query arguments for this decision
     arguments = Argument.objects.filter(decyzja=pk).select_related('author')
