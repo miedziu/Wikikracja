@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-14 14:13+0100\n"
+"POT-Creation-Date: 2026-03-14 19:47+0100\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -65,14 +65,15 @@ msgstr "Zaktualizowane"
 
 #: .\board\models.py:14 .\board\templates\board\board.html:32
 #: .\board\templates\board\board.html:52
-#: .\board\templates\board\post_detail.html:11 .\events\models.py:97
+#: .\board\templates\board\post_detail.html:11
+#: .\chat\templates\chat\chat.html:91 .\events\models.py:97
 #: .\events\templates\events\event_detail.html:80
 #: .\events\templates\events\event_list.html:67
 #: .\home\templates\home\home.html:94
 msgid "Public"
 msgstr "Publiczne"
 
-#: .\board\models.py:15 .\chat\templates\chat\chat.html:68
+#: .\board\models.py:15
 msgid "Archived"
 msgstr "Zarchiwizowane"
 
@@ -574,29 +575,27 @@ msgstr "Skocz do czatu żeby to zrobić {HOST}/chat"
 msgid "New room"
 msgstr "Nowy pokój"
 
-#: .\chat\templates\chat\chat.html:52
-msgid "Rooms"
-msgstr "Pokoje"
-
-#: .\chat\templates\chat\chat.html:54
+#: .\chat\templates\chat\chat.html:93
 msgid "Public chat rooms are archived if they are not used for"
 msgstr "Publiczne pokoje czatu są archiwizowane, jeżeli nie są używane"
 
-#: .\chat\templates\chat\chat.html:54
+#: .\chat\templates\chat\chat.html:93
 msgid "days. After"
 msgstr "dni. Po"
 
-#: .\chat\templates\chat\chat.html:54
+#: .\chat\templates\chat\chat.html:93
 msgid "days they are deleted. Private messages are archived when user is blocked and deleted after"
 msgstr "dniach są usuwane. Prywatne wiadomości są archiwizowane, gdy użytkownik jest blokowany i usuwany po"
 
-#: .\chat\templates\chat\chat.html:54
+#: .\chat\templates\chat\chat.html:93
 #: .\obywatele\templates\obywatele\parameters.html:23
 msgid "days"
 msgstr "dniach"
 
-#: .\chat\templates\chat\chat.html:61 .\chat\templates\chat\chat.html:75
-#: .\chat\templates\chat\chat.html:94 .\chat\templates\chat\chat.html:107
+#: .\chat\templates\chat\chat.html:100 .\chat\templates\chat\chat.html:114
+#: .\chat\templates\chat\chat.html:128 .\chat\templates\chat\chat.html:142
+#: .\chat\templates\chat\chat.html:156 .\chat\templates\chat\chat.html:170
+#: .\chat\templates\chat\chat.html:189 .\chat\templates\chat\chat.html:202
 #: .\home\templates\home\home.html:37 .\home\templates\home\home.html:48
 #: .\home\templates\home\home.html:59 .\home\templates\home\home.html:72
 #: .\home\templates\home\home.html:83 .\home\templates\home\home.html:96
@@ -607,19 +606,39 @@ msgstr "dniach"
 msgid "None"
 msgstr "Brak"
 
-#: .\chat\templates\chat\chat.html:87
+#: .\chat\templates\chat\chat.html:107
+msgid "Public Archived"
+msgstr "Publiczne archiwum"
+
+#: .\chat\templates\chat\chat.html:121 .\home\templates\home\base.html:77
+msgid "Tasks"
+msgstr "Zadania"
+
+#: .\chat\templates\chat\chat.html:135
+msgid "Tasks Archived"
+msgstr "Zadania archiwum"
+
+#: .\chat\templates\chat\chat.html:149
+msgid "Referendums"
+msgstr "Głosowania"
+
+#: .\chat\templates\chat\chat.html:163
+msgid "Referendums Archived"
+msgstr "Głosowania archiwum"
+
+#: .\chat\templates\chat\chat.html:182
 msgid "Private Messages"
 msgstr "Wiadomości prywatne"
 
-#: .\chat\templates\chat\chat.html:100
+#: .\chat\templates\chat\chat.html:195
 msgid "Private Archived"
-msgstr "Prywatne zarchiwizowane"
+msgstr "Prywatne archiwum"
 
-#: .\chat\templates\chat\chat.html:123
+#: .\chat\templates\chat\chat.html:218
 msgid "Changes history"
 msgstr "Historia zmian"
 
-#: .\chat\templates\chat\chat.html:128
+#: .\chat\templates\chat\chat.html:223
 #: .\tasks\templates\tasks\task_detail.html:183
 msgid "Close"
 msgstr "Zamknij"
@@ -632,6 +651,14 @@ msgstr "Skopiuj link"
 #, python-format
 msgid "Copy link to room %(room_name)s"
 msgstr "Skopiuj link do pokoju %(room_name)s"
+
+#: .\chat\views.py:82 .\chat\views.py:83 .\chat\views.py:84 .\chat\views.py:85
+msgid "Task #"
+msgstr "Zadanie #"
+
+#: .\chat\views.py:82 .\chat\views.py:83 .\chat\views.py:86 .\chat\views.py:87
+msgid "Vote #"
+msgstr "Głosowanie #"
 
 #: .\elibrary\forms.py:9 .\elibrary\models.py:15
 msgid "Abstract"
@@ -1641,10 +1668,6 @@ msgstr "Ogłoszenia"
 #: .\home\templates\home\base.html:72
 msgid "Calendar"
 msgstr "Kalendarz"
-
-#: .\home\templates\home\base.html:77
-msgid "Tasks"
-msgstr "Zadania"
 
 #: .\home\templates\home\base.html:83 .\home\templates\home\home.html:14
 #: .\home\templates\home\login.html:4 .\home\templates\home\login.html:12

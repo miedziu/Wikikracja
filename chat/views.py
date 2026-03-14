@@ -77,18 +77,25 @@ def chat(request: HttpRequest):
     private_active = allowed_rooms.filter(public=False, archived=False)
     private_archived = allowed_rooms.filter(public=False, archived=True)
     
-    # seen = room.seen_by.filter(id=user.id) or room.messages.all().count() == 0
-    
-    # Find out which room to open by default
-    # messages_by_user = Message.objects.filter(sender=request.user).values("room__id").order_by("-time").first()
-    # last_user_room = messages_by_user and messages_by_user["room__id"]
+    # Split public rooms into categories based on title patterns
+    # Tasks start with "Task #", Votes start with "Vote #"
+    public_rooms_active = public_active.exclude(title__startswith=_("Task #")).exclude(title__startswith=_("Vote #"))
+    public_rooms_archived = public_archived.exclude(title__startswith=_("Task #")).exclude(title__startswith=_("Vote #"))
+    tasks_active = public_active.filter(title__startswith=_("Task #"))
+    tasks_archived = public_archived.filter(title__startswith=_("Task #"))
+    votes_active = public_active.filter(title__startswith=_("Vote #"))
+    votes_archived = public_archived.filter(title__startswith=_("Vote #"))
     
     # Render that in the chat template
     return render(request, "chat/chat.html", {
         'last_used_room': json.dumps(None),
         'translations': get_translations(),
-        'public_active': public_active,
-        'public_archived': public_archived,
+        'public_rooms_active': public_rooms_active,
+        'public_rooms_archived': public_rooms_archived,
+        'tasks_active': tasks_active,
+        'tasks_archived': tasks_archived,
+        'votes_active': votes_active,
+        'votes_archived': votes_archived,
         'private_active': private_active,
         'private_archived': private_archived,
         'user': request.user,

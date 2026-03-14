@@ -102,6 +102,11 @@ export async function onRoomTryJoin(room_id) {
     }
 
     DOM_API.getRoomLinkDiv(room_id).addClass("joined");
+    
+    // Expand category containing this room
+    if (typeof window.expandCategoryForRoom === 'function') {
+        window.expandCategoryForRoom(room_id);
+    }
 
     // already in the room
     if (current_room == room_id) {
