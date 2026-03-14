@@ -24,6 +24,8 @@
         <th>{% trans "Partner" %}</th>
         <th>{% trans "Category" %}</th>
         <th>{% trans "Amount" %}</th>
+        <th>{% trans "Balance" %}</th>
+        <th>{% trans "Author" %}</th>
         <th class="text-end">{% trans "Actions" %}</th>
       </tr>
     </thead>
@@ -50,21 +52,27 @@
           <td>{{ transaction.partner }}</td>
           <td>{{ transaction.category|default:"-" }}</td>
           <td>{{ transaction.amount }}</td>
+          <td class="{% if transaction.balance > 0 %}text-success{% elif transaction.balance < 0 %}text-danger{% endif %}">
+            {{ transaction.balance|floatformat:2 }}
+          </td>
+          <td>{{ transaction.obj.author.username }}</td>
           <td>
+            {% if transaction.obj.author == request.user %}
             <div class="btn-group float-end" role="group">
               <a href="{% url 'bookkeeping:transaction_update' transaction.id %}" class="btn btn-sm me-1 mb-1 btn-primary">{% trans "Edit" %}</a>
               <a href="{% url 'bookkeeping:transaction_delete' transaction.id %}" class="btn btn-sm me-1 mb-1 btn-danger">{% trans "Delete" %}</a>
             </div>
+            {% endif %}
           </td>
         </tr>
         <tr class="collapse" id="transaction-details-{{ transaction.id }}">
-          <td colspan="6" class="bg-secondary text-white">
+          <td colspan="8" class="bg-secondary text-white">
             <small>{{ transaction.note|default:"-" }}</small>
           </td>
         </tr>
       {% empty %}
         <tr>
-          <td colspan="6">{% trans "No records found." %}</td>
+          <td colspan="8">{% trans "No records found." %}</td>
         </tr>
       {% endfor %}
     </tbody>

@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name=_("Name"))
@@ -38,6 +39,7 @@ class Transaction(models.Model):
     partner = models.ForeignKey(Partner, on_delete=models.CASCADE, null=True, blank=False, verbose_name=_("Partner"))
     amount = models.FloatField(null=True, blank=False, verbose_name=_("Outgoing amount"))
     note = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Note"))
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Author"), related_name='transactions')
     
     def __str__(self):
         return f"{self.payment_received_date} - {self.partner} {self.type} {self.amount}"
