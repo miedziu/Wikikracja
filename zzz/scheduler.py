@@ -1,5 +1,7 @@
 import logging
 import threading
+import fcntl
+import os
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.conf import settings
@@ -10,9 +12,13 @@ log = logging.getLogger(__name__)
 # Needed in case chat_rooms and count_citizens run concurrently. Both writing a lot to database.
 _db_lock = threading.Lock()
 
+# Global variable to hold the lock file descriptor
+_scheduler_lock_fd = None
+
 def start_scheduler():
     """
     Start APScheduler to run management commands on schedule.
+    Uses file-based lock to ensure only one scheduler instance runs across multiple workers.
     Replaces cron jobs:
     - 1 12,18 * * * -> chat_messages
     - */5 * * * * -> chat_rooms (every 5 minutes)
@@ -20,6 +26,18 @@ def start_scheduler():
     - */5 * * * * -> count_citizens (every 5 minutes)
     - 2 * * * * -> update_site (every hour)
     """
+    global _scheduler_lock_fd
+    
+    # Try to acquire exclusive lock on scheduler lock file
+    lock_file_path = '/tmp/wikikracja_scheduler.lock'
+    try:
+        _scheduler_lock_fd = open(lock_file_path, 'w')
+        fcntl.flock(_scheduler_lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        log.info(f"Acquired scheduler lock: {lock_file_path}")
+    except IOError:
+        log.info("Scheduler already running in another worker/process - skipping initialization")
+        return None
+    
     scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)
     
     # Chat messages - runs at 12, 18
