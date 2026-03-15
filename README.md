@@ -19,6 +19,7 @@ A comprehensive community platform with the following modules:
 - 📋 **Board** - Announcements and news board
 - 💰 **Bookkeeping** - Financial transparency and tracking
 - 📅 **Events** - Event management and scheduling
+- ✅ **Tasks** - Collaborative task management with voting-based prioritization
 
 ## Demo
 
@@ -26,37 +27,38 @@ Try the live demo: **https://demo.wikikracja.pl/**
 
 ## Tech Stack
 
-- **Backend**: Django 6, Django Channels, Python 3.14.x (both Docker and local dev)
-- **Frontend**: Bootstrap 5, TinyMCE, Crispy Forms
+- **Backend**: Django 6.0.3, Django Channels 4.3.2, Python 3.14
+- **Frontend**: Bootstrap 5, TinyMCE 5.0, Crispy Bootstrap5
 - **Database**: SQLite (development), PostgreSQL (production ready)
-- **Cache/Channels**: Redis
-- **Deployment**: Docker, Linux
-- **Authentication**: django-allauth with email verification
-- **Security**: CSRF protection, reCAPTCHA, secure password policies
+- **Cache/Channels**: Redis 7.2.1
+- **Deployment**: Docker, Linux (production), Windows (development)
+- **Authentication**: django-allauth 65.14.3 with email verification
+- **Security**: CSRF protection, django-simple-captcha, secure password policies
+- **Real-time**: Daphne ASGI server, WebSockets via Django Channels
 
 ## Quick Start
 
 ### Development Environment
 
 #### Prerequisites
-- Python 3.14.x (install from [python.org](https://www.python.org/downloads/release/python-3143/) on Windows; add to PATH)
-- Redis server (for Django Channels)
-- SMTP account (for sending emails)
+- Python 3.14 (install from [python.org](https://www.python.org/downloads/) on Windows; add to PATH)
+- Redis server (for Django Channels and caching)
+- SMTP account (optional for development, required for production email functionality)
 
 #### Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/wikikracja/wikikracja.git
+   git clone https://github.com/soma115/wikikracja.git
    cd wikikracja
    ```
 
-2. **Create & activate virtual env**
+2. **Create & activate virtual environment**
    ```bash   
-   python -m venv venv
+   python -m venv .venv
 
-   source venv/bin/activate # Linux / macOS
-   venv\Scripts\Activate.ps1 # Windows
+   source .venv/bin/activate # Linux / macOS
+   .venv\Scripts\Activate.ps1 # Windows
    ```
 
 3. **Install dependencies (manual option)**
@@ -71,23 +73,34 @@ Try the live demo: **https://demo.wikikracja.pl/**
    # Edit .env with your settings (SECRET_KEY, email config, etc.)
    ```
 
-5. **Run development server**
-   ```bash
-   ./scripts/start_dev.sh                       # Linux / macOS
-   ./scripts/build_docker_localy_on_windows.ps1 # Windows
-   or: 
-   python ./scripts/start_dev.py
-   ```
-
-   Or manually:
+5. **Initialize database and create superuser**
    ```bash
    python manage.py migrate
    python manage.py createsuperuser
+   ```
+
+6. **Start Redis server** (required for Django Channels)
+   ```bash
+   # Linux/macOS
+   redis-server
+   
+   # Windows (if installed via WSL or native)
+   redis-server
+   # Or use Docker: docker run -p 6379:6379 redis:latest
+   ```
+
+7. **Run development server**
+   ```bash
+   # Using helper script
+   python ./scripts/start_dev.py
+   
+   # Or manually
    python manage.py runserver
    ```
 
-6. **Access the application**
+8. **Access the application**
    - Web: http://localhost:8000
+   - Admin: http://localhost:8000/admin
 
 ### Docker Development
 
@@ -114,7 +127,7 @@ Pre-built images are automatically published to GitHub Container Registry:
 
 ```bash
 # Pull latest official image
-docker pull ghcr.io/wikikracja/wikikracja:latest
+docker pull ghcr.io/soma115/wikikracja:latest
 
 # Run with docker-compose
 docker-compose up
@@ -136,7 +149,7 @@ REGISTRY_IMAGE=ghcr.io/<your-username>/wikikracja ./scripts/build_and_push_docke
 
 # Or for other registries:
 # GitLab: REGISTRY_IMAGE=registry.gitlab.com/<username>/wikikracja ./scripts/build_and_push_docker_image.sh
-# Docker Hub: REGISTRY_IMAGE=docker.io/<username>/wikikracja ./scripts/build_and_push_docker_image.sh
+# Docker Hub: REGISTRY_IMAGE=<username>/wikikracja ./scripts/build_and_push_docker_image.sh
 ```
 
 #### Option 2: Manual build
@@ -187,7 +200,9 @@ EMAIL_HOST_PASSWORD=your-password
 SERVER_EMAIL=noreply@yourdomain.com
 DEFAULT_FROM_EMAIL=noreply@yourdomain.com
 
-# Redis (for Django Channels)
+# Redis (for Django Channels and caching)
+# Use 'redis' hostname when running with docker-compose
+# Use '127.0.0.1' when running Django locally
 REDIS_HOST=redis://redis:6379/1
 ```
 
@@ -207,10 +222,10 @@ We welcome contributions! Here's how you can help:
 
 ### Reporting Issues
 
-- Use the [GitHub issue tracker](https://github.com/wikikracja/wikikracja/issues)
+- Use the [GitHub issue tracker](https://github.com/soma115/wikikracja/issues)
 - Include steps to reproduce
 - Provide error messages and logs
-- Mention your environment (OS, Python version, etc.)
+- Mention your environment (OS, Python version, Docker version, etc.)
 
 ### Pull Requests
 
@@ -265,26 +280,50 @@ See `docker-compose.yml` for a production-ready setup with Redis.
 └─────────────┘      └──────────────────┘
 ```
 
-## Management commands
+## Management Commands
+
+Custom management commands available:
 
 ```bash
-# Run management commands
-python manage.py chat_messages
-python manage.py chat_rooms
-python manage.py count_citizens
-python manage.py vote
+# Chat management
+python manage.py chat_messages      # Manage chat messages
+python manage.py chat_rooms         # Manage chat rooms
+
+# User management
+python manage.py count_citizens     # Count registered citizens
+
+# Voting system
+python manage.py vote               # Voting-related operations
+
+# Site configuration
+python manage.py update_site        # Update site domain and name from environment variables
 ```
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Additional Configuration
+
+### Environment Variables
+
+Key configuration options in `.env`:
+
+- **Logging**: `LOGGING_DESTINATION` (console/file), `LOG_LEVEL` (DEBUG/INFO/WARNING/ERROR)
+- **Sessions**: `SESSION_EXPIRE_AT_BROWSER_CLOSE`, `SESSION_COOKIE_AGE`, `REMEMBER_ME_DAYS`
+- **Voting**: `WYMAGANYCH_PODPISOW`, `CZAS_NA_ZEBRANIE_PODPISOW`, `CZAS_TRWANIA_REFERENDUM`
+- **Chat**: `ARCHIVE_PUBLIC_CHAT_ROOM`, `DELETE_PUBLIC_CHAT_ROOM`
+- **Uploads**: `UPLOAD_IMAGE_MAX_SIZE_MB`, `DATA_UPLOAD_MAX_MEMORY_SIZE`
+- **Citizens**: `ACCEPTANCE`, `DELETE_INACTIVE_USER_AFTER`
+
+See `.env.example` for complete list and descriptions.
+
 ## Support
 
-- **Documentation**: See `/docs` folder (if available)
 - **Issues**: [GitHub Issues](https://github.com/soma115/wikikracja/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/soma115/wikikracja/discussions)
 - **Demo**: https://demo.wikikracja.pl/
+- **Production**: https://wikikracja.pl
 
 ---
 
