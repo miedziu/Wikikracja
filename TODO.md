@@ -1,17 +1,11 @@
 # PILNE
-- Kolory Za i Przeciw w innym kolorze (obrazki)
-- Stopka nie jest widoczna
-- Dodać opcję wyłączania powiadomień email (Unsubscribe)
-- Osoby, które głosują Za zadaniem mogą zostać poproszone o pomoc
-- Dodać opcję likwidacji własnego konta
+- Dodać opcję wyłączania powiadomień email (Unsubscribe). Dodać opcję likwidacji własnego konta
 - Wersjonowanie Ogłoszeń i Przepisów. Wydaje się, że to skomplikuje kod.
-
 - Ludzie piszą do grupy. Grupy piszą do siebie.
 - backup kontaktów, przepisów, ogłoszeń, itd. Każdy powinien móc zrobić w postaci fixtures i md.
 - okres próbny: wszystkie głosowania są zablokowane, finanse i emaile do ludzi nie są widoczne
 - Powinna być możliwość samodzielnego usunięcie z grupy ale też powinien być okres karencji po którym potwierdza się chęć odejścia. W okresie karencji będziemy mieli szansę zapytać co jest nie tak.
 - Temat grace period (okres karencji) pojawił się też przy normalnym usuwaniu użytkowników oraz przy czasowej banicji (jako konsekwencji złamania przepisu). Może da się upiec 3 pieczenie przy jednym ogniu.
-
 - Kalendarz. Powiadomienia whatsapp o spotkaniu
 - Dokończyć Fixtures i dodać je do skryptu instalacyjnego. Fixtures z przepisami, pokojami i ogłoszeniami. Start: (To jest publiczna strona startowa dostępna dla osób niezalogowanych) i Footer: (To jest publiczna stopka twojej strony).
 - Jeśli czas trwania referendum jest ustawiony na 3 dni, to referendum w rzeczywistości trwa 4 dni

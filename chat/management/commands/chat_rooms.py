@@ -14,7 +14,8 @@ class Command(BaseCommand):
     help = 'Create/Delete/Archive chat rooms'
 
     def handle(self, *args, **options):
-        self.stdout.write('Starting chat_rooms command...')
+        ts = timezone.now().strftime('%Y-%m-%d %H:%M:%S%z')
+        self.stdout.write(f'[{ts}] Starting chat_rooms command...')
         logging.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', 
                     format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', 
                     level=logging.INFO)
