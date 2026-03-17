@@ -11,11 +11,23 @@
 
   <script>
     $(document).ready(function () {
-      $('#toggleButtonPubActive').click(function () {
-        $('#content-pub-active').slideToggle(300)
+      $('#toggleButtonPubRoomsActive').click(function () {
+        $('#content-pub-rooms-active').slideToggle(300)
       })
-      $('#toggleButtonPubArchive').click(function () {
-        $('#content-pub-archive').slideToggle(300)
+      $('#toggleButtonPubRoomsArchive').click(function () {
+        $('#content-pub-rooms-archive').slideToggle(300)
+      })
+      $('#toggleButtonTasksActive').click(function () {
+        $('#content-tasks-active').slideToggle(300)
+      })
+      $('#toggleButtonTasksArchive').click(function () {
+        $('#content-tasks-archive').slideToggle(300)
+      })
+      $('#toggleButtonVotesActive').click(function () {
+        $('#content-votes-active').slideToggle(300)
+      })
+      $('#toggleButtonVotesArchive').click(function () {
+        $('#content-votes-archive').slideToggle(300)
       })
       $('#toggleButtonPrvActive').click(function () {
         $('#content-prv-active').slideToggle(300)
@@ -33,6 +45,33 @@
         })
       }
     }
+    
+    // Function to expand category containing the active room
+    window.expandCategoryForRoom = function(room_id) {
+      const roomLink = $(`.room-link[data-room-id="${room_id}"]`)
+      if (roomLink.length === 0) return
+      
+      const container = roomLink.closest('.list-of-rooms, .list-of-pms')
+      if (container.length === 0) return
+      
+      const containerId = container.attr('id')
+      const categoryMap = {
+        'content-pub-rooms-active': '#toggleButtonPubRoomsActive',
+        'content-pub-rooms-archive': '#toggleButtonPubRoomsArchive',
+        'content-tasks-active': '#toggleButtonTasksActive',
+        'content-tasks-archive': '#toggleButtonTasksArchive',
+        'content-votes-active': '#toggleButtonVotesActive',
+        'content-votes-archive': '#toggleButtonVotesArchive',
+        'content-prv-active': '#toggleButtonPrvActive',
+        'content-prv-archive': '#toggleButtonPrvArchive'
+      }
+      
+      const toggleButton = categoryMap[containerId]
+      if (toggleButton && !$(toggleButton).hasClass('activated')) {
+        container.show()
+        $(toggleButton).addClass('activated')
+      }
+    }
   </script>
 
   <!-- ============================================================= -->
@@ -47,14 +86,14 @@
     <div class="room-list col-md-5">
       <div class="row">
         <div class="col p-1">
-          <!-- Public active -->
+          <!-- Public rooms active -->
           <p class="mt-0 mb-0 text-muted">
-            <button class="btn accordion activated" id="toggleButtonPubActive">{% trans 'Rooms' %}</button>
+            <button class="btn accordion" id="toggleButtonPubRoomsActive">{% trans 'Public' %}</button>
             <a class="btn" href="{% url 'chat:add_room' %}"><i class="fas fa-plus"></i></a>
             <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="left" title="{% trans 'Public chat rooms are archived if they are not used for' %} {{ ARCHIVE_PUBLIC_CHAT_ROOM }} {% trans 'days. After' %} {{ DELETE_PUBLIC_CHAT_ROOM }} {% trans 'days they are deleted. Private messages are archived when user is blocked and deleted after' %} {{ DELETE_PUBLIC_CHAT_ROOM }} {% trans 'days' %}."></i>
           </p>
-          <div id="content-pub-active" class="list-of-rooms">
-            {% for room in public_active %}
+          <div id="content-pub-rooms-active" class="list-of-rooms">
+            {% for room in public_rooms_active %}
               {% include 'chat/room_link.html' %}
             {% empty %}
               <p class="text-muted text-center">
@@ -63,12 +102,68 @@
             {% endfor %}
           </div>
 
-          <!-- Public archived -->
+          <!-- Public rooms archived -->
           <p class="mt-0 mb-0 text-muted">
-            <button class="btn accordion" id="toggleButtonPubArchive">{% trans 'Archived' %}</button>
+            <button class="btn accordion" id="toggleButtonPubRoomsArchive">{% trans 'Public Archived' %}</button>
           </p>
-          <div id="content-pub-archive" class="list-of-rooms">
-            {% for room in public_archived %}
+          <div id="content-pub-rooms-archive" class="list-of-rooms">
+            {% for room in public_rooms_archived %}
+              {% include 'chat/room_link.html' %}
+            {% empty %}
+              <p class="text-muted text-center">
+                {% trans 'None' %}
+              </p>
+            {% endfor %}
+          </div>
+
+          <!-- Tasks active -->
+          <p class="mt-0 mb-0 text-muted">
+            <button class="btn accordion" id="toggleButtonTasksActive">{% trans 'Tasks' %}</button>
+          </p>
+          <div id="content-tasks-active" class="list-of-rooms">
+            {% for room in tasks_active %}
+              {% include 'chat/room_link.html' %}
+            {% empty %}
+              <p class="text-muted text-center">
+                {% trans 'None' %}
+              </p>
+            {% endfor %}
+          </div>
+
+          <!-- Tasks archived -->
+          <p class="mt-0 mb-0 text-muted">
+            <button class="btn accordion" id="toggleButtonTasksArchive">{% trans 'Tasks Archived' %}</button>
+          </p>
+          <div id="content-tasks-archive" class="list-of-rooms">
+            {% for room in tasks_archived %}
+              {% include 'chat/room_link.html' %}
+            {% empty %}
+              <p class="text-muted text-center">
+                {% trans 'None' %}
+              </p>
+            {% endfor %}
+          </div>
+
+          <!-- Votes active -->
+          <p class="mt-0 mb-0 text-muted">
+            <button class="btn accordion" id="toggleButtonVotesActive">{% trans 'Referendums' %}</button>
+          </p>
+          <div id="content-votes-active" class="list-of-rooms">
+            {% for room in votes_active %}
+              {% include 'chat/room_link.html' %}
+            {% empty %}
+              <p class="text-muted text-center">
+                {% trans 'None' %}
+              </p>
+            {% endfor %}
+          </div>
+
+          <!-- Votes archived -->
+          <p class="mt-0 mb-0 text-muted">
+            <button class="btn accordion" id="toggleButtonVotesArchive">{% trans 'Referendums Archived' %}</button>
+          </p>
+          <div id="content-votes-archive" class="list-of-rooms">
+            {% for room in votes_archived %}
               {% include 'chat/room_link.html' %}
             {% empty %}
               <p class="text-muted text-center">
@@ -84,7 +179,7 @@
         <div class="col p-1">
           <!-- Private active -->
           <p class="mt-0 mb-0 text-muted">
-            <button class="btn accordion activated" id="toggleButtonPrvActive">{% trans 'Private Messages' %}</button>
+            <button class="btn accordion" id="toggleButtonPrvActive">{% trans 'Private Messages' %}</button>
           </p>
           <div id="content-prv-active" class="list-of-pms">
             {% for room in private_active %}

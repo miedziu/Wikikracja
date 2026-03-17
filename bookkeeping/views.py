@@ -1,12 +1,13 @@
 from django.urls import reverse_lazy
 from .models import Category, Partner, Transaction
 from .forms import TransactionForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.db.models import Sum
+from django.core.exceptions import PermissionDenied
 
 ##########################  Category ###########################
 
@@ -146,8 +147,36 @@ class TransactionListView(LoginRequiredMixin, ListView):
                 'obj': item
             })
         
-        # Sort by payment date (most recent first)
-        return sorted(transactions, key=lambda x: (x['payment_received_date'] is None, x['payment_received_date']), reverse=True)
+        # Sort by payment date and ID (oldest first for balance calculation)
+        sorted_transactions = sorted(transactions, key=lambda x: (x['payment_received_date'] is None, x['payment_received_date'], x['id']))
+        
+        # Calculate running balance
+        balance = 0
+        for transaction in sorted_transactions:
+            if transaction['type'] == 'I':
+                balance += transaction['amount']
+            else:
+                balance -= transaction['amount']
+            transaction['balance'] = balance
+        
+        # Return sorted by most recent first for display (date DESC, ID ASC within same date)
+        result = []
+        current_date = None
+        date_group = []
+        
+        for transaction in reversed(sorted_transactions):
+            if transaction['payment_received_date'] != current_date:
+                if date_group:
+                    result.extend(date_group)
+                date_group = [transaction]
+                current_date = transaction['payment_received_date']
+            else:
+                date_group.append(transaction)
+        
+        if date_group:
+            result.extend(date_group)
+        
+        return result
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -177,7 +206,8 @@ class TransactionCreateView(LoginRequiredMixin, View):
                 category=transaction_data['category'],
                 amount=transaction_data['amount'],
                 payment_received_date=transaction_data['payment_received_date'],
-                note=transaction_data['note']
+                note=transaction_data['note'],
+                author=request.user
             )
             
             # Set the current user and save
@@ -191,10 +221,14 @@ class TransactionCreateView(LoginRequiredMixin, View):
         })
 
 
-class TransactionUpdateView(LoginRequiredMixin, UpdateView):
+class TransactionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Transaction
     form_class = TransactionForm
     template_name = 'bookkeeping/transaction_form.html'
+    
+    def test_func(self):
+        transaction = self.get_object()
+        return self.request.user == transaction.author
     
     def get_success_url(self):
         # Check if 'next' parameter exists in the request
@@ -211,10 +245,14 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class TransactionDeleteView(LoginRequiredMixin, DeleteView):
+class TransactionDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Transaction
     template_name = 'bookkeeping/transaction_confirm_delete.html'
     success_url = reverse_lazy('bookkeeping:transaction_list')
+    
+    def test_func(self):
+        transaction = self.get_object()
+        return self.request.user == transaction.author
 
 ##########################  Report ###########################
 

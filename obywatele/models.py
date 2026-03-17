@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+
+User = get_user_model()
 from django.utils.timezone import make_aware
 from datetime import datetime
 import pytz
@@ -16,7 +18,6 @@ class Uzytkownik(models.Model):
         EMAIL_CONFIRMED = 'email_confirmed', _('Email confirmed')
         FORM_COMPLETED = 'form_completed', _('Form completed')
 
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     uid = models.OneToOneField(User,
                                on_delete=models.CASCADE,
                                editable=False,
@@ -71,7 +72,6 @@ class Uzytkownik(models.Model):
 
 
 class Rate(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     kandydat = models.ForeignKey(Uzytkownik,
                                  on_delete=models.CASCADE,
                                  related_name='kandydat')

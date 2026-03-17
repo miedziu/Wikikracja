@@ -1,16 +1,15 @@
-import os
 from django.db import models
-# import datetime
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
+
+User = get_user_model()
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_comma_separated_integer_list
 import re
 
-base_dir = os.path.abspath('.')
-
 def does_it_exist(value):
-    x = re.split(r'\W+', value.strip(' ').strip(',').strip(' ').strip(',').strip(' ').strip(',').strip(' ').strip(','))
+    x = re.split(r'\W+', value.strip(' ,'))
     for i in x:
         try:
             existing = Decyzja.objects.get(pk=int(i))  # all existing for now
@@ -19,7 +18,6 @@ def does_it_exist(value):
     return True
 
 class Decyzja(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     author = models.ForeignKey(
         'auth.User',
         on_delete=models.SET_NULL,
@@ -89,6 +87,40 @@ class Decyzja(models.Model):
 
     objects = models.Manager()
 
+    def get_chat_room_title(self):
+        # Use English prefix (not translated) for consistency in room categorization
+        return "Vote #%(id)s: %(title)s" % {"id": self.pk, "title": self.title[:20]}
+
+    def get_chat_room(self):
+        from chat.models import Room
+        try:
+            return Room.objects.get(title=self.get_chat_room_title())
+        except Room.DoesNotExist:
+            return None
+
+    def get_chat_room_url(self):
+        room = self.get_chat_room()
+        if room:
+            return f"{reverse('chat:chat')}#room_id={room.id}"
+        return None
+
+    @property
+    def chat_room_url(self):
+        return self.get_chat_room_url()
+
+    @property
+    def chat_room(self):
+        return self.get_chat_room()
+
+    def get_chat_room_pulse_class(self, user):
+        """Return CSS class for chat room pulse indicator if there are unseen messages"""
+        chat_room = self.chat_room
+        if (chat_room and 
+            chat_room.messages.exists() and 
+            not chat_room.seen_by.filter(id=user.id).exists()):
+            return "chat-room-pulse"
+        return ""
+
 
 class Argument(models.Model):
     ARGUMENT_TYPE_CHOICES = [
@@ -96,7 +128,6 @@ class Argument(models.Model):
         ('AGAINST', _('Negative')),
     ]
     
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     decyzja = models.ForeignKey(
         Decyzja,
         on_delete=models.CASCADE,
@@ -141,7 +172,6 @@ class Argument(models.Model):
 
 class ZebranePodpisy(models.Model):
     '''Lista podpisów pod wnioskiem o referendum'''
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     projekt = models.ForeignKey(Decyzja, on_delete=models.SET_NULL, null=True)
 
     # Lets note who signed proposal:
@@ -152,7 +182,6 @@ class ZebranePodpisy(models.Model):
 
 
 class KtoJuzGlosowal(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     projekt = models.ForeignKey(Decyzja, on_delete=models.CASCADE)
     ktory_uzytkownik_juz_zaglosowal = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -167,7 +196,6 @@ class VoteCode(models.Model):
     - Jednorazowy kod
     - Tak/Nie
     '''
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     project = models.ForeignKey(Decyzja, on_delete=models.CASCADE)
     code = models.CharField(editable=False, null=True, max_length=20)
     vote = models.BooleanField(editable=False, null=True)

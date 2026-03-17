@@ -1,4 +1,5 @@
 import mimetypes
+import logging
 from os import getenv, path
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
@@ -237,12 +238,37 @@ if DEBUG:
         'django_browser_reload.middleware.BrowserReloadMiddleware',
     ]
 
-DEBUG_AM = True # Mine (Miedziu) Debug profile/settings for better focus, default after "else"
+# LOGGING_DESTINATION: 'console' (default) or 'file'
+# When 'file', logs are written to LOG_FILE (default: /var/log/wiki.log)
+LOGGING_DESTINATION = getenv("LOGGING_DESTINATION", "console")
+LOG_FILE = getenv("LOG_FILE", "/var/log/wiki.log")
+LOG_LEVEL = getenv("LOG_LEVEL", "DEBUG" if DEBUG else "INFO").strip().upper()
+if LOG_LEVEL not in {"CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"}:
+    raise RuntimeError(
+        "LOG_LEVEL must be one of: CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET"
+    )
+_log_to_file = LOGGING_DESTINATION == "file"
+_active_handler = "file" if _log_to_file else "console"
 
 # Just for suppressing "Using selector: EpollSelector"
-import logging
-logging.getLogger('asyncio').setLevel(logging.ERROR if DEBUG_AM else logging.DEBUG)
+logging.getLogger('asyncio').setLevel(logging.ERROR)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
+
+LOGGING_HANDLERS = {
+    'console': {
+        'level': LOG_LEVEL,
+        'class': 'logging.StreamHandler',
+        'formatter': 'verbose',
+        'stream': 'ext://sys.stdout',
+    },
+}
+if _log_to_file:
+    LOGGING_HANDLERS['file'] = {
+        'level': LOG_LEVEL,
+        'class': 'logging.FileHandler',
+        'filename': LOG_FILE,
+        'formatter': 'verbose',
+    }
 
 LOGGING = {
     'version': 1,
@@ -252,49 +278,37 @@ LOGGING = {
             'format': '%(asctime)s %(levelname)s %(name)s %(message)s'
         },
     },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG' if DEBUG_AM else 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-            'stream': 'ext://sys.stdout',
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'django_queries.log',
-        },
-    },
+    'handlers': LOGGING_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console'],
-            'level': 'ERROR' if DEBUG_AM else 'INFO',
+            'handlers': [_active_handler],
+            'level': LOG_LEVEL,
             'propagate': True
         },
         # 'django': {
-        #     'handlers': ['console'],
+        #     'handlers': [_active_handler],
         #     'level': 'INFO',
         #     'propagate': True
         # },
         # Urls:
         'django.channels.server': {
-            'handlers': ['console'],
+            'handlers': [_active_handler],
             'level': 'ERROR',
             'propagate': True
         },
         # SQL logs:
-        # 'django.db.backends': { 
-        #     'handlers': ['console', 'file'],
+        # 'django.db.backends': {
+        #     'handlers': [_active_handler],
         #     'level': 'DEBUG',
         #     'propagate': True
         # }
         # 'glosowania': {
-        #     'handlers': ['console'],
+        #     'handlers': [_active_handler],
         #     'level': 'INFO',
         #     'propagate': True
         # },
         # 'obywatele': {
-        #     'handlers': ['console'],
+        #     'handlers': [_active_handler],
         #     'level': 'INFO',
         #     'propagate': True
         # },

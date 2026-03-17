@@ -239,8 +239,13 @@
     }
 }
 
-#content-pub-archive,
-/* #content-prv-active, */
+#content-pub-rooms-active,
+#content-pub-rooms-archive,
+#content-tasks-active,
+#content-tasks-archive,
+#content-votes-active,
+#content-votes-archive,
+#content-prv-active,
 #content-prv-archive {
     display: none;
 }

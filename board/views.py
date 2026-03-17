@@ -34,9 +34,6 @@ def create_post(request: HttpRequest):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            if 'publish' in request.POST:
-                post.published_date = timezone.now()
-            # Save the post - this will trigger our signal if it's pinned
             post.save()
             return redirect('board:view_post', post.pk)
     else:
@@ -47,18 +44,12 @@ def create_post(request: HttpRequest):
 @login_required
 def edit_post(request: HttpRequest, pk: int):
     post = get_object_or_404(Post, pk=pk)
-    was_important = post.is_important  # Store original important state
     
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            
-            if 'publish' in request.POST:
-                post.published_date = timezone.now()
-            
-            # Save the post - this will trigger our signal if it's pinned
             post.save()
             return redirect('board:view_post', pk)
     else:

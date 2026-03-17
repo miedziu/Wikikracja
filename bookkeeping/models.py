@@ -1,9 +1,9 @@
 from django.db import models
 from datetime import datetime
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 class Category(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     name = models.CharField(max_length=50, unique=True, verbose_name=_("Name"))
     
     def __str__(self):
@@ -11,7 +11,6 @@ class Category(models.Model):
 
 
 class Partner(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     name = models.CharField(max_length=200, unique=True, verbose_name=_("Name"))
     email = models.EmailField(null=True, blank=True, verbose_name=_("email"))
     phone = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Phone"))
@@ -25,7 +24,6 @@ class Partner(models.Model):
 
 
 class Transaction(models.Model):
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     INCOMING = 'I'
     OUTGOING = 'O'
     TYPES = [
@@ -41,6 +39,7 @@ class Transaction(models.Model):
     partner = models.ForeignKey(Partner, on_delete=models.CASCADE, null=True, blank=False, verbose_name=_("Partner"))
     amount = models.FloatField(null=True, blank=False, verbose_name=_("Outgoing amount"))
     note = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Note"))
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Author"), related_name='transactions')
     
     def __str__(self):
         return f"{self.payment_received_date} - {self.partner} {self.type} {self.amount}"

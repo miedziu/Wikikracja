@@ -63,7 +63,7 @@
                   </tr>
                 {% endfor %}
                 <tr class="fw-bold border-top">
-                  <td>{% trans 'Total' %}</td>
+                  <td>{% trans 'Total of the year' %}</td>
                   <td class="text-end {% if total_net > 0 %}text-success{% elif total_net < 0 %}text-danger{% endif %}">
                     {{ total_net|floatformat:2 }}
                   </td>
@@ -104,7 +104,7 @@
                   </tr>
                 {% endfor %}
                 <tr class="fw-bold border-top">
-                  <td>{% trans 'Total' %}</td>
+                  <td>{% trans 'Total all years' %}</td>
                   <td class="text-end {% if all_years_total_net > 0 %}text-success{% elif all_years_total_net < 0 %}text-danger{% endif %}">
                     {{ all_years_total_net|floatformat:2 }}
                   </td>

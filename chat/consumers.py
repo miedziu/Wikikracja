@@ -170,7 +170,11 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
         # user can only be in one room at the time
         for room_id_to_leave in self.rooms.items():
-            room_to_leave = await self.get_room(room_id_to_leave)
+            try:
+                room_to_leave = await self.get_room(room_id_to_leave)
+            except ClientError:
+                self.rooms.leave(room_id_to_leave)
+                continue
             await self.handle_leave_room(room_to_leave)
 
         # Store that we're in the room
@@ -354,7 +358,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     @handlers.register("room-seen")
     async def handle_seen_room(self, proxy: HandledMessage, room_id):
         """ Handle user reading channel """
-        room = await self.get_room(room_id)
+        try:
+            room = await self.get_room(room_id)
+        except ClientError:
+            return
 
         if not await self.room_is_seen(room):
             await self.see_room(room)
@@ -677,11 +684,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     @database_sync_to_async
     def get_room(self, room_id):
         try:
-            r = Room.objects.get(id=room_id)
-            return r
+            return Room.objects.get(id=room_id)
         except Room.DoesNotExist:
-            log.error(f"Room with ID {room_id} does not exist")
-            return None
+            raise ClientError("ROOM_INVALID")
 
     @database_sync_to_async
     def find_room_with(self, *users):

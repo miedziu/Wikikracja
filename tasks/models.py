@@ -35,7 +35,6 @@ class Task(models.Model):
         CANCELLED = "cancelled", _("Cancelled")
         REJECTED = "rejected", _("Rejected")
 
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     title = models.CharField(max_length=200)
     description = models.TextField()
     status = models.CharField(
@@ -73,7 +72,8 @@ class Task(models.Model):
         return self.status == self.Status.ACTIVE
 
     def get_chat_room_title(self):
-        return _("Task #%(id)s: %(title)s") % {"id": self.id, "title": self.title[:50]}
+        # Use English prefix (not translated) for consistency in room categorization
+        return "Task #%(id)s: %(title)s" % {"id": self.id, "title": self.title[:50]}
 
     def get_chat_room(self):
         from chat.models import Room
@@ -96,13 +96,21 @@ class Task(models.Model):
     def chat_room(self):
         return self.get_chat_room()
 
+    def get_chat_room_pulse_class(self, user):
+        """Return CSS class for chat room pulse indicator if there are unseen messages"""
+        chat_room = self.chat_room
+        if (chat_room and 
+            chat_room.messages.exists() and 
+            not chat_room.seen_by.filter(id=user.id).exists()):
+            return "chat-room-pulse"
+        return ""
+
 
 class TaskVote(models.Model):
     class Value(models.IntegerChoices):
         DOWN = -1, _("Against")
         UP = 1, _("For")
 
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     task = models.ForeignKey(
         Task,
         related_name="votes",
@@ -128,7 +136,6 @@ class TaskEvaluation(models.Model):
         SUCCESS = "success", _("Success")
         FAILURE = "failure", _("Failure")
 
-    id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     task = models.ForeignKey(
         Task,
         related_name="evaluations",

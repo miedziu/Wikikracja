@@ -35,14 +35,13 @@ class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
         translation.activate(s.LANGUAGE_CODE)
 
-        logging.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=logging.INFO)
         HOST = get_site_domain()
 
         INFO_URL = "https://wikikracja.pl/powiadomienia-email/"
 
         def zliczaj_wszystko():
 
-            logging.info(f'zliczaj_wszystko() run ok')
+            log.info(f'zliczaj_wszystko() run ok')
 
             # POPRZEDNIO:
             # propozycja = 1
@@ -217,9 +216,13 @@ class Command(BaseCommand):
                 if existing_room is not None:
                     existing_room.title = title
                     existing_room.save()
-                # if not - create new room
+                # if not - create new room (use get_or_create to handle race conditions)
                 else:
-                    r = Room.objects.create(title=title, public=False)
-                    r.allowed.set((i, j,))
+                    r, created = Room.objects.get_or_create(
+                        title=title,
+                        defaults={'public': False}
+                    )
+                    if created or r.allowed.count() != 2:
+                        r.allowed.set((i, j,))
 
         log.info(f'vote.py counted all votes')

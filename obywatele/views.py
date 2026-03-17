@@ -38,7 +38,6 @@ from zzz.utils import build_site_url, get_site_domain
 HOST = get_site_domain()
 
 log = logging.getLogger(__name__)
-# logging.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', level=logging.INFO)
 
 signer = TimestampSigner()
 
@@ -406,6 +405,7 @@ def dodaj(request: HttpRequest):
                 message = _('The new user has been saved')
                 success(request, (message))
 
+                log.info(f'EMAIL_DIAG trigger=new_citizen_proposed source=obywatele.views.dodaj actor_user_id={request.user.id} actor_username={request.user.username} candidate_user_id={candidate.id} candidate_username={candidate.username} subject={_("New citizen has been proposed")}')
                 SendEmailToAll(
                           _('New citizen has been proposed'),
                           f'{request.user.username} ' + str(_('proposed new citizen\nYou can approve him/her here:')) + f' {build_site_url(f"/obywatele/poczekalnia/{candidate.id}")}'
@@ -647,17 +647,22 @@ def SendEmailToAll(subject, message):
     info_url = "https://wikikracja.pl/powiadomienia-email/"
     email_footer = _("Why you received this email? Here is explanation: {url}").format(url=info_url)
 
+    recipients = list(User.objects.filter(is_active=True).values_list('email', flat=True))
     email_message = EmailMessage(
         from_email=str(s.DEFAULT_FROM_EMAIL),
-        bcc = list(User.objects.filter(is_active=True).values_list('email', flat=True)),
+        bcc=recipients,
         subject=f'[{HOST}] {subject}',
         body=message + "\n\n" + email_footer,
         )
-    # log.info(f'subject: {subject} \n message: {message}')
-    
+    log.info(f'Sending email to {len(recipients)} recipients; subject: {subject}')
+
     def _send_with_delay():
-        time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
-        email_message.send(fail_silently=False)
+        try:
+            time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
+            email_message.send(fail_silently=False)
+            log.info(f'Email sent successfully; subject: {subject}')
+        except Exception as e:
+            log.error(f'Failed to send email; subject: {subject}; error: {e}', exc_info=True)
 
     t = threading.Thread(target=_send_with_delay)
     t.setDaemon(True)
@@ -695,6 +700,7 @@ def set_onboarding_email_confirmed(sender, request, email_address, **kwargs):
     try:
         time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
         send_mail(subject, message, s.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+        log.info(f'Onboarding email sent successfully after confirmation to {user.email}; subject: {subject}')
     except Exception as e:
         log.error(f'Failed sending onboarding email after confirmation: {e}')
 

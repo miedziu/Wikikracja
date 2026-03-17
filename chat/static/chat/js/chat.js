@@ -42,9 +42,19 @@ $(() => {
             }
         }
 
-        // Get locally stored last room ID
+        // Build set of room IDs the user actually has access to (rendered in DOM by server)
+        const allowedRoomIds = new Set(
+            $('.room-link[data-room-id]').map((_, el) => parseInt($(el).data('room-id'))).get()
+        );
+
+        // Get locally stored last room ID, but only if it's in the allowed list
         if (!room_id && localStorage.lastUsedRoomID) {
-            room_id = localStorage.lastUsedRoomID;
+            let storedId = parseInt(localStorage.lastUsedRoomID);
+            if (allowedRoomIds.has(storedId)) {
+                room_id = storedId;
+            } else {
+                delete localStorage.lastUsedRoomID;
+            }
         }
 
         // Check if room_id was passed from backend
@@ -52,12 +62,13 @@ $(() => {
             room_id = LAST_USED_ROOM_ID;
         }
 
-        // Find the room with the lowest number if no room_id is set
+        // Find the first public room if no room_id is set
         if (!room_id) {
-            let roomElements = $('.room-link[data-room-id]');
-            if (roomElements.length > 0) {
-                let roomIds = roomElements.map((_, el) => parseInt($(el).data('room-id'))).get();
-                room_id = Math.max(...roomIds);
+            let publicRooms = $('.room-link[data-room-id][data-room-type="public"]');
+            if (publicRooms.length > 0) {
+                room_id = parseInt($(publicRooms[0]).data('room-id'));
+            } else if (allowedRoomIds.size > 0) {
+                room_id = [...allowedRoomIds][0];
             }
         }
 
@@ -91,6 +102,11 @@ export async function onRoomTryJoin(room_id) {
     }
 
     DOM_API.getRoomLinkDiv(room_id).addClass("joined");
+    
+    // Expand category containing this room
+    if (typeof window.expandCategoryForRoom === 'function') {
+        window.expandCategoryForRoom(room_id);
+    }
 
     // already in the room
     if (current_room == room_id) {
@@ -103,7 +119,26 @@ export async function onRoomTryJoin(room_id) {
     }
 
     RoomLock.lock();
-    let response = await WS_API.joinRoom(room_id);
+    let response;
+    try {
+        response = await WS_API.joinRoom(room_id);
+    } catch (error) {
+        RoomLock.unlock();
+        if (error === 'ROOM_INVALID' || error === 'ACCESS_DENIED') {
+            delete localStorage.lastUsedRoomID;
+            DOM_API.getRoomLinkDiv(room_id).removeClass("joined");
+            let roomElements = $('.room-link[data-room-id][data-room-type="public"]');
+            if (roomElements.length > 0) {
+                let fallbackId = parseInt($(roomElements[0]).data('room-id'));
+                if (fallbackId != room_id) {
+                    onRoomTryJoin(fallbackId);
+                }
+            }
+        } else {
+            alert(error);
+        }
+        return;
+    }
     RoomLock.unlock();
 
     localStorage.lastUsedRoomID = room_id;

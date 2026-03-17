@@ -16,9 +16,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         ts = timezone.now().strftime('%Y-%m-%d %H:%M:%S%z')
         self.stdout.write(f'[{ts}] Starting chat_rooms command...')
-        logging.basicConfig(filename='/var/log/wiki.log', datefmt='%d-%b-%y %H:%M:%S', 
-                    format='%(asctime)s %(levelname)s %(funcName)s() %(message)s', 
-                    level=logging.INFO)
 
         # Allow active user access to all public rooms
         public_rooms = Room.objects.filter(public=True)
@@ -44,6 +41,11 @@ class Command(BaseCommand):
             elif last_message.time > (timezone.now() - td(days=s.ARCHIVE_PUBLIC_CHAT_ROOM)):  # unarchive
                 room.archived = False  # unarchive
                 room.save()
+            
+            # Skip deletion for protected rooms (for tasks, voting) - they should only be deleted when the task/vote is deleted
+            if room.protected:
+                continue
+                
             if last_message.time < (timezone.now() - td(days=s.DELETE_PUBLIC_CHAT_ROOM)):  # delete after 1 year
                 log.info(f'Chat room {room.title} deleted.')
                 room.delete()  # delete

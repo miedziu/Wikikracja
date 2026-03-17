@@ -43,6 +43,7 @@ def dodaj(request: HttpRequest):
             message = _("New proposal has been saved.")
             messages.success(request, (message))
 
+            log.info(f'EMAIL_DIAG trigger=new_law_proposal source=glosowania.views.dodaj actor_user_id={request.user.id} actor_username={request.user.username} decision_id={form.id} subject={_("New law proposal")}')
             SendEmail(
                 _('New law proposal'),
                 _('{user} added new law proposal\nYou can read it here: {url}').format(
@@ -223,17 +224,11 @@ def details(request:HttpRequest, pk: int):
     prev = Decyzja.objects.filter(pk__lt=obj.pk, status = szczegoly.status).order_by('-pk').first()
     next = Decyzja.objects.filter(pk__gt=obj.pk, status = szczegoly.status).order_by('pk').first()
     
-    # Find associated chat room
-    room_title = _("Vote #%(id)s: %(title)s") % {"id": szczegoly.pk, "title": szczegoly.title[:20]}
-
-    chat_room = Room.objects.filter(title=room_title).first()
+    # Find associated chat room using model method
+    chat_room = szczegoly.get_chat_room()
     
     # Check if chat room has unseen messages
-    chat_room_pulse_class = ""
-    if chat_room and request.user.is_authenticated:
-        if (chat_room.messages.exists() and 
-            not chat_room.seen_by.filter(id=request.user.id).exists()):
-            chat_room_pulse_class = "chat-room-pulse"
+    chat_room_pulse_class = szczegoly.get_chat_room_pulse_class(request.user)
     
     # Query arguments for this decision
     arguments = Argument.objects.filter(decyzja=pk).select_related('author')
@@ -377,17 +372,22 @@ def SendEmail(subject: str, message: str):
     info_url = "https://wikikracja.pl/powiadomienia-email/"
     email_footer = _("Why you received this email? Here is explanation: {url}").format(url=info_url)
 
+    recipients = list(User.objects.filter(is_active=True).values_list('email', flat=True))
     email_message = EmailMessage(
         from_email=str(s.DEFAULT_FROM_EMAIL),
-        bcc = list(User.objects.filter(is_active=True).values_list('email', flat=True)),
+        bcc=recipients,
         subject=f'[{HOST}] {subject}',
         body=message + "\n\n" + email_footer,
         )
-    # log.info(f'subject: {subject} \n message: {message}')
-    
+    log.info(f'Sending email to {len(recipients)} recipients; subject: {subject}')
+
     def _send_with_delay():
-        time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
-        email_message.send(fail_silently=False)
+        try:
+            time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
+            email_message.send(fail_silently=False)
+            log.info(f'Email sent successfully; subject: {subject}')
+        except Exception as e:
+            log.error(f'Failed to send email; subject: {subject}; error: {e}', exc_info=True)
 
     t = threading.Thread(target=_send_with_delay)
     t.setDaemon(True)
@@ -420,21 +420,9 @@ def rejected(request: HttpRequest):
 def proposition(request: HttpRequest):
     votings = Decyzja.objects.filter(status=1).order_by('data_referendum_start')
     
-    # Add chat room info for each voting
+    # Add chat room pulse class for each voting
     for voting in votings:
-        room_title = _("Vote #%(id)s: %(title)s") % {"id": voting.pk, "title": voting.title[:20]}
-        chat_room = Room.objects.filter(title=room_title).first()
-        voting.chat_room = chat_room
-        
-        # Check for unseen messages
-        if chat_room and request.user.is_authenticated:
-            if (chat_room.messages.exists() and 
-                not chat_room.seen_by.filter(id=request.user.id).exists()):
-                voting.chat_room_pulse_class = "chat-room-pulse"
-            else:
-                voting.chat_room_pulse_class = ""
-        else:
-            voting.chat_room_pulse_class = ""
+        voting.chat_room_pulse_class = voting.get_chat_room_pulse_class(request.user)
     
     return render(request, 'glosowania/proposition.html', {'votings': votings})
 
@@ -443,21 +431,9 @@ def proposition(request: HttpRequest):
 def discussion(request: HttpRequest):
     votings = Decyzja.objects.filter(status=2).order_by('data_referendum_start')
     
-    # Add chat room info for each voting
+    # Add chat room pulse class for each voting
     for voting in votings:
-        room_title = _("Vote #%(id)s: %(title)s") % {"id": voting.pk, "title": voting.title[:20]}
-        chat_room = Room.objects.filter(title=room_title).first()
-        voting.chat_room = chat_room
-        
-        # Check for unseen messages
-        if chat_room and request.user.is_authenticated:
-            if (chat_room.messages.exists() and 
-                not chat_room.seen_by.filter(id=request.user.id).exists()):
-                voting.chat_room_pulse_class = "chat-room-pulse"
-            else:
-                voting.chat_room_pulse_class = ""
-        else:
-            voting.chat_room_pulse_class = ""
+        voting.chat_room_pulse_class = voting.get_chat_room_pulse_class(request.user)
     
     return render(request, 'glosowania/discussion.html', {'votings': votings})
 
@@ -466,21 +442,9 @@ def discussion(request: HttpRequest):
 def referendum(request: HttpRequest):
     votings = Decyzja.objects.filter(status=3).order_by('data_referendum_start')
     
-    # Add chat room info for each voting
+    # Add chat room pulse class for each voting
     for voting in votings:
-        room_title = _("Vote #%(id)s: %(title)s") % {"id": voting.pk, "title": voting.title[:20]}
-        chat_room = Room.objects.filter(title=room_title).first()
-        voting.chat_room = chat_room
-        
-        # Check for unseen messages
-        if chat_room and request.user.is_authenticated:
-            if (chat_room.messages.exists() and 
-                not chat_room.seen_by.filter(id=request.user.id).exists()):
-                voting.chat_room_pulse_class = "chat-room-pulse"
-            else:
-                voting.chat_room_pulse_class = ""
-        else:
-            voting.chat_room_pulse_class = ""
+        voting.chat_room_pulse_class = voting.get_chat_room_pulse_class(request.user)
     
     return render(request, 'glosowania/referendum.html', {'votings': votings})
 
