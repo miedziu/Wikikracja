@@ -232,6 +232,18 @@ $(".room-name").click(function() {
     }
 });
 
+$(document).on('click', '.enable-notifications-btn', async function(e) {
+    e.preventDefault();
+    try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+            location.reload();
+        }
+    } catch (error) {
+        console.error('Error requesting notification permission:', error);
+    }
+});
+
 $(function() {
     if (!Notification) {
         return;

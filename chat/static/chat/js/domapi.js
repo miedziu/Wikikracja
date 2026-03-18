@@ -298,7 +298,7 @@ export default class DomApi {
 
 
     addPermissionBanner() {
-        $('.chat-page-header').append("<button type='button' class='alert alert-info p-1 m-1' onclick='Notification.requestPermission().then(() => location.reload())'><i class='far fa-bell-slash'></i> " + _("Click here to enable notifications") + " <i class ='far fa-bell-slash'></i></button>")
+        $('.chat-page-header').append("<button type='button' class='alert alert-info p-1 m-1 enable-notifications-btn'><i class='far fa-bell-slash'></i> " + _("Click here to enable notifications") + " <i class ='far fa-bell-slash'></i></button>")
     }
 
     showCopyFeedback(button, message, success) {
