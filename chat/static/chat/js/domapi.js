@@ -273,7 +273,17 @@ export default class DomApi {
     }
 
     setRoomNotifications(room_id, is_enabled) {
-        $(".notif-switch[data-room-id='" + room_id + "']").prop("disabled", false).prop('checked', is_enabled);
+        const $btn = $(".notif-switch[data-room-id='" + room_id + "']");
+        $btn.prop("disabled", false);
+        $btn.data("enabled", is_enabled);
+        
+        // Update icon: bell if enabled, bell-slash if disabled
+        const $icon = $btn.find("i");
+        if (is_enabled) {
+            $icon.removeClass("fa-bell-slash").addClass("fa-bell");
+        } else {
+            $icon.removeClass("fa-bell").addClass("fa-bell-slash");
+        }
     }
 
     clearRoomData() {

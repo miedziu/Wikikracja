@@ -77,8 +77,21 @@ $(document).on('click', '.attachment-image-container', function(e) {
     DOM_API.openBigImage(srcs);
 });
 
-$(document).on('input', '.notif-switch', function() {
-    onToggleNotifications($(this).data("room-id"), $(this).is(":checked"));
+$(document).on('click', '.notif-switch', function() {
+    const $btn = $(this);
+    const currentState = $btn.data("enabled") === "true" || $btn.data("enabled") === true;
+    const newState = !currentState;
+    
+    // Update UI immediately for instant feedback
+    $btn.data("enabled", newState);
+    const $icon = $btn.find("i");
+    if (newState) {
+        $icon.removeClass("fa-bell-slash").addClass("fa-bell");
+    } else {
+        $icon.removeClass("fa-bell").addClass("fa-bell-slash");
+    }
+    
+    onToggleNotifications($btn.data("room-id"), newState);
 });
 
 $(document).on('keydown', function(e) {

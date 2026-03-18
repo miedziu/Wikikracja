@@ -332,6 +332,10 @@
     padding: 4px;
 }
 
+.notif-switch {
+    color: var(--bs-light);
+}
+
 .copy-link-btn {
     position: relative;
     color: var(--bs-light);
@@ -343,11 +347,6 @@
     right: -0.2rem;
     font-size: 0.65rem;
     z-index: 2;
-}
-
-input[type='checkbox'] {
-    width: 1.2rem;
-    height: 1.2rem;
 }
 
 .btn:focus-visible {

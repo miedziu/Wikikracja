@@ -1,4 +1,6 @@
 # PILNE
+- ikona do powiadomień na czacie
+- Ostrzeżenie, że ktoś będzie z niedługo usunięty z grupy
 - Chat room dla Task i Vote znika za szybko
 - Dodać opcję wyłączania powiadomień email (Unsubscribe). Dodać opcję likwidacji własnego konta
 - Wersjonowanie Ogłoszeń i Przepisów. Wydaje się, że to skomplikuje kod.

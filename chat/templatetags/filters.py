@@ -45,3 +45,9 @@ def has_messages(user):
     #     cache.set("has_messages", rooms_with_new_messages, timeout=60)
     # count = rooms_with_new_messages.count()
     # return "chat-has-messages" if count > 0 else ""
+
+
+@register.filter('is_muted_by')
+def is_muted_by(room, user):
+    """Returns True if the room is muted by the user"""
+    return room.muted_by.filter(id=user.id).exists()

@@ -9,11 +9,14 @@
   </div>
 
   <div class="room-controls">
-    <input type='checkbox'
-      class="notif-switch"
-      id='notif-switch-{{room.id}}'
-      data-room-id="{{room.id}}">
-    <label for='notif-switch-{{room.id}}' class="mb-0"> <i class="far fa-bell px-1"></i> </label>
+    <button type="button"
+      class="btn btn-link btn-sm p-0 notif-switch"
+      data-room-id="{{ room.id }}"
+      data-enabled="{% if room|is_muted_by:user %}false{% else %}true{% endif %}"
+      title="{% trans 'Toggle notifications (chat and email)' %}"
+      aria-label="{% blocktrans with room_name=room|name_for:user %}Toggle notifications for room {{ room_name }}{% endblocktrans %}">
+      <i class="far fa-bell{% if room|is_muted_by:user %}-slash{% endif %}"></i>
+    </button>
     <button type="button"
       class="btn btn-link btn-sm p-0 copy-link-btn copy-room-url"
       data-room-id="{{ room.id }}"
