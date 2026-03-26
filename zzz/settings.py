@@ -4,6 +4,7 @@ import mimetypes
 from os import getenv, path
 from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
+from firebase_admin import credentials
 from zzz.settings_base import *
 
 # Register additional MIME types not recognized by default
@@ -174,6 +175,7 @@ TEMPLATES = [
                 'zzz.context_processors.footer',
                 'zzz.context_processors.site_description',
                 'zzz.context_processors.vapid_public_key',
+                'zzz.context_processors.firebase_config',
             ],
             'debug': False
         },
@@ -412,30 +414,34 @@ PUSH_NOTIFICATIONS = {
     #     'KEY_ID': getenv('APNS_KEY_ID', ''),
     #     'TOPIC': getenv('APNS_TOPIC', ''),  # Bundle ID
     # },
-    # 'FCM': {
-    #     'API_KEY': getenv('FCM_API_KEY', ''),
-    #     'SERVER_KEY': getenv('FCM_SERVER_KEY', ''),
-    #     'PROJECT_ID': getenv('FCM_PROJECT_ID', ''),
-    # },
     'WEBPUSH': {
         'VAPID_PUBLIC_KEY': getenv('VAPID_PUBLIC_KEY', ''),
     }
 }
 
-# Import the firebase service
-# from firebase_admin import auth
+APP_ID = getenv('FIREBASE_APP_ID', ''),
+FIREBASE_PROJECT_ID = getenv('FIREBASE_PROJECT_ID', ''),
+FIREBASE_CONFIG = {
+    'apiKey': getenv('FIREBASE_API_KEY', ''),
+    'authDomain': f"{FIREBASE_PROJECT_ID[0]}.firebaseapp.com",  # Will be constructed from project ID
+    'projectId': FIREBASE_PROJECT_ID[0],
+    'storageBucket': f"{FIREBASE_PROJECT_ID[0]}.appspot.com",  # Will be constructed from project ID
+    'messagingSenderId': APP_ID[0].split(':')[1] if APP_ID else '',
+    'appId': APP_ID[0]
+}
 
 # Initialize the default app (either use `GOOGLE_APPLICATION_CREDENTIALS` environment variable, or pass a firebase_admin.credentials.Certificate instance)
-# You can also pass options. One of them is httpTimeout: This sets the timeout (in seconds) for outgoing HTTP connections initiated by the SDK.
-# import firebase_admin
-# default_app = firebase_admin.initialize_app()
+FIREBASE_CERT_PATH = getenv('FIREBASE_CERT_PATH')
+if FIREBASE_CERT_PATH is not None:
+    serviceAccount = credentials.Certificate(FIREBASE_CERT_PATH)
+    import firebase_admin
+    firebase_app = firebase_admin.initialize_app(credential=serviceAccount)
 
-# FIREBASE_APP: Firebase app instance that is used to send the push notification. If not provided, the app will be using the default app instance that you’ve instantiated with firebase_admin.initialize_app().
 PUSH_NOTIFICATIONS_SETTINGS = {
-        # "APNS_CERTIFICATE": getenv('APNS_CERTIFICATE', ''),  # Path to certificate file
-        # "APNS_TOPIC": getenv('APNS_TOPIC', ''),  # Bundle ID like "com.example.push_test",
-        # "WNS_PACKAGE_SECURITY_ID": "[your package security id, e.g: 'ms-app://e-3-4-6234...']",
-        # "WNS_SECRET_KEY": "[your app secret key, e.g.: 'KDiejnLKDUWodsjmewuSZkk']",
-        "WP_PRIVATE_KEY": getenv('VAPID_PRIVATE_KEY', ''), #"/path/to/your/private.pem", # Absolute path to your private certificate file: os.path.join(BASE_DIR, “private_key.pem”)
-        "WP_CLAIMS": {'sub': f"mailto:{getenv('VAPID_ADMIN_EMAIL', 'admin@example.com')}"}
+    # "APNS_CERTIFICATE": getenv('APNS_CERTIFICATE', ''),  # Path to certificate file
+    # "APNS_TOPIC": getenv('APNS_TOPIC', ''),  # Bundle ID like "com.example.push_test",
+    # "WNS_PACKAGE_SECURITY_ID": "[your package security id, e.g: 'ms-app://e-3-4-6234...']",
+    # "WNS_SECRET_KEY": "[your app secret key, e.g.: 'KDiejnLKDUWodsjmewuSZkk']",
+    "WP_PRIVATE_KEY": getenv('VAPID_PRIVATE_KEY', ''),
+    "WP_CLAIMS": {'sub': f"mailto:{getenv('VAPID_ADMIN_EMAIL', 'admin@example.com')}"}
 }

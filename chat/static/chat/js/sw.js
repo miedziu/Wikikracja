@@ -65,14 +65,14 @@ self.addEventListener('push', (event) => {
     const title = notificationData.title || 'Chat Message';
     const options = {
         body: notificationData.body || '',
-        icon: notificationData.icon || '/static/favicon.ico',
-        badge: notificationData.badge || '/static/favicon.ico',
+        icon: notificationData.icon || '/favicon.ico',
+        badge: notificationData.badge || '/favicon.ico',
         vibrate: [200, 100, 200],
         requireInteraction: true,
         data: {
-            room_id: notificationData.data.room_id,
-            click_action: notificationData.data.click_action || '/chat',
-            url: notificationData.data.click_action || '/chat'
+            room_id: notificationData.data?.room_id ?? 0,
+            click_action: notificationData.data?.click_action || '/chat',
+            url: notificationData.data?.click_action || '/chat'
         },
         actions: [
             {

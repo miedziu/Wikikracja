@@ -48,3 +48,4 @@ out.csv
 data/*
 *.lock
 *.bak
+*.json

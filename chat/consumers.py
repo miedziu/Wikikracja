@@ -4,6 +4,7 @@ import os
 
 from django.conf import settings
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from firebase_admin import messaging
 from .exceptions import ClientError
 from .utils import get_room_or_error, OnlineUserRegistry, RoomRegistry, HandledMessage, Handlers, helper_method
 from .models import Message, Room, MessageVote, MessageHistory, MessageHistoryEntry, MessageAttachment
@@ -626,8 +627,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     message = json.dumps({
                         "title": title,
                         "body": body,
-                        "icon":'/static/favicon.ico',
-                        "badge":'/static/favicon.ico',
+                        "icon":'/favicon.ico',
+                        "badge":'/favicon.ico',
                         "data": {
                             'click_action': deep_link,
                             'room_id': room_id,
@@ -641,23 +642,33 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     log.error(f"WebPush failed for user {user.id}: {e}")
             
             # Send to FCM devices (Android)
-            # fcm_devices = GCMDevice.objects.filter(user=user, active=True)
-            # if fcm_devices.exists():
-            #     try:
-            #         message = json.dumps({
-            #             "title": title,
-            #             "body": body,
-            #             "icon":'/static/favicon.ico',
-            #             "data": {
-            #                 'click_action': deep_link,
-            #                 'room_id': room_id,
-            #                 }
-            #             }
-            #         )
-            #         fcm_devices.send_message(message)
-            #         any_sent = True
-            #     except Exception as e:
-            #         log.error(f"FCM failed for user {user.id}: {e}")
+            fcm_devices = GCMDevice.objects.filter(user=user, active=True)
+            if fcm_devices.exists():
+                try:                    
+                    message = messaging.Message(
+                        notification=messaging.Notification(
+                            title=title,
+                            body=body                           
+                        )
+                    )
+                    # When using messaging.Message send twice, when using "message" as string send general "Chat Message" as title/body
+                    fcm_devices.send_message(message)
+                    
+                    # Not working below
+                    # message = json.dumps({
+                    #     "title": title,
+                    #     "body": body,
+                    #     "icon":'/favicon.ico',
+                    #     "data": {
+                    #         'click_action': deep_link,
+                    #         'room_id': room_id,
+                    #         }
+                    #     }
+                    # )
+                    # fcm_devices.send_message(message)
+                    any_sent = True
+                except Exception as e:
+                    log.error(f"FCM failed for user {user.id}: {e}")
             
             # # Send to APNS devices (iOS)
             # apns_devices = APNSDevice.objects.filter(user=user, active=True)
@@ -666,7 +677,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             #         message = json.dumps({
             #             "title": title,
             #             "body": body,
-            #             "icon":'/static/favicon.ico',
+            #             "icon":'/favicon.ico',
             #             "badge":1,
             #             "sound":'default',
             #             "data": {

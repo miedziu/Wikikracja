@@ -6,7 +6,7 @@ export function makeNotification(n) {
 
     if (Notification && Notification.permission == 'granted') {
         let notification = new Notification(n.title, {
-            icon: n.link,
+            icon: n.link ?? "/favicon.ico",
             body: n.body,
         });
         notification.onclick = function() {

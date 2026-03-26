@@ -13,9 +13,22 @@ const PushNotificationManager = {
     
     // Platform detection
     detectPlatform() {
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const hasFirebase = typeof firebase !== 'undefined' && firebase.messaging;
+        
+        // On Android with Firebase, prefer FCM over WebPush
+        if (isAndroid && hasFirebase) {
+            this.supportedPlatforms = ['fcm'];
+            return {
+                webpush: false,
+                fcm: true,
+                apns: false
+            };
+        } 
+        
         const platform = {
             webpush: 'Notification' in window && 'serviceWorker' in navigator,
-            fcm: false, // Will be detected after Firebase init
+            fcm: false,
             apns: 'Notification' in window && 'serviceWorker' in navigator && navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
         };
         
@@ -37,6 +50,9 @@ const PushNotificationManager = {
         if (platform.webpush) {
             this.currentPlatform = 'webpush';
             await this.initWebPush();
+        } else if (platform.fcm) {
+            this.currentPlatform = 'fcm';
+            await this.initFCM();
         } else if (platform.apns) {
             this.currentPlatform = 'apns';
             await this.initAPNS();
@@ -208,6 +224,62 @@ const PushNotificationManager = {
             }, timeout);
         });
     },
+        
+    // FCM initialization (Firebase Cloud Messaging)
+    async initFCM() {
+        try {
+            // Check if Firebase is loaded
+            if (typeof firebase === 'undefined') {
+                console.warn('Firebase SDK not loaded');
+                return false;
+            }
+
+            // Initialize Firebase app if not already done
+            let app;
+            try {
+                app = firebase.app();
+            } catch (e) {
+                // App doesn't exist, create it
+                const firebaseConfig = window.FIREBASE_CONFIG || {};
+                if (!firebaseConfig.apiKey) {
+                    console.error('Firebase configuration is missing or incomplete. Check FIREBASE_CONFIG.');
+                    return false;
+                }
+                app = firebase.initializeApp(firebaseConfig);
+                console.log('Firebase app initialized with config:', firebaseConfig);
+            }
+            
+            // Get FCM token
+            const messaging = firebase.messaging();
+            const token = await messaging.getToken({
+                // vapidKey: window.VAPID_PUBLIC_KEY // Optional for web
+            });
+            
+            if (!token) {
+                console.warn('FCM token retrieval failed');
+                return false;
+            }
+            
+            console.log('FCM token obtained:', token);
+            
+            // Send token to server (no device_type for FCM - device_id field is for Android native ID)
+            await this.registerDevice('fcm', token);
+            
+            // Set up foreground message handler
+            messaging.onMessage((payload) => {
+                console.log('FCM foreground message:', payload);
+                this.showNotification(payload.notification);
+            });
+            
+            this.isEnabled = true;
+            this.currentPlatform = 'fcm';
+            console.log('FCM initialized successfully');
+            return true;            
+        } catch (error) {
+            console.error('Error initializing FCM:', error);
+            return false;
+        }
+    },
     
     // // APNS initialization (Safari/iOS)
     // async initAPNS() {
@@ -233,59 +305,12 @@ const PushNotificationManager = {
     //     }
     // },
     
-    // // FCM initialization (Firebase Cloud Messaging)
-    // async initFCM() {
-    //     try {
-    //         // Check if Firebase is loaded
-    //         if (typeof firebase === 'undefined') {
-    //             console.warn('Firebase SDK not loaded');
-    //             return false;
-    //         }
-            
-    //         // Initialize Firebase if not already done
-    //         if (!firebase.apps.length) {
-    //             // Firebase config should be provided by Django template
-    //             const firebaseConfig = window.FIREBASE_CONFIG || {};
-    //             firebase.initializeApp(firebaseConfig);
-    //         }
-            
-    //         // Get FCM token
-    //         const messaging = firebase.messaging();
-    //         const token = await messaging.getToken({
-    //             vapidKey: window.FCM_VAPID_KEY // Optional for web
-    //         });
-            
-    //         if (!token) {
-    //             console.warn('FCM token retrieval failed');
-    //             return false;
-    //         }
-            
-    //         // Send token to server
-    //         await this.registerDevice('fcm', token, 'Firebase');
-            
-    //         // Set up foreground message handler
-    //         messaging.onMessage((payload) => {
-    //             console.log('FCM foreground message:', payload);
-    //             this.showNotification(payload.notification);
-    //         });
-            
-    //         this.isEnabled = true;
-    //         this.currentPlatform = 'fcm';
-    //         console.log('FCM initialized successfully');
-    //         return true;
-            
-    //     } catch (error) {
-    //         console.error('Error initializing FCM:', error);
-    //         return false;
-    //     }
-    // },
-    
     // Register device with server
     async registerDevice(platform, registration, deviceType = '') {
         try {
-            const registrationJson = registration.toJSON();
-            const p256dh = registrationJson.keys.p256dh;
-            const auth = registrationJson.keys.auth;
+            const registrationJson = registration.toJSON ? registration.toJSON() : registration;
+            const p256dh = registrationJson.keys?.p256dh || '';
+            const auth = registrationJson.keys?.auth || '';
             const response = await fetch('/chat/api/push/register/', {
                 method: 'POST',
                 headers: {
@@ -294,10 +319,10 @@ const PushNotificationManager = {
                 },
                 body: JSON.stringify({
                     platform: platform,
-                    registration_id: registration.endpoint,
+                    registration_id: registration.endpoint || registration,
                     device_type: deviceType,
-                    p256dh: p256dh || '',
-                    auth: auth || ''
+                    p256dh: p256dh,
+                    auth: auth
                 })
             });
             const data = await response.json();
@@ -359,8 +384,8 @@ const PushNotificationManager = {
             
             const notif = new Notification(notification.title || 'Chat Message', {
                 body: notification.body || '',
-                icon: notification.icon || '/static/favicon.ico',
-                badge: notification.badge || '/static/favicon.ico',
+                icon: notification.icon || '/favicon.ico',
+                badge: notification.badge || '/favicon.ico',
                 tag: `chat-${notification.room_id || 'general'}`,
                 requireInteraction: true
             });

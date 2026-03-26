@@ -33,20 +33,20 @@
 	<script src="{% static 'chat/js/jquery-4.0.0.min.js' %}"></script>
 	<script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
 
-	<!-- Firebase SDK (for FCM on Android) -->
-  {% comment %} <script type="module" src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js"></script>
-  <script type="module" src="https://www.gstatic.com/firebasejs/12.10.0/firebase-messaging.js"></script> {% endcomment %}
+	<!-- Firebase SDK (for FCM on Android) - using compat version for global namespace -->
+  <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-messaging-compat.js"></script>
   
-  <!-- Push notifications manager -->
-  <script src="{% static 'chat/js/push-notifications.js' %}" type="module"></script>
-
   <script>
     // Firebase configuration for FCM (Android)
-    // window.FIREBASE_CONFIG = {{ firebase_config|safe }};
+    // firebase_config is already a JSON string from the context processor
+    window.FIREBASE_CONFIG = JSON.parse('{{ firebase_config|safe }}');
     
     // VAPID public key for WebPush
     window.VAPID_PUBLIC_KEY = "{{ vapid_public_key|default:'' }}";
   </script>
+  <!-- Push notifications manager -->
+  <script src="{% static 'chat/js/push-notifications.js?2' %}" type="module"></script>
 	
   {% bootstrap_messages %}
   {% bootstrap_javascript %}

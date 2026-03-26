@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 from django.shortcuts import render, redirect
@@ -165,10 +166,60 @@ def service_worker(request):
         if not sw_path:
             return HttpResponse("Service Worker not found", status=404)
     
-    with open(sw_path, 'rb') as f:
-        response = HttpResponse(f.read(), content_type='application/javascript')
-        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-        response['Pragma'] = 'no-cache'
-        response['Expires'] = '0'
-        response['Service-Worker-Allowed'] = "/"
-        return response
+    with open(sw_path, 'r', encoding='utf-8') as f:
+        sw_content = f.read()
+    
+#     # Inject Firebase config if available
+#     firebase_config = settings.FIREBASE_CONFIG or {}
+#     if firebase_config and 'apiKey' in firebase_config:
+#         # Add Firebase initialization code to the service worker
+#         firebase_sw_code = f"""
+# // Firebase Messaging integration
+# const firebaseConfig = {json.dumps(firebase_config)};
+# importScripts('https://www.gstatic.com/firebasejs/12.10.0/firebase-app-compat.js', 'https://www.gstatic.com/firebasejs/12.10.0/firebase-messaging-compat.js');
+# firebase.initializeApp(firebaseConfig);
+# const messaging = firebase.messaging();
+
+# // Handle background FCM messages
+# messaging.onBackgroundMessage((payload) => {{
+#     console.log('FCM background message:', payload);
+#     self.dispatchEvent(new CustomEvent('fcmbackgroundmessage', {{ detail: payload }}));
+# }});
+# """
+#         # Insert before the first self.addEventListener
+#         insert_pos = sw_content.find('self.addEventListener')
+#         if insert_pos > 0:
+#             sw_content = sw_content[:insert_pos] + firebase_sw_code + '\n' + sw_content[insert_pos:]
+    
+    response = HttpResponse(sw_content, content_type='application/javascript')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    response['Service-Worker-Allowed'] = "/"
+    return response
+
+
+def firebase_messaging_sw(request):
+    """Serve the Firebase Messaging service worker JavaScript file with injected Firebase config"""
+    sw_path = os.path.join(settings.BASE_DIR, 'firebase-messaging-sw.js')
+    
+    if not os.path.exists(sw_path):
+        return HttpResponse("Firebase Messaging Service Worker not found", status=404)
+    
+    with open(sw_path, 'r', encoding='utf-8') as f:
+        sw_content = f.read()
+    
+    # Replace placeholder with actual Firebase config from settings
+    firebase_config = settings.FIREBASE_CONFIG or {}
+    if firebase_config and 'apiKey' in firebase_config:
+        sw_content = sw_content.replace(
+            'const firebaseConfig = typeof firebaseConfig !== \'undefined\' ? firebaseConfig : {};',
+            f'const firebaseConfig = {json.dumps(firebase_config)};'
+        )
+    
+    response = HttpResponse(sw_content, content_type='application/javascript')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    response['Service-Worker-Allowed'] = "/"
+    return response
