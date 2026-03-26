@@ -23,9 +23,11 @@ $(() => {
         }
 
         let rooms = await WS_API.getNotificationData();
-        for (let room_id of rooms.rooms) {
-            DOM_API.setRoomNotifications(room_id, true);
-        }
+        const enabledRooms = new Set(rooms.rooms.map(id => parseInt(id)));
+        $('.notif-switch[data-room-id]').each(function() {
+            const id = parseInt($(this).data('room-id'));
+            DOM_API.setRoomNotifications(id, enabledRooms.has(id));
+        });
 
         let room_id;
 

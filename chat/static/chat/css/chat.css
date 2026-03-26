@@ -294,6 +294,11 @@
         border: 2px solid var(--bs-info);
         background: #3399f3;
         color: var(--bs-dark);
+
+        .notif-switch,
+        .copy-link-btn {
+            color: var(--bs-white) !important;
+        }
     }
 
     &.room-not-seen {
