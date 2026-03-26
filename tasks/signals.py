@@ -24,9 +24,11 @@ def create_task_chat_room(sender, instance, created, **kwargs):
             
             room_title = instance.get_chat_room_title()
             
-            # Check if room already exists
-            if Room.objects.filter(title=room_title).exists():
-                log.info(f"Chat room '{room_title}' already exists")
+            # Check if room already exists (e.g. from a previous attempt)
+            existing = Room.objects.filter(title=room_title).first()
+            if existing:
+                log.info(f"Chat room '{room_title}' already exists, linking to task #{instance.id}")
+                Task.objects.filter(pk=instance.pk).update(chat_room=existing)
                 return
             
             # Create new public room
@@ -41,6 +43,9 @@ def create_task_chat_room(sender, instance, created, **kwargs):
             # Allow all active users access to the room
             active_users = User.objects.filter(is_active=True)
             room.allowed.set(active_users)
+            
+            # Link room to task via FK
+            Task.objects.filter(pk=instance.pk).update(chat_room=room)
             
             log.info(f"Created chat room '{room_title}' for task #{instance.id}")
             
@@ -67,13 +72,9 @@ def delete_task_chat_room(sender, instance, **kwargs):
     """
     Automatically delete the associated chat room when a task is deleted
     """
-    from chat.models import Room
-    
-    room_title = instance.get_chat_room_title()
-    
-    try:
-        room = Room.objects.get(title=room_title)
+    room = instance.chat_room
+    if room:
         room.delete()
-        log.info(f"Deleted chat room '{room_title}' for task #{instance.id}")
-    except Room.DoesNotExist:
-        log.info(f"Chat room '{room_title}' does not exist, nothing to delete")
+        log.info(f"Deleted chat room '{room}' for task #{instance.id}")
+    else:
+        log.info(f"No chat room linked to task #{instance.id}, nothing to delete")

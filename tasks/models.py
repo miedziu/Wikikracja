@@ -58,6 +58,14 @@ class Task(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    chat_room = models.ForeignKey(
+        "chat.Room",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="task",
+        verbose_name=_("chat room"),
+    )
 
     objects = TaskQuerySet.as_manager()
 
@@ -75,33 +83,21 @@ class Task(models.Model):
         # Use English prefix (not translated) for consistency in room categorization
         return "Task #%(id)s: %(title)s" % {"id": self.id, "title": self.title[:50]}
 
-    def get_chat_room(self):
-        from chat.models import Room
-        try:
-            return Room.objects.get(title=self.get_chat_room_title())
-        except Room.DoesNotExist:
-            return None
-
     def get_chat_room_url(self):
-        room = self.get_chat_room()
-        if room:
-            return f"{reverse('chat:chat')}#room_id={room.id}"
+        if self.chat_room_id:
+            return f"{reverse('chat:chat')}#room_id={self.chat_room_id}"
         return None
 
     @property
     def chat_room_url(self):
         return self.get_chat_room_url()
 
-    @property
-    def chat_room(self):
-        return self.get_chat_room()
-
     def get_chat_room_pulse_class(self, user):
         """Return CSS class for chat room pulse indicator if there are unseen messages"""
-        chat_room = self.chat_room
-        if (chat_room and 
-            chat_room.messages.exists() and 
-            not chat_room.seen_by.filter(id=user.id).exists()):
+        room = self.chat_room
+        if (room and
+            room.messages.exists() and
+            not room.seen_by.filter(id=user.id).exists()):
             return "chat-room-pulse"
         return ""
 
