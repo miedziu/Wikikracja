@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-18 18:48+0100\n"
+"POT-Creation-Date: 2026-03-27 00:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1518,11 +1518,11 @@ msgstr ""
 msgid "Result"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:112
+#: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:108
 msgid "For"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:111
+#: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:107
 msgid "Against"
 msgstr ""
 
@@ -1734,6 +1734,14 @@ msgstr ""
 
 #: .\home\templates\home\base.html:150
 msgid "Not now"
+msgstr ""
+
+#: .\home\templates\home\base.html:155
+msgid "Notifications are blocked. Please enable them in your browser settings"
+msgstr ""
+
+#: .\home\templates\home\base.html:157
+msgid "Dismiss"
 msgstr ""
 
 #: .\home\templates\home\haslo.html:3
@@ -2452,17 +2460,21 @@ msgstr ""
 msgid "Cancelled"
 msgstr "Cancel"
 
-#: .\tasks\models.py:136 .\tasks\templates\tasks\task_detail.html:74
+#: .\tasks\models.py:67
+msgid "chat room"
+msgstr ""
+
+#: .\tasks\models.py:132 .\tasks\templates\tasks\task_detail.html:74
 #: .\tasks\templates\tasks\task_detail.html:164
 msgid "Success"
 msgstr ""
 
-#: .\tasks\models.py:137 .\tasks\templates\tasks\task_detail.html:75
+#: .\tasks\models.py:133 .\tasks\templates\tasks\task_detail.html:75
 #: .\tasks\templates\tasks\task_detail.html:170
 msgid "Failure"
 msgstr ""
 
-#: .\tasks\signals.py:49
+#: .\tasks\signals.py:56
 #, python-format
 msgid "Discussion room for task: %(task_url)s"
 msgstr ""
