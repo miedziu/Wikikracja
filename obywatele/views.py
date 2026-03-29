@@ -5,34 +5,27 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.messages import success, error
-from django.db.models import Sum, Case, When, Value, IntegerField, Q, Count
+from django.db.models import Case, When, Value, IntegerField, Q
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
-from django.utils.timezone import now
-from datetime import timedelta as td
 from django.utils.translation import gettext_lazy as _
 from random import choice
 from string import ascii_letters, digits
 import logging
-from obywatele.forms import UserForm, ProfileForm, EmailChangeForm, UsernameChangeForm, OnboardingDetailsForm
+from obywatele.forms import SendEmailToAll, UserForm, ProfileForm, EmailChangeForm, UsernameChangeForm, OnboardingDetailsForm
 from obywatele.models import Uzytkownik, Rate
-from django.utils import translation
-from django.core.mail import EmailMessage
 from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 # from django.core.management import call_command
-import threading
 import time
 from obywatele.tables import UzytkownikTable
 from obywatele.filters import UzytkownikFilter
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
-# from django_tables2.export import TableExport
 from allauth.account.signals import user_signed_up, email_confirmed
 from allauth.account.models import EmailAddress
 from django.dispatch import receiver
-from chat import signals
 from zzz.utils import build_site_url, get_site_domain
 
 HOST = get_site_domain()
@@ -598,12 +591,7 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
         rate.save()
         return redirect('obywatele:obywatele_szczegoly', pk)
 
-<<<<<<< HEAD
     total_rate_count = Rate.objects.filter(kandydat=candidate_profile).count()
-=======
-    # Get total number of votes for this candidate
-    votes_count = Rate.objects.filter(kandydat=candidate_profile).count()
->>>>>>> e0e6daf8ed79b0ecd77d59d22b6e648095da14ae
 
     # Previous and Next
     obj = get_object_or_404(User, pk=pk)
@@ -626,11 +614,7 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
             'active': obj.is_active,
             'email_confirmed': email_confirmed,
             'form_completed': form_completed,
-<<<<<<< HEAD
             'total_rate_count': total_rate_count,
-=======
-            'votes_count': votes_count,
->>>>>>> e0e6daf8ed79b0ecd77d59d22b6e648095da14ae
         })
 
 
@@ -653,37 +637,6 @@ def change_password(request: HttpRequest):
 
 def password_generator(size=8, chars=ascii_letters + digits):
     return ''.join(choice(chars) for i in range(size))
-
-
-def SendEmailToAll(subject, message):
-    # bcc: all active users
-    # subject: Custom
-    # message: Custom
-    translation.activate(s.LANGUAGE_CODE)
-
-    info_url = "https://wikikracja.pl/powiadomienia-email/"
-    email_footer = _("Why you received this email? Here is explanation: {url}").format(url=info_url)
-
-    recipients = list(User.objects.filter(is_active=True).values_list('email', flat=True))
-    email_message = EmailMessage(
-        from_email=str(s.DEFAULT_FROM_EMAIL),
-        bcc=recipients,
-        subject=f'[{HOST}] {subject}',
-        body=message + "\n\n" + email_footer,
-        )
-    log.info(f'Sending email to {len(recipients)} recipients; subject: {subject}')
-
-    def _send_with_delay():
-        try:
-            time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
-            email_message.send(fail_silently=False)
-            log.info(f'Email sent successfully; subject: {subject}')
-        except Exception as e:
-            log.error(f'Failed to send email; subject: {subject}; error: {e}', exc_info=True)
-
-    t = threading.Thread(target=_send_with_delay)
-    t.setDaemon(True)
-    t.start()
 
 
 @receiver(user_signed_up)
