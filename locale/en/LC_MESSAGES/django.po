@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-29 15:13+0200\n"
+"POT-Creation-Date: 2026-03-29 15:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgstr ""
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:28
 #: .\elibrary\forms.py:8 .\elibrary\models.py:14
 #: .\elibrary\templates\elibrary\book_confirm_delete.html:15
-#: .\glosowania\models.py:142
+#: .\glosowania\models.py:154
 #: .\glosowania\templates\glosowania\szczegoly.html:214
 #: .\tasks\templates\tasks\task_detail.html:64
 msgid "Author"
@@ -1124,35 +1124,35 @@ msgstr ""
 msgid "and was removed from queue"
 msgstr ""
 
-#: .\glosowania\management\commands\vote.py:100
+#: .\glosowania\management\commands\vote.py:102
 msgid "Signed"
 msgstr ""
 
-#: .\glosowania\management\commands\vote.py:100
+#: .\glosowania\management\commands\vote.py:102
 #: .\glosowania\templates\glosowania\menu.html:30 .\glosowania\views.py:220
 msgid "Discussion"
 msgstr ""
 
-#: .\glosowania\management\commands\vote.py:115
+#: .\glosowania\management\commands\vote.py:117
 msgid "Not enough signatures"
 msgstr ""
 
-#: .\glosowania\management\commands\vote.py:128
+#: .\glosowania\management\commands\vote.py:130
 #: .\glosowania\templates\glosowania\menu.html:34 .\glosowania\views.py:220
 msgid "Referendum"
 msgstr ""
 
-#: .\glosowania\management\commands\vote.py:152
+#: .\glosowania\management\commands\vote.py:154
 #: .\glosowania\templates\glosowania\menu.html:38 .\glosowania\views.py:220
 msgid "Approved"
 msgstr ""
 
-#: .\glosowania\management\commands\vote.py:171 .\glosowania\views.py:220
+#: .\glosowania\management\commands\vote.py:173 .\glosowania\views.py:220
 #: .\tasks\models.py:36 .\tasks\views.py:23
 msgid "Rejected"
 msgstr ""
 
-#: .\glosowania\management\commands\vote.py:187 .\glosowania\views.py:373
+#: .\glosowania\management\commands\vote.py:189 .\glosowania\views.py:373
 #: .\obywatele\forms.py:208 .\obywatele\views.py:651
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
@@ -1221,56 +1221,60 @@ msgstr ""
 msgid "The path this bill took."
 msgstr ""
 
-#: .\glosowania\models.py:127
+#: .\glosowania\models.py:134
+msgid "draft"
+msgstr ""
+
+#: .\glosowania\models.py:139
 msgid "Positive"
 msgstr ""
 
-#: .\glosowania\models.py:128
+#: .\glosowania\models.py:140
 #, fuzzy
 #| msgid "Inactive"
 msgid "Negative"
 msgstr "Inactive"
 
-#: .\glosowania\models.py:135
+#: .\glosowania\models.py:147
 #: .\glosowania\templates\glosowania\delete_argument.html:13
 #: .\glosowania\templates\glosowania\edit_argument.html:10
 msgid "Decision"
 msgstr ""
 
-#: .\glosowania\models.py:147
+#: .\glosowania\models.py:159
 #: .\glosowania\templates\glosowania\delete_argument.html:14
 msgid "Argument Type"
 msgstr ""
 
-#: .\glosowania\models.py:148
+#: .\glosowania\models.py:160
 msgid "Is this a positive or negative argument?"
 msgstr ""
 
-#: .\glosowania\models.py:152
+#: .\glosowania\models.py:164
 msgid "Argument Content"
 msgstr ""
 
-#: .\glosowania\models.py:153
+#: .\glosowania\models.py:165
 msgid "Enter your argument. You can include links."
 msgstr ""
 
-#: .\glosowania\models.py:157
+#: .\glosowania\models.py:169
 #, fuzzy
 #| msgid "Created"
 msgid "Created At"
 msgstr "Created"
 
-#: .\glosowania\models.py:161
+#: .\glosowania\models.py:173
 #: .\glosowania\templates\glosowania\delete_argument.html:22
 #: .\glosowania\templates\glosowania\edit_argument.html:14
 msgid "Last Modified"
 msgstr ""
 
-#: .\glosowania\models.py:166
+#: .\glosowania\models.py:178
 msgid "Argument"
 msgstr ""
 
-#: .\glosowania\models.py:167
+#: .\glosowania\models.py:179
 msgid "Arguments"
 msgstr ""
 

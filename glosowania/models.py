@@ -121,6 +121,18 @@ class Decyzja(models.Model):
             return "chat-room-pulse"
         return ""
 
+    @property
+    def is_author_signed(self):
+        if not self.author_id:
+            return False
+        return ZebranePodpisy.objects.filter(projekt=self, podpis_uzytkownika_id=self.author_id).exists()
+
+    @property
+    def display_title(self):
+        if self.is_author_signed:
+            return self.title
+        return f"{self.title} [{_('draft')}]"
+
 
 class Argument(models.Model):
     ARGUMENT_TYPE_CHOICES = [

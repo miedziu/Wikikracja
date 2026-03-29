@@ -429,7 +429,10 @@ def proposition(request: HttpRequest):
 
 @login_required
 def discussion(request: HttpRequest):
-    votings = Decyzja.objects.filter(status=2).order_by('data_referendum_start')
+    votings = [
+        voting for voting in Decyzja.objects.filter(status=2).order_by('data_referendum_start')
+        if voting.is_author_signed
+    ]
     
     # Add chat room pulse class for each voting
     for voting in votings:
@@ -440,7 +443,10 @@ def discussion(request: HttpRequest):
 
 @login_required
 def referendum(request: HttpRequest):
-    votings = Decyzja.objects.filter(status=3).order_by('data_referendum_start')
+    votings = [
+        voting for voting in Decyzja.objects.filter(status=3).order_by('data_referendum_start')
+        if voting.is_author_signed
+    ]
     
     # Add chat room pulse class for each voting
     for voting in votings:

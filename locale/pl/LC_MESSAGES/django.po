@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-29 15:13+0200\n"
+"POT-Creation-Date: 2026-03-29 15:18+0200\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr "Podtytuł"
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:28
 #: .\elibrary\forms.py:8 .\elibrary\models.py:14
 #: .\elibrary\templates\elibrary\book_confirm_delete.html:15
-#: .\glosowania\models.py:142
+#: .\glosowania\models.py:154
 #: .\glosowania\templates\glosowania\szczegoly.html:214
 #: .\tasks\templates\tasks\task_detail.html:64
 msgid "Author"
@@ -1111,35 +1111,35 @@ msgstr "została zatwierdzona"
 msgid "and was removed from queue"
 msgstr "i został usunięty z kolejki"
 
-#: .\glosowania\management\commands\vote.py:100
+#: .\glosowania\management\commands\vote.py:102
 msgid "Signed"
 msgstr "Podpisana"
 
-#: .\glosowania\management\commands\vote.py:100
+#: .\glosowania\management\commands\vote.py:102
 #: .\glosowania\templates\glosowania\menu.html:30 .\glosowania\views.py:220
 msgid "Discussion"
 msgstr "Dyskusja"
 
-#: .\glosowania\management\commands\vote.py:115
+#: .\glosowania\management\commands\vote.py:117
 msgid "Not enough signatures"
 msgstr "Nie zabrała podpisów"
 
-#: .\glosowania\management\commands\vote.py:128
+#: .\glosowania\management\commands\vote.py:130
 #: .\glosowania\templates\glosowania\menu.html:34 .\glosowania\views.py:220
 msgid "Referendum"
 msgstr "Referendum"
 
-#: .\glosowania\management\commands\vote.py:152
+#: .\glosowania\management\commands\vote.py:154
 #: .\glosowania\templates\glosowania\menu.html:38 .\glosowania\views.py:220
 msgid "Approved"
 msgstr "Zatwierdzone"
 
-#: .\glosowania\management\commands\vote.py:171 .\glosowania\views.py:220
+#: .\glosowania\management\commands\vote.py:173 .\glosowania\views.py:220
 #: .\tasks\models.py:36 .\tasks\views.py:23
 msgid "Rejected"
 msgstr "Odrzucone"
 
-#: .\glosowania\management\commands\vote.py:187 .\glosowania\views.py:373
+#: .\glosowania\management\commands\vote.py:189 .\glosowania\views.py:373
 #: .\obywatele\forms.py:208 .\obywatele\views.py:651
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
@@ -1208,52 +1208,56 @@ msgstr "Jeśli proponowane prawo zastępuje inne przepisy, wprowadź tutaj ich n
 msgid "The path this bill took."
 msgstr "Historia propozycji"
 
-#: .\glosowania\models.py:127
+#: .\glosowania\models.py:134
+msgid "draft"
+msgstr "szkic"
+
+#: .\glosowania\models.py:139
 msgid "Positive"
 msgstr "Argument Za"
 
-#: .\glosowania\models.py:128
+#: .\glosowania\models.py:140
 msgid "Negative"
 msgstr "Argument Przeciw"
 
-#: .\glosowania\models.py:135
+#: .\glosowania\models.py:147
 #: .\glosowania\templates\glosowania\delete_argument.html:13
 #: .\glosowania\templates\glosowania\edit_argument.html:10
 msgid "Decision"
 msgstr "Decyzja"
 
-#: .\glosowania\models.py:147
+#: .\glosowania\models.py:159
 #: .\glosowania\templates\glosowania\delete_argument.html:14
 msgid "Argument Type"
 msgstr "Typ argumentu"
 
-#: .\glosowania\models.py:148
+#: .\glosowania\models.py:160
 msgid "Is this a positive or negative argument?"
 msgstr "Czy to argument pozytywny czy negatywny?"
 
-#: .\glosowania\models.py:152
+#: .\glosowania\models.py:164
 msgid "Argument Content"
 msgstr "Treść argumentu"
 
-#: .\glosowania\models.py:153
+#: .\glosowania\models.py:165
 msgid "Enter your argument. You can include links."
 msgstr "Wprowadź swój argument. Możesz dodać linki."
 
-#: .\glosowania\models.py:157
+#: .\glosowania\models.py:169
 msgid "Created At"
 msgstr "Utworzono"
 
-#: .\glosowania\models.py:161
+#: .\glosowania\models.py:173
 #: .\glosowania\templates\glosowania\delete_argument.html:22
 #: .\glosowania\templates\glosowania\edit_argument.html:14
 msgid "Last Modified"
 msgstr "Ostatnia modyfikacja"
 
-#: .\glosowania\models.py:166
+#: .\glosowania\models.py:178
 msgid "Argument"
 msgstr "Argument"
 
-#: .\glosowania\models.py:167
+#: .\glosowania\models.py:179
 msgid "Arguments"
 msgstr "Argumenty"
 

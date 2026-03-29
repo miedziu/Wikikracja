@@ -28,7 +28,7 @@
 	<div>
 		<h5><u><b>{% trans 'Bill number' %}</b></u> {{ id.id }}</h5>
 		<h5>
-			<u><b>{% trans 'Bill title' %}</b></u> {{ id.title }}
+			<u><b>{% trans 'Bill title' %}</b></u> {{ id.display_title }}
 			{% if chat_room %}
 				<a href="{% url 'chat:chat' %}#room_id={{ chat_room.id }}" target="_blank" class="text-decoration-none ms-3 {{ chat_room_pulse_class }}">
 					<i class="bi bi-chat-dots"></i>
@@ -152,7 +152,7 @@
 
 
 	{% comment %} REFERENDUM {% endcomment %}
-	{% if id.status == 3 %}
+	{% if id.status == 3 and id.is_author_signed %}
 	<hr>
 		{% if not voted %}
 			<form action="#" method="get">

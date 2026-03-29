@@ -88,7 +88,9 @@ class Command(BaseCommand):
 
                     # FROM PROPOSITION TO DISCUSSION
                     if i.status == proposition:
-                        if i.ile_osob_podpisalo >= s.WYMAGANYCH_PODPISOW:
+                        if not i.is_author_signed:
+                            log.info(f"Proposition {i.id} is still a draft because the author has not signed it yet.")
+                        elif i.ile_osob_podpisalo >= s.WYMAGANYCH_PODPISOW:
                             # Check if 2 days have passed since last modification
                             if i.data_ostatniej_modyfikacji:
                                 days_since_modification = (dzisiaj - i.data_ostatniej_modyfikacji.date()).days
