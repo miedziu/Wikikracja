@@ -19,6 +19,7 @@
       {% trans 'Joined at' %}: {{ b.data_przyjecia|date:"Y-m-d"|default:"-" }}<br>
       {% trans 'Email confirmed' %}: {% if email_confirmed %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}<br>
       {% trans 'Form completed' %}: {% if form_completed %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}<br>
+      {% if not active %}{% trans 'Ratings' %}: {{ total_rate_count }}<br>{% endif %}
       
       <!--Podgląd własnego profilu-->
       {% if b.id == d.id %}

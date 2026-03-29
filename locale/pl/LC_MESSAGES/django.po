@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-27 00:01+0100\n"
+"POT-Creation-Date: 2026-03-29 15:13+0200\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -312,7 +312,7 @@ msgstr "Adres"
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:26
 #: .\obywatele\models.py:38 .\obywatele\templates\obywatele\my_profile.html:32
 #: .\obywatele\templates\obywatele\start.html:48
-#: .\obywatele\templates\obywatele\szczegoly.html:55
+#: .\obywatele\templates\obywatele\szczegoly.html:56
 msgid "City"
 msgstr "Miasto"
 
@@ -1140,7 +1140,7 @@ msgid "Rejected"
 msgstr "Odrzucone"
 
 #: .\glosowania\management\commands\vote.py:187 .\glosowania\views.py:373
-#: .\obywatele\forms.py:208 .\obywatele\views.py:648
+#: .\obywatele\forms.py:208 .\obywatele\views.py:651
 #, python-brace-format
 msgid "Why you received this email? Here is explanation: {url}"
 msgstr "Dlaczego otrzymałeś ten e-mail? Tutaj jest wyjaśnienie: {url}"
@@ -1712,11 +1712,11 @@ msgstr "Nie teraz"
 
 #: .\home\templates\home\base.html:155
 msgid "Notifications are blocked. Please enable them in your browser settings"
-msgstr ""
+msgstr "Powiadomienia są zablokowane. Włącz je w ustawieniach przeglądarki"
 
 #: .\home\templates\home\base.html:157
 msgid "Dismiss"
-msgstr ""
+msgstr "Odrzuć"
 
 #: .\home\templates\home\haslo.html:3
 #: .\obywatele\management\commands\count_citizens.py:180
@@ -1866,7 +1866,7 @@ msgstr "Nazwisko"
 
 #: .\obywatele\forms.py:108 .\obywatele\forms.py:130
 #: .\obywatele\templates\obywatele\my_profile.html:36
-#: .\obywatele\templates\obywatele\szczegoly.html:47
+#: .\obywatele\templates\obywatele\szczegoly.html:48
 msgid "Communicator or Phone number"
 msgstr "Komunikator lub numer telefonu"
 
@@ -1986,7 +1986,7 @@ msgid "Tasks performed in our group"
 msgstr "Zadania wykonywane w naszej grupie"
 
 #: .\obywatele\models.py:39 .\obywatele\templates\obywatele\my_profile.html:44
-#: .\obywatele\templates\obywatele\szczegoly.html:59
+#: .\obywatele\templates\obywatele\szczegoly.html:60
 msgid "Responsibilities"
 msgstr "Obowiązki"
 
@@ -1995,7 +1995,7 @@ msgid "Hobbies one have"
 msgstr "Hobby"
 
 #: .\obywatele\models.py:40 .\obywatele\templates\obywatele\my_profile.html:52
-#: .\obywatele\templates\obywatele\szczegoly.html:63
+#: .\obywatele\templates\obywatele\szczegoly.html:64
 msgid "Hobby"
 msgstr "Hobby"
 
@@ -2004,7 +2004,7 @@ msgid "Things you are willing to give away for free"
 msgstr "Przedmioty, które chcesz oddać za darmo"
 
 #: .\obywatele\models.py:41 .\obywatele\templates\obywatele\my_profile.html:56
-#: .\obywatele\templates\obywatele\szczegoly.html:67
+#: .\obywatele\templates\obywatele\szczegoly.html:68
 msgid "To give away"
 msgstr "Do oddania"
 
@@ -2013,7 +2013,7 @@ msgid "Stuff you can borrow to others"
 msgstr "Przedmioty, które możesz pożyczyć"
 
 #: .\obywatele\models.py:42 .\obywatele\templates\obywatele\my_profile.html:60
-#: .\obywatele\templates\obywatele\szczegoly.html:71
+#: .\obywatele\templates\obywatele\szczegoly.html:72
 msgid "To borrow"
 msgstr "Do pożyczenia"
 
@@ -2022,7 +2022,7 @@ msgid "Stuff you have for sale"
 msgstr "Przedmioty, które chcesz sprzedać"
 
 #: .\obywatele\models.py:43 .\obywatele\templates\obywatele\my_profile.html:64
-#: .\obywatele\templates\obywatele\szczegoly.html:75
+#: .\obywatele\templates\obywatele\szczegoly.html:76
 msgid "For sale"
 msgstr "Do sprzedania"
 
@@ -2031,7 +2031,7 @@ msgid "What do you need"
 msgstr "Czego potrzebujesz"
 
 #: .\obywatele\models.py:44 .\obywatele\templates\obywatele\my_profile.html:68
-#: .\obywatele\templates\obywatele\szczegoly.html:79
+#: .\obywatele\templates\obywatele\szczegoly.html:80
 msgid "I need"
 msgstr "Potrzeby"
 
@@ -2040,7 +2040,7 @@ msgid "Practical skills one have"
 msgstr "Praktyczne umiejętności"
 
 #: .\obywatele\models.py:45 .\obywatele\templates\obywatele\my_profile.html:76
-#: .\obywatele\templates\obywatele\szczegoly.html:83
+#: .\obywatele\templates\obywatele\szczegoly.html:84
 msgid "Skills"
 msgstr "Umiejętności"
 
@@ -2049,7 +2049,7 @@ msgid "Knowledge one have"
 msgstr "Wiedza"
 
 #: .\obywatele\models.py:46 .\obywatele\templates\obywatele\my_profile.html:80
-#: .\obywatele\templates\obywatele\szczegoly.html:87
+#: .\obywatele\templates\obywatele\szczegoly.html:88
 msgid "Knowledge"
 msgstr "Wiedza"
 
@@ -2058,7 +2058,7 @@ msgid "Things one would like to learn"
 msgstr "Czego chce się nauczyć"
 
 #: .\obywatele\models.py:47 .\obywatele\templates\obywatele\my_profile.html:72
-#: .\obywatele\templates\obywatele\szczegoly.html:91
+#: .\obywatele\templates\obywatele\szczegoly.html:92
 msgid "I want to learn"
 msgstr "Chcę się nauczyć"
 
@@ -2067,7 +2067,7 @@ msgid "If running a business"
 msgstr "Jaki prowadzisz biznes. Np adres www."
 
 #: .\obywatele\models.py:48 .\obywatele\templates\obywatele\my_profile.html:48
-#: .\obywatele\templates\obywatele\szczegoly.html:95
+#: .\obywatele\templates\obywatele\szczegoly.html:96
 msgid "Business"
 msgstr "Biznes"
 
@@ -2076,7 +2076,7 @@ msgid "Profession"
 msgstr "Wykonywany zawód"
 
 #: .\obywatele\models.py:49 .\obywatele\templates\obywatele\my_profile.html:40
-#: .\obywatele\templates\obywatele\szczegoly.html:51
+#: .\obywatele\templates\obywatele\szczegoly.html:52
 msgid "Job"
 msgstr "Zawód"
 
@@ -2085,7 +2085,7 @@ msgid "What gift would you like to receive"
 msgstr "Jaki prazent chciałbyś dostać"
 
 #: .\obywatele\models.py:50 .\obywatele\templates\obywatele\my_profile.html:84
-#: .\obywatele\templates\obywatele\szczegoly.html:99
+#: .\obywatele\templates\obywatele\szczegoly.html:100
 msgid "Gift"
 msgstr "Prezent"
 
@@ -2094,7 +2094,7 @@ msgid "Other things worth mentioning"
 msgstr "Inne rzeczy warte wzmianki"
 
 #: .\obywatele\models.py:51 .\obywatele\templates\obywatele\my_profile.html:88
-#: .\obywatele\templates\obywatele\szczegoly.html:103
+#: .\obywatele\templates\obywatele\szczegoly.html:104
 msgid "Other"
 msgstr "Inne"
 
@@ -2103,7 +2103,7 @@ msgid "In your own words please explain why do you want join our group"
 msgstr "Wyjaśnij własnymi słowami dlaczego chcesz dołączyć do naszej grupy"
 
 #: .\obywatele\models.py:52 .\obywatele\templates\obywatele\my_profile.html:92
-#: .\obywatele\templates\obywatele\szczegoly.html:107
+#: .\obywatele\templates\obywatele\szczegoly.html:108
 msgid "Why do you want to join?"
 msgstr "Dlaczego chcesz należeć do grupy?"
 
@@ -2327,27 +2327,31 @@ msgstr "Nigdy"
 msgid "Joined at"
 msgstr "Data przyjęcia"
 
-#: .\obywatele\templates\obywatele\szczegoly.html:26
+#: .\obywatele\templates\obywatele\szczegoly.html:22
+msgid "Ratings"
+msgstr "Oceny"
+
+#: .\obywatele\templates\obywatele\szczegoly.html:27
 msgid "This is you"
 msgstr "To jesteś Ty"
 
-#: .\obywatele\templates\obywatele\szczegoly.html:27
+#: .\obywatele\templates\obywatele\szczegoly.html:28
 msgid "You can find more setting in your profile"
 msgstr "Więcej ustawień znajdziesz w twoim profilu"
 
-#: .\obywatele\templates\obywatele\szczegoly.html:32
+#: .\obywatele\templates\obywatele\szczegoly.html:33
 msgid "Your relationship to this person is"
 msgstr "Twój stosunek do tej osoby jest"
 
-#: .\obywatele\templates\obywatele\szczegoly.html:34
+#: .\obywatele\templates\obywatele\szczegoly.html:35
 msgid "I accept this person"
 msgstr "Akceptuję tą osobę"
 
-#: .\obywatele\templates\obywatele\szczegoly.html:35
+#: .\obywatele\templates\obywatele\szczegoly.html:36
 msgid "Indifferent"
 msgstr "Neutralny"
 
-#: .\obywatele\templates\obywatele\szczegoly.html:36
+#: .\obywatele\templates\obywatele\szczegoly.html:37
 msgid "I do not accept"
 msgstr "Nie akceptuję"
 
@@ -2411,11 +2415,11 @@ msgstr "negatywny"
 msgid "neutral"
 msgstr "obojętny"
 
-#: .\obywatele\views.py:695
+#: .\obywatele\views.py:698
 msgid "Fill out your onboarding form"
 msgstr "Wypełnij formularz rejestracyjny"
 
-#: .\obywatele\views.py:697
+#: .\obywatele\views.py:700
 #, python-format
 msgid "Your email has been confirmed. Please fill out your onboarding form here: %(link)s"
 msgstr "Twoj email został potwierdzony. Wypełnij proszę formularz rejestracyjny (jeśli jeszcze tego nie zrobiłeś/aś): %(link)s"
@@ -2434,7 +2438,7 @@ msgstr "Anulowane"
 
 #: .\tasks\models.py:67
 msgid "chat room"
-msgstr ""
+msgstr "Pokój czatu"
 
 #: .\tasks\models.py:132 .\tasks\templates\tasks\task_detail.html:74
 #: .\tasks\templates\tasks\task_detail.html:164

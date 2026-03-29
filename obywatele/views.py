@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.messages import success, error
-from django.db.models import Sum, Case, When, Value, IntegerField, Q
+from django.db.models import Sum, Case, When, Value, IntegerField, Q, Count
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -593,6 +593,8 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
         rate.save()
         return redirect('obywatele:obywatele_szczegoly', pk)
 
+    total_rate_count = Rate.objects.filter(kandydat=candidate_profile).count()
+
     # Previous and Next
     obj = get_object_or_404(User, pk=pk)
     # kandydaci czy obywatele? Na razie wszyscy.
@@ -614,6 +616,7 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
             'active': obj.is_active,
             'email_confirmed': email_confirmed,
             'form_completed': form_completed,
+            'total_rate_count': total_rate_count,
         })
 
 
