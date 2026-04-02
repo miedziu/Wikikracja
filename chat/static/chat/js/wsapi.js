@@ -5,8 +5,6 @@
  * including sending messages, joining rooms, voting, and file uploads.
  */
 
-import { onSocketMessage } from './handlers.js';
-
 /**
  * WebSocket API class for managing chat WebSocket connection
  * Handles all server communication through WebSocket protocol
@@ -27,7 +25,7 @@ export default class WsApi {
 
         this.socket = new ReconnectingWebSocket(ws_path);
 
-        $(window).on('beforeunload', () => {            
+        $(window).on('beforeunload', () => {
             console.log("beforeunload: Closing connecton " + ws_path);
             this.socket.close();
         });
@@ -45,7 +43,11 @@ export default class WsApi {
                 if (data.error) {
                     alert(data.error);
                 } else {
-                    onSocketMessage(data);
+                    if (this.socketMessageHandler) {
+                        this.socketMessageHandler(data);
+                    } else {
+                        console.warn("No socket message handler set");
+                    }
                 }
             }
         }
@@ -189,22 +191,22 @@ export default class WsApi {
             command: "edit-message",
             message_id: message_id
         };
-        
+
         // Only include new_message if it changed
         if (original_message === null || message !== original_message) {
             payload.new_message = message;
         }
-        
+
         // Add attachments if provided
         if (attachments && Object.keys(attachments).length > 0) {
             payload.attachments = attachments;
         }
-        
+
         // Add removed attachments if provided
         if (removed_attachments && removed_attachments.length > 0) {
             payload.removed_attachments = removed_attachments;
         }
-        
+
         this.sendJson(payload);
     }
 

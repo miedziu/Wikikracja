@@ -10,12 +10,6 @@ import {
     onRoomTryJoin,
     onToggleNotifications,
     onMessageHistory,
-    onReceiveMessages,
-    onRoomUnsee,
-    onReceiveVotes,
-    onReceiveEdit,
-    onReceiveOnlineUpdates,
-    onReceiveNotification,
     copyRoomLink,
     copyMessageLink,
 } from './chat.js';
@@ -29,46 +23,42 @@ import DomApi from './domapi.js';
 const DOM_API = new DomApi();
 
 /**
- * Routes incoming WebSocket messages to appropriate handlers
- * @param {Object} data - WebSocket message data
- * @param {number} [data.join] - Room ID (deprecated)
- * @param {number} [data.leave] - Room ID to leave (deprecated)
- * @param {Array} [data.messages] - Array of message objects
- * @param {number} [data.unsee_room] - Room ID to mark as unread
- * @param {Object} [data.notification] - Notification data
- * @param {Object} [data.update_votes] - Vote update data
- * @param {Object} [data.edit_message] - Edit information
- * @param {Array} [data.online_data] - Online status updates
- */
-export async function onSocketMessage(data) {
-    if (data.join) {
-        console.warn("deprecated");
-    } else if (data.leave) {
-        console.warn("deprecated");
-    } else if (data.messages) {
-        onReceiveMessages(data.messages);
-    } else if (data.unsee_room) {
-        onRoomUnsee(data.unsee_room);
-    } else if (data.notification) {
-        let notif = data.notification;
-        onReceiveNotification(notif);
-    } else if (data.update_votes) {
-        let event = data.update_votes;
-        onReceiveVotes(event);
-    } else if (data.edit_message) {
-        let edit = data.edit_message;
-        onReceiveEdit(edit);
-    } else if (data.online_data) {
-        onReceiveOnlineUpdates(data.online_data);
-    } else {
-        console.log("Cannot handle message!");
-    }
-}
-
-/**
  * Sets up event listeners for the chat interface
  */
 $(document).ready(function() {
+
+    let acc = document.getElementsByClassName('accordion')
+    for (var i = 0; i < acc.length; i++) {
+        acc[i].addEventListener('click', function() {
+            this.classList.toggle('activated')
+        })
+    }
+
+    $('#toggleButtonPubRoomsActive').click(function() {
+        $('#content-pub-rooms-active').slideToggle(300)
+    })
+    $('#toggleButtonPubRoomsArchive').click(function() {
+        $('#content-pub-rooms-archive').slideToggle(300)
+    })
+    $('#toggleButtonTasksActive').click(function() {
+        $('#content-tasks-active').slideToggle(300)
+    })
+    $('#toggleButtonTasksArchive').click(function() {
+        $('#content-tasks-archive').slideToggle(300)
+    })
+    $('#toggleButtonVotesActive').click(function() {
+        $('#content-votes-active').slideToggle(300)
+    })
+    $('#toggleButtonVotesArchive').click(function() {
+        $('#content-votes-archive').slideToggle(300)
+    })
+    $('#toggleButtonPrvActive').click(function() {
+        $('#content-prv-active').slideToggle(300)
+    })
+    $('#toggleButtonPrvArchive').click(function() {
+        $('#content-prv-archive').slideToggle(300)
+    })
+
     // Send message button click handler
     $(document).on("click", ".send-message", function() {
         let edit_message_id = DOM_API.getEditedMessageId();
@@ -109,7 +99,7 @@ $(document).ready(function() {
         const $btn = $(this);
         const currentState = $btn.data("enabled") === "true" || $btn.data("enabled") === true;
         const newState = !currentState;
-        
+
         // Update UI immediately for instant feedback
         $btn.data("enabled", newState);
         const $icon = $btn.find("i");
@@ -118,7 +108,7 @@ $(document).ready(function() {
         } else {
             $icon.removeClass("fa-bell").addClass("fa-bell-slash");
         }
-        
+
         onToggleNotifications($btn.data("room-id"), newState);
     });
 
@@ -162,7 +152,7 @@ $(document).ready(function() {
     $(document).on("change", ".file-input", function(e) {
         let files = this.files;
         let preview_container = DOM_API.getPreviewDiv();
-        
+
         // If editing, keep existing attachments and append new ones
         if (!DOM_API.isEditing()) {
             preview_container.empty();
@@ -180,12 +170,12 @@ $(document).ready(function() {
 
             let img_html = `<div class="image-preview-wrapper" style="position: relative; display: inline-block;">
                 <img class='image-preview new-attachment' id='${preview_id}'>
-                <button class="btn btn-sm btn-danger remove-new-attachment" 
+                <button class="btn btn-sm btn-danger remove-new-attachment"
                     style="position: absolute; top: 2px; right: 2px; padding: 0 4px; font-size: 12px;"
                     data-preview-id="${preview_id}" type="button">×</button>
             </div>`;
             preview_container.append(img_html);
-            
+
             fr.onload = function(e) {
                 $(`#${preview_id}`)[0].src = this.result;
             };
@@ -224,7 +214,7 @@ $(document).ready(function() {
         let filename = $(this).data("filename");
         DOM_API.addRemovedAttachment(filename);
         $(this).closest('.image-preview-wrapper').remove();
-        
+
         // Hide preview container if no images left
         if (DOM_API.getPreviewDiv().children().length === 0) {
             DOM_API.getPreviewContainer().hide();
@@ -236,12 +226,12 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
         $(this).closest('.image-preview-wrapper').remove();
-        
+
         // Clear file input if no new attachments left
         if (DOM_API.getPreviewDiv().find('.new-attachment').length === 0) {
             DOM_API.getFileInput().val("");
         }
-        
+
         // Hide preview container if no images left
         if (DOM_API.getPreviewDiv().children().length === 0) {
             DOM_API.getPreviewContainer().hide();
@@ -254,7 +244,7 @@ $(document).ready(function() {
         if (e.type === 'touchstart') {
             e.preventDefault();
         }
-        
+
         let room_id = $(this).parent().attr("data-room-id");
 
         if ($(this).hasClass("joined")) {
@@ -267,7 +257,7 @@ $(document).ready(function() {
             setTimeout(() => {
                 $(this).parent().removeClass('room-tapping');
             }, 300);
-            
+
             // Join room
             onRoomTryJoin(room_id);
         }

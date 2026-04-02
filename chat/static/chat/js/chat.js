@@ -42,8 +42,11 @@ let scrollToMessageId = null;
 $(() => {
     WS_API = new WsApi();
     DOM_API = new DomApi();
-    
-    WS_API.wsOnConnect = async() => {
+
+    // Set the WebSocket message handler to break circular dependency
+    WS_API.socketMessageHandler = onSocketMessage;
+
+    WS_API.wsOnConnect = async () => {
         // Request data about who is online
         let response = await WS_API.getOnlineUsers();
         for (let user of response.online_data) {
@@ -95,10 +98,47 @@ $(() => {
             }
         }
 
-        if (room_id) 
-            onRoomTryJoin(room_id);        
+        if (room_id)
+            onRoomTryJoin(room_id);
     }
 });
+
+/**
+ * Routes incoming WebSocket messages to appropriate handlers
+ * @param {Object} data - WebSocket message data
+ * @param {number} [data.join] - Room ID (deprecated)
+ * @param {number} [data.leave] - Room ID to leave (deprecated)
+ * @param {Array} [data.messages] - Array of message objects
+ * @param {number} [data.unsee_room] - Room ID to mark as unread
+ * @param {Object} [data.notification] - Notification data
+ * @param {Object} [data.update_votes] - Vote update data
+ * @param {Object} [data.edit_message] - Edit information
+ * @param {Array} [data.online_data] - Online status updates
+ */
+export async function onSocketMessage(data) {
+    if (data.join) {
+        console.warn("deprecated");
+    } else if (data.leave) {
+        console.warn("deprecated");
+    } else if (data.messages) {
+        onReceiveMessages(data.messages);
+    } else if (data.unsee_room) {
+        onRoomUnsee(data.unsee_room);
+    } else if (data.notification) {
+        let notif = data.notification;
+        onReceiveNotification(notif);
+    } else if (data.update_votes) {
+        let event = data.update_votes;
+        onReceiveVotes(event);
+    } else if (data.edit_message) {
+        let edit = data.edit_message;
+        onReceiveEdit(edit);
+    } else if (data.online_data) {
+        onReceiveOnlineUpdates(data.online_data);
+    } else {
+        console.log("Cannot handle message!");
+    }
+}
 
 /**
  * Handles incoming chat notifications
@@ -112,16 +152,16 @@ export async function onReceiveNotification(notification) {
     makeNotification(notification);
 }
 
-    // Function to expand category containing the active room
+// Function to expand category containing the active room
 async function expandCategoryForRoom(room_id) {
-      const roomLink = $(`.room-link[data-room-id="${room_id}"]`)
-      if (roomLink.length === 0) return
-      
-      const container = roomLink.closest('.list-of-rooms, .list-of-pms')
-      if (container.length === 0) return
-      
-      const containerId = container.attr('id')
-      const categoryMap = {
+    const roomLink = $(`.room-link[data-room-id="${room_id}"]`)
+    if (roomLink.length === 0) return
+
+    const container = roomLink.closest('.list-of-rooms, .list-of-pms')
+    if (container.length === 0) return
+
+    const containerId = container.attr('id')
+    const categoryMap = {
         'content-pub-rooms-active': '#toggleButtonPubRoomsActive',
         'content-pub-rooms-archive': '#toggleButtonPubRoomsArchive',
         'content-tasks-active': '#toggleButtonTasksActive',
@@ -130,14 +170,14 @@ async function expandCategoryForRoom(room_id) {
         'content-votes-archive': '#toggleButtonVotesArchive',
         'content-prv-active': '#toggleButtonPrvActive',
         'content-prv-archive': '#toggleButtonPrvArchive'
-      }
-      
-      const toggleButton = categoryMap[containerId]
-      if (toggleButton && !$(toggleButton).hasClass('activated')) {
+    }
+
+    const toggleButton = categoryMap[containerId]
+    if (toggleButton && !$(toggleButton).hasClass('activated')) {
         container.show()
         $(toggleButton).addClass('activated')
-      }
     }
+}
 
 export async function onRoomTryJoin(room_id) {
     // already in this room
@@ -156,10 +196,10 @@ export async function onRoomTryJoin(room_id) {
     }
 
     DOM_API.getRoomLinkDiv(room_id).addClass("joined");
-    
+
     // Expand category containing this room
     expandCategoryForRoom(room_id);
-    
+
     // joined another room while awaiting confirmation
     if (currentRoomId) {
         return;
@@ -171,7 +211,7 @@ export async function onRoomTryJoin(room_id) {
         response = await WS_API.joinRoom(room_id);
         const ii = 1;
         const ii2 = 1;
-        
+
     } catch (error) {
         RoomLock.unlock();
         if (error === 'ROOM_INVALID' || error === 'ACCESS_DENIED') {
@@ -354,12 +394,12 @@ export async function onReceiveVotes(event) {
 export async function onReceiveEdit(edit_info) {
     // update text of message
     DOM_API.editMessageText(edit_info.message_id, edit_info.text, edit_info.timestamp);
-    
+
     // update attachments if provided
     if (edit_info.attachments !== undefined) {
         DOM_API.updateMessageAttachments(edit_info.message_id, edit_info.attachments);
     }
-    
+
     //show history button
     DOM_API.showHistoryButton(edit_info.message_id);
 }
@@ -422,13 +462,13 @@ export async function onToggleNotifications(room_id, is_enabled) {
 export async function onMessageHistory(message_id) {
     let data = await WS_API.getMessageHistory(message_id);
     let history = data?.message_history || []
-    
+
     // Format timestamps to readable dates with time
     history = history.map(entry => ({
         ...entry,
         formattedTime: formatDateTime(entry.timestamp)
     }));
-    
+
     let html = MessageHistory( {history} );
     $("#message-history-modal .modal-body").html(html);
     $("#message-history-modal").modal('show');

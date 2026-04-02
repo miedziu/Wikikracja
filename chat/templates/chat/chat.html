@@ -12,48 +12,11 @@
 
   <!-- Main chat script -->
   <script src="{% static 'chat/js/chat.js' %}" type="module"></script>
+  <script src="{% static 'chat/js/handlers.js' %}" type="module"></script>
   <script src="{% static 'chat/js/ejs.min.js' %}"></script>
 
   <script>
-    const TRANSLATIONS = {{ translations|default:"{}"|safe }};    
-  </script>
-
-  <script>
-    $(document).ready(function () {
-      $('#toggleButtonPubRoomsActive').click(function () {
-        $('#content-pub-rooms-active').slideToggle(300)
-      })
-      $('#toggleButtonPubRoomsArchive').click(function () {
-        $('#content-pub-rooms-archive').slideToggle(300)
-      })
-      $('#toggleButtonTasksActive').click(function () {
-        $('#content-tasks-active').slideToggle(300)
-      })
-      $('#toggleButtonTasksArchive').click(function () {
-        $('#content-tasks-archive').slideToggle(300)
-      })
-      $('#toggleButtonVotesActive').click(function () {
-        $('#content-votes-active').slideToggle(300)
-      })
-      $('#toggleButtonVotesArchive').click(function () {
-        $('#content-votes-archive').slideToggle(300)
-      })
-      $('#toggleButtonPrvActive').click(function () {
-        $('#content-prv-active').slideToggle(300)
-      })
-      $('#toggleButtonPrvArchive').click(function () {
-        $('#content-prv-archive').slideToggle(300)
-      })
-    })
-    
-    window.onload = function () {
-      let acc = document.getElementsByClassName('accordion')
-      for (var i = 0; i < acc.length; i++) {
-        acc[i].addEventListener('click', function () {
-          this.classList.toggle('activated')
-        })
-      }
-    }
+    const TRANSLATIONS = {{ translations|default:"{}"|safe }};
   </script>
 
   <!-- ============================================================= -->
@@ -232,8 +195,8 @@
           <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
           <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
 
-          <!--                                               
-           Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR 
+          <!--
+           Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR
            element will get class pswp__preloader
            active when preloader is running  -->
           <div class="pswp__preloader">
