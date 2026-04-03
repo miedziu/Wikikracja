@@ -8,7 +8,6 @@ import {
     removeNotification,
     formatTime,
     escapeHtml,
-    getImageSize,
     _,
     setCaretPosition,
     $,
@@ -231,21 +230,92 @@ export default class DomApi {
         this.clearFiles();
     }
 
-    async openBigImage(srcs) {
-        const pswpElement = $$('.pswp')[0];
-        const items = [];
-        for (const src of srcs) {
-            const size = await getImageSize(src);
-            items.push({ src, w: size.w, h: size.h });
+    openBigImage(srcs) {
+        // Remove existing viewer if any
+        this.closeBigImage();
+
+        // Create modal overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'image-viewer-overlay';
+        overlay.className = 'image-viewer-overlay';
+        overlay.innerHTML = `
+            <button class="image-viewer-close" aria-label="Close">&times;</button>
+            <button class="image-viewer-nav image-viewer-prev" aria-label="Previous">&#10094;</button>
+            <button class="image-viewer-nav image-viewer-next" aria-label="Next">&#10095;</button>
+            <div class="image-viewer-container">
+                <img class="image-viewer-img" src="" alt="Image viewer">
+            </div>
+            <div class="image-viewer-counter"></div>
+        `;
+
+        document.body.appendChild(overlay);
+        document.body.classList.add('modal-open');
+
+        // State
+        let currentIndex = 0;
+        const images = srcs;
+        const imgEl = overlay.querySelector('.image-viewer-img');
+        const counterEl = overlay.querySelector('.image-viewer-counter');
+        const prevBtn = overlay.querySelector('.image-viewer-prev');
+        const nextBtn = overlay.querySelector('.image-viewer-next');
+
+        function showImage(index) {
+            currentIndex = index;
+            imgEl.src = images[currentIndex];
+            if (images.length > 1) {
+                counterEl.textContent = (currentIndex + 1) + ' / ' + images.length;
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+            } else {
+                counterEl.textContent = '';
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            }
         }
-        const gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
-            index: 0, closeOnScroll: false,
+
+        function close() {
+            overlay.remove();
+            document.body.classList.remove('modal-open');
+        }
+
+        // Event listeners
+        overlay.querySelector('.image-viewer-close').addEventListener('click', close);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) close();
         });
-        gallery.init();
+
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const newIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(newIndex);
+        });
+
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const newIndex = (currentIndex + 1) % images.length;
+            showImage(newIndex);
+        });
+
+        // Keyboard navigation
+        overlay._keyHandler = (e) => {
+            if (e.key === 'Escape') close();
+            if (e.key === 'ArrowLeft' && images.length > 1) showImage((currentIndex - 1 + images.length) % images.length);
+            if (e.key === 'ArrowRight' && images.length > 1) showImage((currentIndex + 1) % images.length);
+        };
+        document.addEventListener('keydown', overlay._keyHandler);
+
+        // Show first image
+        showImage(0);
     }
 
     closeBigImage() {
-        $("#big-image")?.remove();
+        const overlay = $('#image-viewer-overlay');
+        if (overlay) {
+            if (overlay._keyHandler) {
+                document.removeEventListener('keydown', overlay._keyHandler);
+            }
+            overlay.remove();
+        }
         document.body.classList.remove('modal-open');
     }
 
