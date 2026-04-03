@@ -9,11 +9,11 @@ import {
     onUpdateVote,
     onRoomTryJoin,
     onToggleNotifications,
+    onToggleSeen,
     onMessageHistory,
     copyRoomLink,
     copyMessageLink,
 } from './chat.js';
-
 import DomApi from './domapi.js';
 import { $, $$ } from './utility.js';
 
@@ -79,6 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
             icon?.classList.toggle('fa-bell', newState);
             icon?.classList.toggle('fa-bell-slash', !newState);
             onToggleNotifications(btn.dataset.roomId, newState);
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.seen-switch');
+        if (btn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const isCurrentlySeen = btn.dataset.seen === "true";
+            const newState = !isCurrentlySeen;
+            DOM_API.getRoomLinkDiv(btn.dataset.roomId)?.classList.toggle('room-not-seen', !newState);
+            DOM_API.setRoomSeenIconState(btn.dataset.roomId, newState);
+            onToggleSeen(btn.dataset.roomId, newState);
         }
     });
 
@@ -191,6 +204,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!roomName.classList.contains("joined")) {
             roomName.parentElement.classList.add('room-tapping');
             setTimeout(() => roomName.parentElement.classList.remove('room-tapping'), 300);
+            // Sync eye icon state after joining
+            DOM_API.getRoomLinkDiv(room_id)?.classList.remove("room-not-seen");
+            DOM_API.setRoomSeenIconState(room_id, true);
             onRoomTryJoin(room_id);
         }
     }

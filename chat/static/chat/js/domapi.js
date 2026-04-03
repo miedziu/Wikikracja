@@ -156,6 +156,7 @@ export default class DomApi {
 
     seenChat(room_id) {
         this.getRoomLinkDiv(room_id)?.classList.remove("room-not-seen");
+        this.setRoomSeenIconState(room_id, true);
         if ($$('.room-not-seen').length === 0) {
             removeNotification();
         }
@@ -348,6 +349,17 @@ export default class DomApi {
         if (icon) {
             icon.classList.toggle('fa-bell', is_enabled);
             icon.classList.toggle('fa-bell-slash', !is_enabled);
+        }
+    }
+
+    setRoomSeenIconState(room_id, is_seen) {
+        const btn = $(`.seen-switch[data-room-id='${room_id}']`);
+        if (!btn) return;
+        btn.dataset.seen = is_seen.toString();
+        const icon = $("i", btn);
+        if (icon) {
+            icon.classList.toggle('fa-eye', is_seen);
+            icon.classList.toggle('fa-eye-slash', !is_seen);
         }
     }
 

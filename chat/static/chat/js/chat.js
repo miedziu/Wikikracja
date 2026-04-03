@@ -89,6 +89,7 @@ export async function onSocketMessage(data) {
     if (data.join || data.leave) console.warn("deprecated");
     else if (data.messages) onReceiveMessages(data.messages);
     else if (data.unsee_room) onRoomUnsee(data.unsee_room);
+    else if (data.room_seen) onRoomSeen(data.room_seen);
     else if (data.notification) onReceiveNotification(data.notification);
     else if (data.update_votes) onReceiveVotes(data.update_votes);
     else if (data.edit_message) onReceiveEdit(data.edit_message);
@@ -270,6 +271,12 @@ export async function onReceiveOnlineUpdates(updates) {
 export async function onRoomUnsee(room_id) {
     if (CurrentRoomId == room_id) return;
     DOM_API.getRoomLinkDiv(room_id)?.classList.add("room-not-seen");
+    DOM_API.setRoomSeenIconState(room_id, false);
+}
+
+export async function onRoomSeen(room_id) {
+    DOM_API.getRoomLinkDiv(room_id)?.classList.remove("room-not-seen");
+    DOM_API.setRoomSeenIconState(room_id, true);
 }
 
 export async function onUpdateVote(vote, message_id, is_add) {
@@ -279,6 +286,14 @@ export async function onUpdateVote(vote, message_id, is_add) {
 
 export async function onToggleNotifications(room_id, is_enabled) {
     WS_API.toggleNotifications(room_id, is_enabled);
+}
+
+export async function onToggleSeen(room_id, is_seen) {
+    if (is_seen) {
+        WS_API.seenRoom(room_id);
+    } else {
+        WS_API.markRoomUnseen(room_id);
+    }
 }
 
 export async function onMessageHistory(message_id) {

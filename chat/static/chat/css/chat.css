@@ -292,6 +292,7 @@
         background: #3399f3;
         color: var(--bs-dark);
 
+        .seen-switch,
         .notif-switch,
         .copy-link-btn {
             color: var(--bs-white) !important;
@@ -341,13 +342,14 @@
     padding: 4px;
 }
 
-.notif-switch {
+.seen-switch,
+.notif-switch,
+.copy-link-btn {
     color: var(--bs-light);
 }
 
 .copy-link-btn {
     position: relative;
-    color: var(--bs-light);
 }
 
 .copy-feedback {

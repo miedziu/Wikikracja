@@ -285,4 +285,15 @@ export default class WsApi {
             enabled
         });
     }
+
+    /**
+     * Marks a room as unread/unseen
+     * @param {number} room_id - ID of the room
+     */
+    markRoomUnseen(room_id) {
+        this.sendJson({
+            command: 'room-unseen',
+            room_id
+        });
+    }
 }
