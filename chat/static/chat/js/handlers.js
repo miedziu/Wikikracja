@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     for (const acc of document.getElementsByClassName('accordion')) {
-        acc.addEventListener('click', () => {
+        acc.addEventListener('click', function() {
             this.classList.toggle('activated');
             const contentEl = $('#' + accordionMap[this.id]);
             if (contentEl) slideToggle(contentEl, 300);
