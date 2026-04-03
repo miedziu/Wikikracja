@@ -2,10 +2,6 @@
     background-color: var(--bs-success);
 }
 
-.chat-page-header {
-    text-align: center;
-}
-
 .chat-root-messages {
     display: flex;
     flex: 1;
