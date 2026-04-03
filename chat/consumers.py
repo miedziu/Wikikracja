@@ -995,13 +995,19 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def has_muted_room(self, room_id):
-        room = Room.objects.get(pk=room_id)
-        return room.muted_by.filter(id=self.scope['user'].id).exists()
+        # Single query using through table instead of fetching room then filtering muted_by
+        return Room.muted_by.through.objects.filter(
+            room_id=room_id, 
+            user_id=self.scope['user'].id
+        ).exists()
 
     @database_sync_to_async
     def user_has_muted_room(self, user_id, room_id):
-        room = Room.objects.get(pk=room_id)
-        return room.muted_by.filter(id=user_id).exists()
+        # Single query using through table instead of fetching room then filtering muted_by
+        return Room.muted_by.through.objects.filter(
+            room_id=room_id, 
+            user_id=user_id
+        ).exists()
 
     @database_sync_to_async
     def unmute_room(self, room_id):

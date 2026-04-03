@@ -67,7 +67,7 @@ def chat(request: HttpRequest):
     # 1. Prefetch allowed users for private rooms (needed for displayed_name)
     # 2. Annotate with message count (for seen_by filter)
     # 3. Annotate with is_seen status (for seen_by filter)
-    allowed_rooms = Room.objects.filter(allowed=request.user.id).prefetch_related(Prefetch('allowed', queryset=User.objects.only('id', 'username'))).annotate(messages_count=Count('messages'), is_seen=Exists(Room.seen_by.through.objects.filter(room_id=OuterRef('pk'), user_id=request.user.id))).order_by("title")
+    allowed_rooms = Room.objects.filter(allowed=request.user.id).prefetch_related(Prefetch('allowed', queryset=User.objects.only('id', 'username')), 'muted_by').annotate(messages_count=Count('messages'), is_seen=Exists(Room.seen_by.through.objects.filter(room_id=OuterRef('pk'), user_id=request.user.id))).order_by("title")
 
     public_active = allowed_rooms.filter(public=True, archived=False)
     public_archived = allowed_rooms.filter(public=True, archived=True)

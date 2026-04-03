@@ -36,6 +36,9 @@ def seen_by(room, user):
 @register.filter('is_muted_by')
 def is_muted_by(room, user):
     """Returns True if the room is muted by the user"""
+    # Use prefetched data if available
+    if hasattr(room, '_prefetched_objects_cache') and 'muted_by' in room._prefetched_objects_cache:
+        return any(u.id == user.id for u in room.muted_by.all())
     return room.muted_by.filter(id=user.id).exists()
 
 

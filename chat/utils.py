@@ -232,9 +232,12 @@ def send_message_to_room(room_title, message_text, sender=None, anonymous=True):
         })
 
         # Send browser notification to each online user who should receive it
+        # Batch fetch muted user IDs to avoid N+1 queries
+        muted_user_ids = set(room.muted_by.filter(id__in=[u.id for u in users_to_mark_unseen]).values_list('id', flat=True))
+
         for user in users_to_mark_unseen:
             # Skip if the user has muted the room
-            if room.muted_by.filter(id=user.id).exists():
+            if user.id in muted_user_ids:
                 continue
 
             # Check if user is online and has an active connection
