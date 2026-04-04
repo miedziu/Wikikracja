@@ -264,7 +264,6 @@ def reopen_task(request: HttpRequest, pk: int) -> HttpResponse:
             return redirect(next_url)
         return redirect("tasks:detail", pk=pk)
 
-    TaskVote.objects.filter(task=task).delete()
     task.status = Task.Status.ACTIVE
     task.save(update_fields=["status", "updated_at"])
     if next_url:
