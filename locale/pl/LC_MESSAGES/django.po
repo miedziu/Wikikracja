@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-04 08:25+0200\n"
+"POT-Creation-Date: 2026-04-04 11:50+0200\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -652,6 +652,7 @@ msgid "Mark as unread"
 msgstr "Oznacz jako nieprzeczytane"
 
 #: .\chat\templates\chat\room_link.html:17
+#, python-format
 msgid "Mark room %(room_name)s as unread"
 msgstr "Oznacz pokój %(room_name)s jako nieprzeczytany"
 
@@ -2217,13 +2218,25 @@ msgstr "Formularz rejestracyjny"
 
 #: .\obywatele\templates\obywatele\onboarding_details.html:10
 msgid "Remember: your email is not confirmed yet. Please confirm it using the link from your inbox."
-msgstr "Pamiętaj: Twój email nie został jeszcze potwierdzony. Poprosimy o potwierdzenie go poprzez kliknięcie linku w mailu wysłanym do Ciebie."
+msgstr "Pamiętaj: Twój email nie został jeszcze potwierdzony. Poprosimy o potwierdzenie go poprzez kliknięcie linka z emaila wysłanego do Ciebie."
 
 #: .\obywatele\templates\obywatele\onboarding_details.html:15
-msgid "Please fill in the questions below. This helps the group evaluate your application."
-msgstr "Wypełnij proszę poniższe pytania. To pomoże grupie podjąć decyzję."
+msgid "Please fill form below"
+msgstr "Wypełnij proszę poniższy formularz"
 
-#: .\obywatele\templates\obywatele\onboarding_details.html:31
+#: .\obywatele\templates\obywatele\onboarding_details.html:16
+msgid "This information will help the group make a decision"
+msgstr "Te informacje pomogą grupie podjąć decyzję"
+
+#: .\obywatele\templates\obywatele\onboarding_details.html:17
+msgid "You can edit this information later"
+msgstr "Później będziesz mógł edytować te informacje"
+
+#: .\obywatele\templates\obywatele\onboarding_details.html:18
+msgid "Mandatory fields are marked with *"
+msgstr "Pola obowiązkowe oznaczone są gwiazdką*"
+
+#: .\obywatele\templates\obywatele\onboarding_details.html:34
 msgid "Save form"
 msgstr "Zapisz formularz"
 
@@ -2233,7 +2246,7 @@ msgstr "Zgłoszenie wysłane"
 
 #: .\obywatele\templates\obywatele\onboarding_waiting.html:9
 msgid "You still need to confirm your email address using the link sent to your inbox."
-msgstr "Twój email nie został jeszcze potwierdzony. Poprosimy o potwierdzenie go poprzez kliknięcie linku w mailu wysłanym do Ciebie."
+msgstr "Twój email nie został jeszcze potwierdzony. Poprosimy o potwierdzenie go poprzez kliknięcie linka z emaila wysłanego do Ciebie."
 
 #: .\obywatele\templates\obywatele\onboarding_waiting.html:13
 msgid "Your email address is confirmed."

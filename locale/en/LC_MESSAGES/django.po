@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-04 08:25+0200\n"
+"POT-Creation-Date: 2026-04-04 11:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2251,10 +2251,22 @@ msgid "Remember: your email is not confirmed yet. Please confirm it using the li
 msgstr ""
 
 #: .\obywatele\templates\obywatele\onboarding_details.html:15
-msgid "Please fill in the questions below. This helps the group evaluate your application."
+msgid "Please fill form below"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\onboarding_details.html:31
+#: .\obywatele\templates\obywatele\onboarding_details.html:16
+msgid "This information will help the group make a decision"
+msgstr ""
+
+#: .\obywatele\templates\obywatele\onboarding_details.html:17
+msgid "You can edit this information later"
+msgstr ""
+
+#: .\obywatele\templates\obywatele\onboarding_details.html:18
+msgid "Mandatory fields are marked with *"
+msgstr ""
+
+#: .\obywatele\templates\obywatele\onboarding_details.html:34
 msgid "Save form"
 msgstr ""
 
