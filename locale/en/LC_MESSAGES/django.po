@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 22:38+0200\n"
+"POT-Creation-Date: 2026-04-04 08:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,7 @@ msgstr "Updated"
 #: .\board\models.py:16 .\board\templates\board\board.html:32
 #: .\board\templates\board\board.html:52
 #: .\board\templates\board\post_detail.html:11
-#: .\chat\templates\chat\chat.html:30 .\events\models.py:52
+#: .\chat\templates\chat\chat.html:38 .\events\models.py:52
 #: .\events\templates\events\event_detail.html:80
 #: .\events\templates\events\event_list.html:67
 #: .\home\templates\home\home.html:94
@@ -580,27 +580,33 @@ msgstr ""
 msgid "New room"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:32
+#: .\chat\templates\chat\chat.html:25
+#, fuzzy
+#| msgid "Back to Calendar"
+msgid "Back to room list"
+msgstr "Back to Calendar"
+
+#: .\chat\templates\chat\chat.html:40
 msgid "Public chat rooms are archived if they are not used for"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:32
+#: .\chat\templates\chat\chat.html:40
 msgid "days. After"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:32
+#: .\chat\templates\chat\chat.html:40
 msgid "days they are deleted. Private messages are archived when user is blocked and deleted after"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:32
+#: .\chat\templates\chat\chat.html:40
 #: .\obywatele\templates\obywatele\parameters.html:23
 msgid "days"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:39 .\chat\templates\chat\chat.html:53
-#: .\chat\templates\chat\chat.html:67 .\chat\templates\chat\chat.html:81
-#: .\chat\templates\chat\chat.html:95 .\chat\templates\chat\chat.html:109
-#: .\chat\templates\chat\chat.html:128 .\chat\templates\chat\chat.html:141
+#: .\chat\templates\chat\chat.html:47 .\chat\templates\chat\chat.html:61
+#: .\chat\templates\chat\chat.html:75 .\chat\templates\chat\chat.html:89
+#: .\chat\templates\chat\chat.html:103 .\chat\templates\chat\chat.html:117
+#: .\chat\templates\chat\chat.html:136 .\chat\templates\chat\chat.html:149
 #: .\home\templates\home\home.html:37 .\home\templates\home\home.html:48
 #: .\home\templates\home\home.html:59 .\home\templates\home\home.html:72
 #: .\home\templates\home\home.html:83 .\home\templates\home\home.html:96
@@ -611,39 +617,39 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:46
+#: .\chat\templates\chat\chat.html:54
 msgid "Public Archived"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:60 .\home\templates\home\base.html:81
+#: .\chat\templates\chat\chat.html:68 .\home\templates\home\base.html:81
 msgid "Tasks"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:74
+#: .\chat\templates\chat\chat.html:82
 msgid "Tasks Archived"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:88
+#: .\chat\templates\chat\chat.html:96
 msgid "Referendums"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:102
+#: .\chat\templates\chat\chat.html:110
 msgid "Referendums Archived"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:121
+#: .\chat\templates\chat\chat.html:129
 msgid "Private Messages"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:134
+#: .\chat\templates\chat\chat.html:142
 msgid "Private Archived"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:157
+#: .\chat\templates\chat\chat.html:165
 msgid "Changes history"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:162
+#: .\chat\templates\chat\chat.html:170
 #: .\tasks\templates\tasks\task_detail.html:183
 msgid "Close"
 msgstr ""
