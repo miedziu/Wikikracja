@@ -22,6 +22,14 @@ let WS_API;
 let DOM_API;
 
 /**
+ * Check if we're on mobile (based on screen width)
+ * @returns {boolean}
+ */
+function isMobile() {
+    return window.innerWidth < 768;
+}
+
+/**
  * Lock for preventing concurrent room join/leave operations
  * @type {Lock}
  */
@@ -164,6 +172,8 @@ export async function onRoomTryJoin(room_id) {
     WS_API.seenRoom(room_id);
     DOM_API.setRoomNotifications(response.notifications);
     DOM_API.createRoomDiv(CurrentRoomId, response.title, response.public, response.notifications);
+    DOM_API.setFoldedRoomTitle(response.title);
+    DOM_API.showFoldedRoomHeader();
     $("#message-input")?.focus();
 }
 
@@ -179,7 +189,17 @@ export async function onRoomTryLeave(sync_with_server) {
     }
     DOM_API.getRoomLinkDiv(CurrentRoomId)?.classList.remove("joined");
     DOM_API.clearRoomData();
+    DOM_API.hideFoldedRoomHeader();
     CurrentRoomId = null;
+}
+
+/**
+ * Handle back button click - leave room and show room list on mobile
+ */
+export async function onBackToRoomList() {
+    if (CurrentRoomId) {
+        await onRoomTryLeave(false);
+    }
 }
 
 /**

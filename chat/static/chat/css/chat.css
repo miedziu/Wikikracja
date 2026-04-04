@@ -2,6 +2,46 @@
     display: flex;
     flex: 1;
     padding: 0 4px 0 4px;
+    position: relative;
+}
+
+/* Folded room header - shown when room is selected on mobile */
+.folded-room-header {
+    display: none;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--bs-dark);
+    border-bottom: 1px solid var(--bs-secondary);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.btn-back-room {
+    background: none;
+    border: none;
+    color: var(--bs-light);
+    padding: 0.25rem 0.5rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+}
+
+.btn-back-room:hover {
+    color: var(--bs-info);
+}
+
+.folded-room-title {
+    color: var(--bs-light);
+    font-weight: 600;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
 }
 
 #room {
@@ -375,14 +415,38 @@
 
 /* Mobile only */
 @media (max-width: 767px) {
+    .chat-rooms {
+        position: relative;
+    }
+
     #room .messages {
-        min-height: 15dvh;
-        max-height: 60dvh;
+        max-height: calc(100dvh - 100px);
     }
 
     .room-list {
-        min-height: 15dvh;
-        max-height: 45dvh;
+        max-height: 100dvh;
+    }
+
+    /* When room is selected on mobile, hide room list and show chat full width */
+    .chat-rooms.mobile-room-selected .room-list {
+        display: none;
+    }
+
+    .chat-rooms:not(.mobile-room-selected) .chat-root-messages {
+        display: none;
+    }
+
+    .chat-rooms.mobile-room-selected .chat-root-messages {
+        flex: 1;
+        max-width: 100%;
+    }
+
+    .chat-rooms.mobile-room-selected .folded-room-header {
+        display: flex !important;
+    }
+
+    .chat-rooms:not(.mobile-room-selected) .folded-room-header {
+        display: none !important;
     }
 }
 
@@ -406,8 +470,13 @@
 }
 
 @keyframes imageViewerFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .image-viewer-close {
@@ -479,8 +548,15 @@
 }
 
 @keyframes imageViewerImgFadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .image-viewer-counter {

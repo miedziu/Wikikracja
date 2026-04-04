@@ -8,6 +8,7 @@ import {
     onSubmitMessage,
     onUpdateVote,
     onRoomTryJoin,
+    onBackToRoomList,
     onToggleNotifications,
     onToggleSeen,
     onMessageHistory,
@@ -210,6 +211,23 @@ document.addEventListener('DOMContentLoaded', () => {
             onRoomTryJoin(room_id);
         }
     }
+
+    // Handle back button to room list
+    document.addEventListener('click', (e) => {
+        const backBtn = e.target.closest('#back-to-room-list');
+        if (backBtn) {
+            e.preventDefault();
+            onBackToRoomList();
+        }
+    });
+
+    // Handle window resize - reset mobile state on larger screens
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+            const chatRooms = $(".chat-rooms");
+            if (chatRooms) chatRooms.classList.remove('mobile-room-selected');
+        }
+    });
 });
 
 function slideToggle(element, duration) {

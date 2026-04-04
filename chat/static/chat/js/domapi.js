@@ -27,7 +27,10 @@ export default class DomApi {
     createRoomDiv(room_id, title, is_public, notifs_enabled) {
         const html = Room({ room_id, title, is_public, notifs_enabled });
         const container = $('.chat-root-messages');
+        // Preserve the folded room header when clearing container
+        const foldedHeader = $('#folded-room-header');
         container.innerHTML = '';
+        if (foldedHeader) container.appendChild(foldedHeader);
         container.insertAdjacentHTML('beforeend', html);
         return container.firstElementChild;
     }
@@ -432,5 +435,31 @@ export default class DomApi {
 
     getOriginalMessageText(message_id) {
         return this.getMessageInput()?.dataset.originalMessageText ?? '';
+    }
+
+    /**
+     * Set the room title in the folded header (mobile back button area)
+     * @param {string} title - Room title to display
+     */
+    setFoldedRoomTitle(title) {
+        const el = $("#folded-room-title");
+        if (el) el.textContent = title;
+    }
+
+    /**
+     * Show the folded room header (mobile back button) and add class to collapse room list
+     * Only applies to mobile screens (< 768px) via CSS media queries
+     */
+    showFoldedRoomHeader() {
+        const chatRooms = $(".chat-rooms");
+        if (chatRooms) chatRooms.classList.add('mobile-room-selected');
+    }
+
+    /**
+     * Hide the folded room header and remove class to show room list
+     */
+    hideFoldedRoomHeader() {
+        const chatRooms = $(".chat-rooms");
+        if (chatRooms) chatRooms.classList.remove('mobile-room-selected');
     }
 }
