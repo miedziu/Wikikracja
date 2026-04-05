@@ -22,9 +22,19 @@ log = logging.getLogger(__name__)
 
 
 class UserForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=150, label=_('First name'), required=True)
+    last_name = forms.CharField(max_length=150, label=_('Last name'), required=True)
+    email = forms.EmailField(label=_('Email'), required=True)
+
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name')
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].error_messages['required'] = _('First name is required.')
+        self.fields['last_name'].error_messages['required'] = _('Last name is required.')
+        self.fields['email'].error_messages['required'] = _('Email is required.')
 
 
 class UsernameChangeForm(forms.ModelForm):
