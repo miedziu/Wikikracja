@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-04 11:50+0200\n"
+"POT-Creation-Date: 2026-04-05 09:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,8 +39,8 @@ msgstr ""
 #: .\elibrary\forms.py:12 .\elibrary\models.py:16
 #: .\elibrary\templates\elibrary\book_confirm_delete.html:15
 #: .\glosowania\models.py:125
-#: .\glosowania\templates\glosowania\szczegoly.html:214
-#: .\tasks\templates\tasks\task_detail.html:64
+#: .\glosowania\templates\glosowania\szczegoly.html:198
+#: .\tasks\templates\tasks\task_detail.html:36
 msgid "Author"
 msgstr ""
 
@@ -49,10 +49,10 @@ msgstr ""
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:23
 #: .\events\templates\events\event_detail.html:107
 #: .\glosowania\templates\glosowania\delete_argument.html:20
-#: .\glosowania\templates\glosowania\discussion.html:49
+#: .\glosowania\templates\glosowania\discussion.html:33
 #: .\glosowania\templates\glosowania\edit_argument.html:12
-#: .\glosowania\templates\glosowania\proposition.html:53
-#: .\tasks\templates\tasks\task_detail.html:63
+#: .\glosowania\templates\glosowania\proposition.html:37
+#: .\tasks\templates\tasks\task_detail.html:35
 msgid "Created"
 msgstr "Created"
 
@@ -117,8 +117,8 @@ msgstr ""
 #: .\board\templates\board\board.html:63
 #: .\bookkeeping\templates\bookkeeping\category_list.html:38
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:60
-#: .\bookkeeping\templates\bookkeeping\report_list.html:75
-#: .\bookkeeping\templates\bookkeeping\report_list.html:116
+#: .\bookkeeping\templates\bookkeeping\report_list.html:67
+#: .\bookkeeping\templates\bookkeeping\report_list.html:108
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:75
 msgid "No records found."
 msgstr ""
@@ -161,7 +161,7 @@ msgstr ""
 #: .\obywatele\templates\obywatele\change_username.html:19
 #: .\obywatele\templates\obywatele\my_assets.html:99
 #: .\tasks\templates\tasks\task_close.html:21
-#: .\tasks\templates\tasks\task_detail.html:190
+#: .\tasks\templates\tasks\task_detail.html:162
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -186,8 +186,8 @@ msgstr ""
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:63
 #: .\elibrary\templates\elibrary\book_detail.html:34
 #: .\events\templates\events\event_detail.html:16
-#: .\glosowania\templates\glosowania\szczegoly.html:70
-#: .\glosowania\templates\glosowania\szczegoly.html:104
+#: .\glosowania\templates\glosowania\szczegoly.html:54
+#: .\glosowania\templates\glosowania\szczegoly.html:88
 msgid "Delete"
 msgstr ""
 
@@ -207,10 +207,10 @@ msgstr ""
 #: .\elibrary\templates\elibrary\book_detail.html:35
 #: .\events\templates\events\event_detail.html:13
 #: .\events\templates\events\event_list.html:82
-#: .\glosowania\templates\glosowania\szczegoly.html:69
-#: .\glosowania\templates\glosowania\szczegoly.html:103
-#: .\glosowania\templates\glosowania\szczegoly.html:154
-#: .\tasks\templates\tasks\task_detail.html:111
+#: .\glosowania\templates\glosowania\szczegoly.html:53
+#: .\glosowania\templates\glosowania\szczegoly.html:87
+#: .\glosowania\templates\glosowania\szczegoly.html:138
+#: .\tasks\templates\tasks\task_detail.html:83
 msgid "Edit"
 msgstr ""
 
@@ -260,8 +260,8 @@ msgstr ""
 
 #: .\bookkeeping\forms.py:54 .\bookkeeping\models.py:42
 #: .\bookkeeping\templates\bookkeeping\partner_confirm_delete.html:36
-#: .\bookkeeping\templates\bookkeeping\report_list.html:52
-#: .\bookkeeping\templates\bookkeeping\report_list.html:93
+#: .\bookkeeping\templates\bookkeeping\report_list.html:44
+#: .\bookkeeping\templates\bookkeeping\report_list.html:85
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:25
 msgid "Category"
 msgstr ""
@@ -494,24 +494,24 @@ msgstr ""
 msgid "Select Year"
 msgstr ""
 
-#: .\bookkeeping\templates\bookkeeping\report_list.html:45
+#: .\bookkeeping\templates\bookkeeping\report_list.html:37
 msgid "Summary"
 msgstr ""
 
-#: .\bookkeeping\templates\bookkeeping\report_list.html:53
-#: .\bookkeeping\templates\bookkeeping\report_list.html:94
+#: .\bookkeeping\templates\bookkeeping\report_list.html:45
+#: .\bookkeeping\templates\bookkeeping\report_list.html:86
 msgid "Sum"
 msgstr ""
 
-#: .\bookkeeping\templates\bookkeeping\report_list.html:66
+#: .\bookkeeping\templates\bookkeeping\report_list.html:58
 msgid "Total of the year"
 msgstr ""
 
-#: .\bookkeeping\templates\bookkeeping\report_list.html:86
+#: .\bookkeeping\templates\bookkeeping\report_list.html:78
 msgid "All Years Summary"
 msgstr ""
 
-#: .\bookkeeping\templates\bookkeeping\report_list.html:107
+#: .\bookkeeping\templates\bookkeeping\report_list.html:99
 msgid "Total all years"
 msgstr ""
 
@@ -612,8 +612,8 @@ msgstr ""
 #: .\home\templates\home\home.html:83 .\home\templates\home\home.html:96
 #: .\home\templates\home\home.html:107 .\home\templates\home\home.html:118
 #: .\home\templates\home\home.html:129
-#: .\tasks\templates\tasks\task_list.html:46
-#: .\tasks\templates\tasks\task_list.html:50
+#: .\tasks\templates\tasks\task_list.html:31
+#: .\tasks\templates\tasks\task_list.html:35
 msgid "None"
 msgstr ""
 
@@ -621,7 +621,7 @@ msgstr ""
 msgid "Public Archived"
 msgstr ""
 
-#: .\chat\templates\chat\chat.html:68 .\home\templates\home\base.html:81
+#: .\chat\templates\chat\chat.html:68 .\home\templates\home\base.html:79
 msgid "Tasks"
 msgstr ""
 
@@ -650,7 +650,7 @@ msgid "Changes history"
 msgstr ""
 
 #: .\chat\templates\chat\chat.html:170
-#: .\tasks\templates\tasks\task_detail.html:183
+#: .\tasks\templates\tasks\task_detail.html:155
 msgid "Close"
 msgstr ""
 
@@ -959,7 +959,7 @@ msgstr ""
 
 #: .\events\templates\events\event_detail.html:69
 #: .\tasks\templates\tasks\task_close.html:16
-#: .\tasks\templates\tasks\task_detail.html:67
+#: .\tasks\templates\tasks\task_detail.html:39
 msgid "Status"
 msgstr "Status"
 
@@ -990,7 +990,7 @@ msgid "No upcoming occurrences"
 msgstr "No upcoming occurrences"
 
 #: .\events\templates\events\event_detail.html:118
-#: .\events\templates\events\event_form.html:46
+#: .\events\templates\events\event_form.html:25
 msgid "Back to Calendar"
 msgstr "Back to Calendar"
 
@@ -1010,7 +1010,7 @@ msgstr "Edit Event"
 msgid "Create New Event"
 msgstr "Create New Event"
 
-#: .\events\templates\events\event_form.html:50
+#: .\events\templates\events\event_form.html:29
 msgid "View Event"
 msgstr "View Event"
 
@@ -1144,7 +1144,7 @@ msgid "Signed"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:103
-#: .\glosowania\templates\glosowania\menu.html:30 .\glosowania\views.py:220
+#: .\glosowania\templates\glosowania\menu.html:26 .\glosowania\views.py:220
 msgid "Discussion"
 msgstr ""
 
@@ -1153,12 +1153,12 @@ msgid "Not enough signatures"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:125
-#: .\glosowania\templates\glosowania\menu.html:34 .\glosowania\views.py:221
+#: .\glosowania\templates\glosowania\menu.html:30 .\glosowania\views.py:221
 msgid "Referendum"
 msgstr ""
 
 #: .\glosowania\management\commands\vote.py:143
-#: .\glosowania\templates\glosowania\menu.html:38 .\glosowania\views.py:223
+#: .\glosowania\templates\glosowania\menu.html:34 .\glosowania\views.py:223
 msgid "Approved"
 msgstr ""
 
@@ -1190,9 +1190,9 @@ msgid "Enter the exact wording of the law as it is to be applied."
 msgstr ""
 
 #: .\glosowania\models.py:32
-#: .\glosowania\templates\glosowania\discussion.html:42
-#: .\glosowania\templates\glosowania\proposition.html:43
-#: .\glosowania\templates\glosowania\szczegoly.html:40
+#: .\glosowania\templates\glosowania\discussion.html:26
+#: .\glosowania\templates\glosowania\proposition.html:27
+#: .\glosowania\templates\glosowania\szczegoly.html:24
 msgid "Penalty for non-compliance"
 msgstr ""
 
@@ -1302,9 +1302,9 @@ msgid ""
 msgstr ""
 
 #: .\glosowania\templates\glosowania\approved.html:21
-#: .\glosowania\templates\glosowania\discussion.html:52
-#: .\glosowania\templates\glosowania\proposition.html:57
-#: .\glosowania\templates\glosowania\referendum.html:49
+#: .\glosowania\templates\glosowania\discussion.html:36
+#: .\glosowania\templates\glosowania\proposition.html:41
+#: .\glosowania\templates\glosowania\referendum.html:33
 #: .\glosowania\templates\glosowania\rejected.html:20
 msgid "There is no proposal with this status"
 msgstr ""
@@ -1331,15 +1331,15 @@ msgstr ""
 msgid "No, Cancel"
 msgstr "Cancel"
 
-#: .\glosowania\templates\glosowania\discussion.html:45
-#: .\glosowania\templates\glosowania\proposition.html:46
-#: .\glosowania\templates\glosowania\szczegoly.html:41
+#: .\glosowania\templates\glosowania\discussion.html:29
+#: .\glosowania\templates\glosowania\proposition.html:30
+#: .\glosowania\templates\glosowania\szczegoly.html:25
 msgid "Reason"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\discussion.html:48
-#: .\glosowania\templates\glosowania\proposition.html:49
-#: .\glosowania\templates\glosowania\szczegoly.html:42
+#: .\glosowania\templates\glosowania\discussion.html:32
+#: .\glosowania\templates\glosowania\proposition.html:33
+#: .\glosowania\templates\glosowania\szczegoly.html:26
 msgid "This law supersedes the following bills"
 msgstr ""
 
@@ -1357,15 +1357,15 @@ msgstr ""
 msgid "Edit Argument"
 msgstr "Edit Event"
 
-#: .\glosowania\templates\glosowania\menu.html:13
+#: .\glosowania\templates\glosowania\menu.html:9
 msgid "A referendum is not a one-off decision. The referendum is to pass a law that will be in force all the time."
 msgstr ""
 
-#: .\glosowania\templates\glosowania\menu.html:26
+#: .\glosowania\templates\glosowania\menu.html:22
 msgid "Propositions"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\menu.html:45
+#: .\glosowania\templates\glosowania\menu.html:41
 msgid "Add"
 msgstr ""
 
@@ -1414,105 +1414,105 @@ msgstr ""
 msgid "parameters - create referendum."
 msgstr ""
 
-#: .\glosowania\templates\glosowania\proposition.html:51
+#: .\glosowania\templates\glosowania\proposition.html:35
 msgid "Signatures"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\referendum.html:43
-#: .\glosowania\templates\glosowania\szczegoly.html:220
+#: .\glosowania\templates\glosowania\referendum.html:27
+#: .\glosowania\templates\glosowania\szczegoly.html:204
 msgid "Start referendum"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\referendum.html:45
-#: .\glosowania\templates\glosowania\szczegoly.html:223
+#: .\glosowania\templates\glosowania\referendum.html:29
+#: .\glosowania\templates\glosowania\szczegoly.html:207
 msgid "End referendum"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:29
+#: .\glosowania\templates\glosowania\szczegoly.html:13
 msgid "Bill number"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:31
+#: .\glosowania\templates\glosowania\szczegoly.html:15
 msgid "Bill title"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:38
+#: .\glosowania\templates\glosowania\szczegoly.html:22
 msgid "Bill state"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:39
+#: .\glosowania\templates\glosowania\szczegoly.html:23
 msgid "Bill text"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:51
+#: .\glosowania\templates\glosowania\szczegoly.html:35
 msgid "Positive Arguments"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:61
-#: .\glosowania\templates\glosowania\szczegoly.html:95
+#: .\glosowania\templates\glosowania\szczegoly.html:45
+#: .\glosowania\templates\glosowania\szczegoly.html:79
 msgid "By"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:62
-#: .\glosowania\templates\glosowania\szczegoly.html:96
+#: .\glosowania\templates\glosowania\szczegoly.html:46
+#: .\glosowania\templates\glosowania\szczegoly.html:80
 msgid "Added"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:64
-#: .\glosowania\templates\glosowania\szczegoly.html:98
+#: .\glosowania\templates\glosowania\szczegoly.html:48
+#: .\glosowania\templates\glosowania\szczegoly.html:82
 msgid "Modified"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:78
+#: .\glosowania\templates\glosowania\szczegoly.html:62
 #, fuzzy
 #| msgid "No events yet"
 msgid "No positive arguments yet."
 msgstr "No events yet"
 
-#: .\glosowania\templates\glosowania\szczegoly.html:85
+#: .\glosowania\templates\glosowania\szczegoly.html:69
 #, fuzzy
 #| msgid "Inactive"
 msgid "Negative Arguments"
 msgstr "Inactive"
 
-#: .\glosowania\templates\glosowania\szczegoly.html:112
+#: .\glosowania\templates\glosowania\szczegoly.html:96
 #, fuzzy
 #| msgid "No events yet"
 msgid "No negative arguments yet."
 msgstr "No events yet"
 
-#: .\glosowania\templates\glosowania\szczegoly.html:122
+#: .\glosowania\templates\glosowania\szczegoly.html:106
 msgid "Add Your Argument"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:128
+#: .\glosowania\templates\glosowania\szczegoly.html:112
 #, fuzzy
 #| msgid "Add Event"
 msgid "Add Argument"
 msgstr "Add Event"
 
-#: .\glosowania\templates\glosowania\szczegoly.html:143
+#: .\glosowania\templates\glosowania\szczegoly.html:127
 msgid "Do you want a referendum on this law?"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:144
+#: .\glosowania\templates\glosowania\szczegoly.html:128
 msgid "Yes, I sign"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:147
+#: .\glosowania\templates\glosowania\szczegoly.html:131
 msgid "You already signed this proposal."
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:149
+#: .\glosowania\templates\glosowania\szczegoly.html:133
 msgid "Withdraw your sign"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:166
+#: .\glosowania\templates\glosowania\szczegoly.html:150
 msgid "Do you want to implement this law?"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:167
-#: .\glosowania\templates\glosowania\szczegoly.html:188
+#: .\glosowania\templates\glosowania\szczegoly.html:151
+#: .\glosowania\templates\glosowania\szczegoly.html:172
 #: .\obywatele\templates\obywatele\poczekalnia.html:49
 #: .\obywatele\templates\obywatele\poczekalnia.html:50
 #: .\obywatele\templates\obywatele\szczegoly.html:21
@@ -1520,8 +1520,8 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:168
-#: .\glosowania\templates\glosowania\szczegoly.html:190
+#: .\glosowania\templates\glosowania\szczegoly.html:152
+#: .\glosowania\templates\glosowania\szczegoly.html:174
 #: .\obywatele\templates\obywatele\poczekalnia.html:49
 #: .\obywatele\templates\obywatele\poczekalnia.html:50
 #: .\obywatele\templates\obywatele\szczegoly.html:21
@@ -1529,47 +1529,47 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:171
+#: .\glosowania\templates\glosowania\szczegoly.html:155
 msgid "You already voted."
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:181
+#: .\glosowania\templates\glosowania\szczegoly.html:165
 msgid "Result"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:109
+#: .\glosowania\templates\glosowania\szczegoly.html:166 .\tasks\models.py:109
 msgid "For"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:182 .\tasks\models.py:108
+#: .\glosowania\templates\glosowania\szczegoly.html:166 .\tasks\models.py:108
 msgid "Against"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:185
+#: .\glosowania\templates\glosowania\szczegoly.html:169
 msgid "Protocol"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:197
+#: .\glosowania\templates\glosowania\szczegoly.html:181
 msgid "List of people who voted"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:201
+#: .\glosowania\templates\glosowania\szczegoly.html:185
 msgid "No votes recorded yet."
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:212
+#: .\glosowania\templates\glosowania\szczegoly.html:196
 msgid "Number of people signed the motion for a referendum"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:216
+#: .\glosowania\templates\glosowania\szczegoly.html:200
 msgid "History"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:218
+#: .\glosowania\templates\glosowania\szczegoly.html:202
 msgid "Date created"
 msgstr ""
 
-#: .\glosowania\templates\glosowania\szczegoly.html:219
+#: .\glosowania\templates\glosowania\szczegoly.html:203
 msgid "Date of collecting signatures"
 msgstr ""
 
@@ -1696,70 +1696,70 @@ msgstr ""
 msgid "Keep me signed in"
 msgstr ""
 
-#: .\home\templates\home\base.html:68 .\home\templates\home\home.html:46
+#: .\home\templates\home\base.html:66 .\home\templates\home\home.html:46
 msgid "Start"
 msgstr ""
 
-#: .\home\templates\home\base.html:72
+#: .\home\templates\home\base.html:70
 msgid "Board"
 msgstr ""
 
-#: .\home\templates\home\base.html:76
+#: .\home\templates\home\base.html:74
 msgid "Calendar"
 msgstr ""
 
-#: .\home\templates\home\base.html:87 .\home\templates\home\home.html:14
+#: .\home\templates\home\base.html:85 .\home\templates\home\home.html:14
 #: .\home\templates\home\login.html:4 .\home\templates\home\login.html:13
 #: .\home\templates\home\login.html:34
 #: .\obywatele\management\commands\count_citizens.py:175
 msgid "Login"
 msgstr ""
 
-#: .\home\templates\home\base.html:91 .\home\templates\home\home.html:17
+#: .\home\templates\home\base.html:89 .\home\templates\home\home.html:17
 #: .\home\templates\home\login.html:35
 #: .\templates\allauth\account\signup.html:28
 msgid "Sign Up"
 msgstr ""
 
-#: .\home\templates\home\base.html:99 .\obywatele\models.py:63
-#: .\obywatele\templates\obywatele\menu.html:26
+#: .\home\templates\home\base.html:97 .\obywatele\models.py:63
+#: .\obywatele\templates\obywatele\menu.html:22
 #: .\obywatele\templates\obywatele\start.html:10
 msgid "Citizens"
 msgstr ""
 
-#: .\home\templates\home\base.html:105
+#: .\home\templates\home\base.html:103
 msgid "Voting"
 msgstr ""
 
-#: .\home\templates\home\base.html:109
+#: .\home\templates\home\base.html:107
 msgid "Bookkeeping"
 msgstr ""
 
-#: .\home\templates\home\base.html:113
+#: .\home\templates\home\base.html:111
 msgid "eLibrary"
 msgstr ""
 
-#: .\home\templates\home\base.html:122
+#: .\home\templates\home\base.html:120
 msgid "Chat"
 msgstr ""
 
-#: .\home\templates\home\base.html:144
+#: .\home\templates\home\base.html:142
 msgid "Enable notifications to stay updated with new messages and activities"
 msgstr ""
 
-#: .\home\templates\home\base.html:146
+#: .\home\templates\home\base.html:144
 msgid "Enable Notifications"
 msgstr ""
 
-#: .\home\templates\home\base.html:149
+#: .\home\templates\home\base.html:147
 msgid "Not now"
 msgstr ""
 
-#: .\home\templates\home\base.html:154
+#: .\home\templates\home\base.html:152
 msgid "Notifications are blocked. Please enable them in your browser settings"
 msgstr ""
 
-#: .\home\templates\home\base.html:156
+#: .\home\templates\home\base.html:154
 msgid "Dismiss"
 msgstr ""
 
@@ -2181,20 +2181,20 @@ msgstr ""
 msgid "Below fields are not mandatory but filling them out will help us make the right decision when accepting a new person."
 msgstr ""
 
-#: .\obywatele\templates\obywatele\menu.html:33
+#: .\obywatele\templates\obywatele\menu.html:29
 #: .\obywatele\templates\obywatele\poczekalnia.html:9
 msgid "Candidates"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\menu.html:40
+#: .\obywatele\templates\obywatele\menu.html:36
 msgid "Assets"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\menu.html:44
+#: .\obywatele\templates\obywatele\menu.html:40
 msgid "Clear form"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\menu.html:47
+#: .\obywatele\templates\obywatele\menu.html:43
 msgid "Invite"
 msgstr ""
 
@@ -2283,7 +2283,7 @@ msgid "Your email address is confirmed."
 msgstr ""
 
 #: .\obywatele\templates\obywatele\onboarding_waiting.html:17
-#: .\obywatele\views.py:335
+#: .\obywatele\views.py:347
 msgid "Your onboarding form has been saved."
 msgstr ""
 
@@ -2418,69 +2418,69 @@ msgstr ""
 msgid "I do not accept"
 msgstr ""
 
-#: .\obywatele\views.py:115
+#: .\obywatele\views.py:127
 msgid "Your new email has been saved."
 msgstr ""
 
-#: .\obywatele\views.py:135
+#: .\obywatele\views.py:147
 msgid "Your name has been saved."
 msgstr ""
 
-#: .\obywatele\views.py:280
+#: .\obywatele\views.py:292
 msgid "Your profile does not exist. Please contact administrator."
 msgstr ""
 
-#: .\obywatele\views.py:319 .\obywatele\views.py:352
+#: .\obywatele\views.py:331 .\obywatele\views.py:364
 msgid "Could not find your onboarding account."
 msgstr ""
 
-#: .\obywatele\views.py:371
+#: .\obywatele\views.py:383
 msgid "Email already exist"
 msgstr ""
 
-#: .\obywatele\views.py:405
+#: .\obywatele\views.py:417
 msgid "The new user has been saved"
 msgstr ""
 
-#: .\obywatele\views.py:408 .\obywatele\views.py:409
+#: .\obywatele\views.py:420 .\obywatele\views.py:421
 msgid "New citizen has been proposed"
 msgstr ""
 
-#: .\obywatele\views.py:409
+#: .\obywatele\views.py:421
 msgid ""
 "proposed new citizen\n"
 "You can approve him/her here:"
 msgstr ""
 
-#: .\obywatele\views.py:421
+#: .\obywatele\views.py:433
 msgid "Please correct the highlighted errors."
 msgstr ""
 
-#: .\obywatele\views.py:482
+#: .\obywatele\views.py:494
 msgid "Changes was saved"
 msgstr ""
 
-#: .\obywatele\views.py:491
+#: .\obywatele\views.py:503
 msgid "Form is not valid!"
 msgstr ""
 
-#: .\obywatele\views.py:562
+#: .\obywatele\views.py:574
 msgid "positive"
 msgstr ""
 
-#: .\obywatele\views.py:569
+#: .\obywatele\views.py:581
 msgid "negative"
 msgstr ""
 
-#: .\obywatele\views.py:576
+#: .\obywatele\views.py:588
 msgid "neutral"
 msgstr ""
 
-#: .\obywatele\views.py:651
+#: .\obywatele\views.py:663
 msgid "Fill out your onboarding form"
 msgstr ""
 
-#: .\obywatele\views.py:652
+#: .\obywatele\views.py:664
 #, python-format
 msgid "Your email has been confirmed. Please fill out your onboarding form here: %(link)s"
 msgstr ""
@@ -2503,13 +2503,13 @@ msgstr "Cancel"
 msgid "chat room"
 msgstr ""
 
-#: .\tasks\models.py:133 .\tasks\templates\tasks\task_detail.html:74
-#: .\tasks\templates\tasks\task_detail.html:164
+#: .\tasks\models.py:133 .\tasks\templates\tasks\task_detail.html:46
+#: .\tasks\templates\tasks\task_detail.html:136
 msgid "Success"
 msgstr ""
 
-#: .\tasks\models.py:134 .\tasks\templates\tasks\task_detail.html:75
-#: .\tasks\templates\tasks\task_detail.html:170
+#: .\tasks\models.py:134 .\tasks\templates\tasks\task_detail.html:47
+#: .\tasks\templates\tasks\task_detail.html:142
 msgid "Failure"
 msgstr ""
 
@@ -2518,32 +2518,32 @@ msgstr ""
 msgid "Discussion room for task: %(task_url)s"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:57
-#: .\tasks\templates\tasks\task_detail.html:116
+#: .\tasks\templates\tasks\_task_cards.html:51
+#: .\tasks\templates\tasks\task_detail.html:88
 msgid "Resign"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:63
-#: .\tasks\templates\tasks\task_detail.html:106
+#: .\tasks\templates\tasks\_task_cards.html:57
+#: .\tasks\templates\tasks\task_detail.html:78
 msgid "Take task"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:70
-#: .\tasks\templates\tasks\task_detail.html:66
+#: .\tasks\templates\tasks\_task_cards.html:64
+#: .\tasks\templates\tasks\task_detail.html:38
 msgid "Owner"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:74
+#: .\tasks\templates\tasks\_task_cards.html:68
 msgid "n/a"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:83
-#: .\tasks\templates\tasks\task_detail.html:88
+#: .\tasks\templates\tasks\_task_cards.html:77
+#: .\tasks\templates\tasks\task_detail.html:60
 msgid "I want to help"
 msgstr ""
 
-#: .\tasks\templates\tasks\_task_cards.html:89
-#: .\tasks\templates\tasks\task_detail.html:97
+#: .\tasks\templates\tasks\_task_cards.html:83
+#: .\tasks\templates\tasks\task_detail.html:69
 msgid "Let's not do that"
 msgstr ""
 
@@ -2554,7 +2554,7 @@ msgid "Back to task"
 msgstr "Back to Calendar"
 
 #: .\tasks\templates\tasks\task_close.html:10
-#: .\tasks\templates\tasks\task_detail.html:112
+#: .\tasks\templates\tasks\task_detail.html:84
 msgid "Close task"
 msgstr ""
 
@@ -2566,54 +2566,54 @@ msgstr ""
 msgid "Confirm close"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_detail.html:34
+#: .\tasks\templates\tasks\task_detail.html:6
 #, fuzzy
 #| msgid "Back to Calendar"
 msgid "Back to list"
 msgstr "Back to Calendar"
 
-#: .\tasks\templates\tasks\task_detail.html:64
+#: .\tasks\templates\tasks\task_detail.html:36
 msgid "Unknown"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_detail.html:66
+#: .\tasks\templates\tasks\task_detail.html:38
 msgid "Nobody"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_detail.html:73
+#: .\tasks\templates\tasks\task_detail.html:45
 msgid "Votes"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_detail.html:126
-#: .\tasks\templates\tasks\task_detail.html:182
+#: .\tasks\templates\tasks\task_detail.html:98
+#: .\tasks\templates\tasks\task_detail.html:154
 #, fuzzy
 #| msgid "Delete Event"
 msgid "Delete task"
 msgstr "Delete Event"
 
-#: .\tasks\templates\tasks\task_detail.html:133
+#: .\tasks\templates\tasks\task_detail.html:105
 msgid "Willing to help"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_detail.html:143
+#: .\tasks\templates\tasks\task_detail.html:115
 msgid "No one wants to help at the moment"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_detail.html:153
+#: .\tasks\templates\tasks\task_detail.html:125
 msgid "Reopen task"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_detail.html:158
+#: .\tasks\templates\tasks\task_detail.html:130
 msgid "Evaluate outcome"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_detail.html:187
+#: .\tasks\templates\tasks\task_detail.html:159
 #, fuzzy
 #| msgid "Are you sure you want to delete the following event?"
 msgid "Are you sure you want to delete this task? This action cannot be undone."
 msgstr "Are you sure you want to delete the following event?"
 
-#: .\tasks\templates\tasks\task_detail.html:193
+#: .\tasks\templates\tasks\task_detail.html:165
 msgid "Yes, delete"
 msgstr ""
 
@@ -2627,43 +2627,43 @@ msgstr "Edit Event"
 msgid "Add new task"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:22
+#: .\tasks\templates\tasks\task_list.html:7
 msgid "Task board"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:23
+#: .\tasks\templates\tasks\task_list.html:8
 msgid "Add task"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:27
+#: .\tasks\templates\tasks\task_list.html:12
 msgid "This module is used to determine which tasks we should complete as a group and which we should skip."
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:33
+#: .\tasks\templates\tasks\task_list.html:18
 msgid "Actively handled"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:36
+#: .\tasks\templates\tasks\task_list.html:21
 msgid "Awaiting pickup"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:39
+#: .\tasks\templates\tasks\task_list.html:24
 msgid "Finished"
 msgstr ""
 
-#: .\tasks\templates\tasks\task_list.html:55
+#: .\tasks\templates\tasks\task_list.html:40
 #, fuzzy
 #| msgid "No events yet"
 msgid "No completed tasks yet."
 msgstr "No events yet"
 
-#: .\tasks\templates\tasks\task_list.html:58
+#: .\tasks\templates\tasks\task_list.html:43
 #, fuzzy
 #| msgid "No events yet"
 msgid "No cancelled tasks yet."
 msgstr "No events yet"
 
-#: .\tasks\templates\tasks\task_list.html:61
+#: .\tasks\templates\tasks\task_list.html:46
 #, fuzzy
 #| msgid "No events yet"
 msgid "No rejected tasks yet."

@@ -83,16 +83,28 @@ def required_reputation():
     if population() > s.ACCEPTANCE * 2:
         return s.ACCEPTANCE
     '''
-    Liczba Próg
-    Pop  P-A=Rep
-    1 -> 1-3=0
-    2 -> 2-3=0
+    Załóżmy, że próg akceptacji wynosi 3.
+    W grupie pojawiają się po kolei 1, 2, 3 osoby.
+    W takiej sytuacji nikt nie może osiągnąć progu akceptacji wynoszącego 3 bo w grupie są np. 2 osoby.
+    Musi więc istnieć mechanizm, który chwilowo obniża próg akceptacji.
+
+    Rozwiązanie:
+    populacja - docelowy_próg_akceptacji = chwilowy_próg_akceptacji
+    1 -> 1-3=-2
+    2 -> 2-3=-1
     3 -> 3-3=0
     4 -> 4-3=+1
     5 -> 5-3=+2
     6 -> 6-3=+3
     7 -> 7-3=+3
     8 -> 8-3=+3
+
+    To rozwiązanie rodzi następny problem:
+    Ponieważ próg akceptacji rośnie,
+    ale pierwszej osobie w grupie nikt nie dał Akceptuję,
+    to po automatycznym podniesieniu progu - pierwsza osoba jest usuwana.
+
+    Stąd bierze się mechanizm automatycznego nadawania istniejącym osobom punktów reputacji.
     '''
 
 

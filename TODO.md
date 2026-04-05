@@ -1,7 +1,10 @@
 # PILNE
-- obrazek pokazujące kolejne kroki zapisywania się do grupy
+- archiwum czatów powinno być nie pod rozwijaną listą tylko pod guzikiem. Archiwum powinno być bardziej ukryte żeby nie zaśmiecać interfejsu.
+- podczas zakładania konta powinny się wyświetlić aktualne zasady i trzeba je zaakceptować
+- zrób obrazek po polsku pokazujące kolejne kroki zapisywania się do grupy
 - Ostrzeżenie, że ktoś będzie z niedługo usunięty z grupy
-- Chat room dla Task i Vote znika za szybko
+- Chat room dla Task i Vote znika za szybko - częśćiowo zrobione ale nie są zachowywane na wieki
+- Start: infinite scroll z kolejnymi wydarzeniami. Jak x.com. Dodatkowo: porady jak używać niektórych opcji.
 - Dodać opcję wyłączania powiadomień email (Unsubscribe). Dodać opcję likwidacji własnego konta
 - Wersjonowanie Ogłoszeń i Przepisów. Wydaje się, że to skomplikuje kod.
 - Ludzie piszą do grupy. Grupy piszą do siebie.
