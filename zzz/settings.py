@@ -52,7 +52,9 @@ SITE_DESCRIPTION = getenv("SITE_DESCRIPTION", SITE_NAME)
 SECRET_KEY = getenv("SECRET_KEY")
 if not SECRET_KEY:
     if DEBUG:
-        SECRET_KEY = "dev-insecure-secret-key"
+        # Generate a random key for development
+        import secrets
+        SECRET_KEY = secrets.token_urlsafe(50)
     else:
         raise RuntimeError("SECRET_KEY is required when DEBUG is False")
 

@@ -86,6 +86,9 @@
 								<h6 class="mb-2">
 									<a href="{{ item.url }}" class="text-decoration-none {% if not item.is_read %}fw-bold{% endif %}">
 										{{ item.title }}
+										{% if item.content_type == 'room_messages' and item.message_count > 1 %}
+											<span class="badge bg-secondary ms-1">{{ item.message_count }} {% trans 'messages' %}</span>
+										{% endif %}
 									</a>
 								</h6>
 								

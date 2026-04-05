@@ -13,6 +13,7 @@ def content_type_color(content_type):
         'book': 'secondary',
         'event': 'primary',
         'message': 'primary',
+        'room_messages': 'info',  # New content type for grouped room messages
         'decision': 'danger',
         'citizen': 'danger',
         'membership': 'secondary',
@@ -30,6 +31,7 @@ def content_type_label(content_type):
         'book': _('Book'),
         'event': _('Event'),
         'message': _('Message'),
+        'room_messages': _('Chat Room'),  # New content type for grouped room messages
         'decision': _('Decision'),
         'citizen': _('Citizen'),
         'membership': _('Membership'),

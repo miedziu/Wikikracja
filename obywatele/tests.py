@@ -9,6 +9,7 @@ EMAIL_BACKEND is overridden to locmem so no real SMTP is used.
 """
 # Standard library imports
 import threading
+import secrets
 from datetime import datetime
 
 # Third party imports
@@ -42,7 +43,9 @@ def _drain_threads():
 # Helper: create an active user + Uzytkownik profile
 # ---------------------------------------------------------------------------
 def make_active_user(username, email):
-    user = User.objects.create_user(username=username, email=email, password='pass')
+    # Generate secure random password for tests
+    test_password = secrets.token_urlsafe(16)
+    user = User.objects.create_user(username=username, email=email, password=test_password)
     user.is_active = True
     user.save()
     # Uzytkownik is auto-created via post_save signal

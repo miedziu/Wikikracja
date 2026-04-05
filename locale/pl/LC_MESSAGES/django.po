@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-05 12:16+0200\n"
+"POT-Creation-Date: 2026-04-05 12:48+0200\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -916,7 +916,7 @@ msgid "Public events are visible to everyone. Private events are only visible to
 msgstr "Wydarzenia publiczne są widoczne dla wszystkich. Wydarzenia prywatne są widoczne tylko dla zalogowanych użytkowników."
 
 #: .\events\models.py:58 .\home\models.py:16 .\home\models.py:47
-#: .\home\templatetags\feed_filters.py:31
+#: .\home\templatetags\feed_filters.py:32
 msgid "Event"
 msgstr "Wydarzenie"
 
@@ -1229,7 +1229,7 @@ msgstr "Argument Przeciw"
 #: .\glosowania\models.py:124
 #: .\glosowania\templates\glosowania\delete_argument.html:13
 #: .\glosowania\templates\glosowania\edit_argument.html:10 .\home\models.py:18
-#: .\home\models.py:49 .\home\templatetags\feed_filters.py:33
+#: .\home\models.py:49 .\home\templatetags\feed_filters.py:35
 msgid "Decision"
 msgstr "Referendum"
 
@@ -1663,24 +1663,24 @@ msgid "Keep me signed in"
 msgstr "Nie wylogowuj mnie"
 
 #: .\home\models.py:13 .\home\models.py:44
-#: .\home\templatetags\feed_filters.py:28
+#: .\home\templatetags\feed_filters.py:29
 msgid "Post"
 msgstr "Ogłoszenie"
 
 #: .\home\models.py:14 .\home\models.py:45
-#: .\home\templatetags\feed_filters.py:29
+#: .\home\templatetags\feed_filters.py:30
 msgid "Task"
 msgstr "Zadanie"
 
 #: .\home\models.py:15 .\home\models.py:46
-#: .\home\templatetags\feed_filters.py:30
+#: .\home\templatetags\feed_filters.py:31
 msgid "Book"
 msgstr "Biblioteka"
 
 #: .\home\models.py:17 .\home\models.py:48
-#: .\home\templatetags\feed_filters.py:32
+#: .\home\templatetags\feed_filters.py:33
 msgid "Message"
-msgstr "Czat"
+msgstr "Wiadomość"
 
 #: .\home\models.py:19 .\home\models.py:50
 msgid "Citizen Activity"
@@ -1782,20 +1782,24 @@ msgstr "Przejdź do pierwszej nieprzeczytanej"
 msgid "Activity Feed"
 msgstr "Kanał aktywności"
 
-#: .\home\templates\home\home.html:67 .\home\templates\home\home.html:285
+#: .\home\templates\home\home.html:67 .\home\templates\home\home.html:288
 msgid "Mark as read"
 msgstr "Oznacz jako przeczytane"
 
-#: .\home\templates\home\home.html:76 .\home\templates\home\home.html:234
-#: .\home\templates\home\home.html:315
+#: .\home\templates\home\home.html:76 .\home\templates\home\home.html:237
+#: .\home\templates\home\home.html:318
 msgid "Mark unread"
 msgstr "Oznacz jako nieprzeczytane"
 
-#: .\home\templates\home\home.html:98
+#: .\home\templates\home\home.html:90
+msgid "messages"
+msgstr "wiadomości"
+
+#: .\home\templates\home\home.html:101
 msgid "View"
 msgstr "Zobacz"
 
-#: .\home\templates\home\home.html:105
+#: .\home\templates\home\home.html:108
 msgid "No recent activity"
 msgstr "Brak ostatniej aktywności"
 
@@ -1848,15 +1852,19 @@ msgstr "Aby zresetować hasło, wprowadź swój adres e-mail i kliknij \"Wyślij
 msgid "Send"
 msgstr "Wyślij"
 
-#: .\home\templatetags\feed_filters.py:34 .\obywatele\models.py:62
+#: .\home\templatetags\feed_filters.py:34
+msgid "Chat Room"
+msgstr "Pokój czatu"
+
+#: .\home\templatetags\feed_filters.py:36 .\obywatele\models.py:62
 msgid "Citizen"
 msgstr "Obywatel"
 
-#: .\home\templatetags\feed_filters.py:35
+#: .\home\templatetags\feed_filters.py:37
 msgid "Membership"
 msgstr "Członkostwo"
 
-#: .\home\templatetags\feed_filters.py:36
+#: .\home\templatetags\feed_filters.py:38
 msgid "Transaction"
 msgstr "Transakcja"
 
@@ -1864,16 +1872,21 @@ msgstr "Transakcja"
 msgid "Untitled Book"
 msgstr "Książka bez tytułu"
 
-#: .\home\views.py:170
+#: .\home\views.py:177
 #, python-format
-msgid "Message in %(room_title)s"
-msgstr "Wiadomość w %(room_title)s"
+msgid "Latest: %(message)s"
+msgstr "Najnowsze: %(message)s"
 
-#: .\home\views.py:321
+#: .\home\views.py:183
+#, python-format
+msgid "Messages in %(room_title)s"
+msgstr "Wiadomości w %(room_title)s"
+
+#: .\home\views.py:337
 msgid "Your password has been changed."
 msgstr "Twoje hasło zostało zmienione."
 
-#: .\home\views.py:324
+#: .\home\views.py:340
 msgid "You typed something wrong. See what error appeared above and try again."
 msgstr "Coś źle wpisałeś. Zobacz, jaki błąd pojawił się powyżej i spróbuj ponownie."
 
@@ -3026,10 +3039,10 @@ msgstr ""
 msgid "<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-mail address</a>."
 msgstr "<strong>Uwaga:</strong> nadal możesz <a href=\"%(email_url)s\">zmienić swój adres e-mail</a>."
 
-#: .\zzz\settings.py:101
+#: .\zzz\settings.py:103
 msgid "English"
 msgstr "Angielski"
 
-#: .\zzz\settings.py:102
+#: .\zzz\settings.py:104
 msgid "Polish"
 msgstr "Polski"

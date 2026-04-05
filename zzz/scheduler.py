@@ -2,6 +2,7 @@
 import json
 import logging
 import os
+import tempfile
 import threading
 
 # Third party imports
@@ -34,7 +35,7 @@ def start_scheduler():
     global _scheduler_lock_fd
 
     # Try to acquire exclusive lock on scheduler lock file
-    lock_file_path = os.getenv("SCHEDULER_LOCK_FILE", '/tmp/wikikracja_scheduler.lock')
+    lock_file_path = os.getenv("SCHEDULER_LOCK_FILE", os.path.join(tempfile.gettempdir(), 'wikikracja_scheduler.lock'))
     try:
         _scheduler_lock_fd = open(lock_file_path, 'w')
         if os.name != 'nt':

@@ -1,5 +1,6 @@
 # Standard library imports
 from datetime import timedelta
+import secrets
 
 # Third party imports
 from django.contrib.auth.models import User
@@ -33,7 +34,9 @@ class EventModelTest(TestCase):
 class EventViewTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='testpass123')
+        # Generate secure random password for tests
+        self.test_password = secrets.token_urlsafe(16)
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password=self.test_password)
         self.event = Event.objects.create(title="Test Event", description="Test Description", start_date=timezone.now() + timedelta(days=1), frequency='once')
 
     def test_event_list_view(self):
@@ -53,6 +56,6 @@ class EventViewTest(TestCase):
         self.assertEqual(response.status_code, 302)  # Redirect to login
 
     def test_event_create_view_authenticated(self):
-        self.client.login(username='testuser', password='testpass123')
+        self.client.login(username='testuser', password=self.test_password)
         response = self.client.get(reverse('events:create'))
         self.assertEqual(response.status_code, 200)

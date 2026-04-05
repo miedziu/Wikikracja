@@ -156,25 +156,39 @@ def generate_feed_items(user):
             'object_id': event.pk,
         })
 
-    # Get recent messages from rooms user has access to
+    # Get recent messages from rooms user has access to, grouped by room
     rooms = Room.objects.filter(allowed=user).prefetch_related('messages', 'messages__sender')
     seen_room_ids = set(Room.objects.filter(allowed=user, seen_by=user).values_list('id', flat=True))
+    
     for room in rooms:
         messages = room.messages.filter(
             time__gte=timezone.now() - td(days=30)
         ).order_by('-time')[:5]  # Limit to recent messages per room
         
-        for message in messages:
+        if messages:  # Only add room if it has recent messages
+            # Create a description that shows the most recent message
+            latest_message = messages[0]
+            message_count = messages.count()
+            
+            # Build description showing latest message and count
+            if message_count == 1:
+                description = latest_message.text[:500] + '...' if len(latest_message.text) > 500 else latest_message.text
+            else:
+                description = _("Latest: %(message)s") % {
+                    'message': latest_message.text[:300] + '...' if len(latest_message.text) > 300 else latest_message.text
+                }
+            
             feed_items.append({
-                'content_type': 'message',
-                'title': _("Message in %(room_title)s") % {'room_title': room.title},
-                'description': message.text[:500] + '...' if len(message.text) > 500 else message.text,
-                'author': message.sender,
-                'timestamp': message.time,
+                'content_type': 'room_messages',
+                'title': _("Messages in %(room_title)s") % {'room_title': room.title},
+                'description': description,
+                'author': latest_message.sender,
+                'timestamp': latest_message.time,
                 'url': f"/chat/#room_id={room.id}",
-                'is_read': message.pk in read_status_map[ReadStatus.ContentType.MESSAGE] or room.id in seen_room_ids,
-                'object_id': message.pk,
+                'is_read': room.id in seen_room_ids,  # Room is read if all messages are seen
+                'object_id': room.id,  # Use room ID as object_id for grouping
                 'room_id': room.id,
+                'message_count': message_count,
             })
     
     # Get recent decisions
@@ -236,6 +250,7 @@ def mark_as_read(request):
             'book': ReadStatus.ContentType.BOOK,
             'event': ReadStatus.ContentType.EVENT,
             'message': ReadStatus.ContentType.MESSAGE,
+            'room_messages': ReadStatus.ContentType.MESSAGE,  # Map room messages to message type for read tracking
             'decision': ReadStatus.ContentType.DECISION,
             'citizen': ReadStatus.ContentType.CITIZEN,
         }
@@ -276,6 +291,7 @@ def mark_unread(request):
             'book': ReadStatus.ContentType.BOOK,
             'event': ReadStatus.ContentType.EVENT,
             'message': ReadStatus.ContentType.MESSAGE,
+            'room_messages': ReadStatus.ContentType.MESSAGE,  # Map room messages to message type for read tracking
             'decision': ReadStatus.ContentType.DECISION,
             'citizen': ReadStatus.ContentType.CITIZEN,
         }
