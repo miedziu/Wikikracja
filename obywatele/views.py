@@ -75,8 +75,6 @@ def population():
 
 
 def required_reputation():
-    if population() <= s.ACCEPTANCE:
-        return 0
     if population() <= s.ACCEPTANCE * 2:
         return population() - s.ACCEPTANCE
     if population() > s.ACCEPTANCE * 2:

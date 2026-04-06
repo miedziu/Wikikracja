@@ -1,4 +1,7 @@
 # PILNE
+- Zadania: filtr, który pokazuje tylko moje zadania
+- czaty pod ogłoszeniami
+- Ostrzeżenie przed usunięciem
 - Refactor from eLibrary to Library.
 - archiwum czatów powinno być nie pod rozwijaną listą tylko pod guzikiem. Archiwum powinno być bardziej ukryte żeby nie zaśmiecać interfejsu.
 - podczas zakładania konta powinny się wyświetlić aktualne zasady i trzeba je zaakceptować
