@@ -98,7 +98,7 @@ def generate_feed_items(user):
         feed_items.append({
             'content_type': 'post',
             'title': post.title,
-            'description': clean_text[:500] + '...' if len(clean_text) > 500 else clean_text,
+            'description': clean_text[:125] + '...' if len(clean_text) > 125 else clean_text,
             'author': post.author,
             'timestamp': post.updated,
             'url': f"/board/view/{post.pk}/",
@@ -116,7 +116,7 @@ def generate_feed_items(user):
         feed_items.append({
             'content_type': 'task',
             'title': task.title,
-            'description': clean_description[:500] + '...' if len(clean_description) > 500 else clean_description,
+            'description': clean_description[:125] + '...' if len(clean_description) > 125 else clean_description,
             'author': task.created_by or task.assigned_to,
             'timestamp': task.updated_at,
             'url': f"/tasks/{task.pk}/",
@@ -134,7 +134,7 @@ def generate_feed_items(user):
         feed_items.append({
             'content_type': 'book',
             'title': book.title or _('Untitled Book'),
-            'description': clean_abstract[:500] + '...' if clean_abstract and len(clean_abstract) > 500 else clean_abstract,
+            'description': clean_abstract[:125] + '...' if clean_abstract and len(clean_abstract) > 125 else clean_abstract,
             'author': book.uploader,
             'timestamp': book.uploaded,
             'url': f"/elibrary/{book.pk}/detail/",
@@ -153,7 +153,7 @@ def generate_feed_items(user):
         feed_items.append({
             'content_type': 'event',
             'title': event.title,
-            'description': clean_description[:500] + '...' if clean_description and len(clean_description) > 500 else clean_description,
+            'description': clean_description[:125] + '...' if clean_description and len(clean_description) > 125 else clean_description,
             'author': None,
             'timestamp': event.start_date,
             'url': f"/events/{event.pk}/",
@@ -179,7 +179,7 @@ def generate_feed_items(user):
                     author_name = message.sender.username
                 else:
                     author_name = 'System'
-                message_list.append(f"<strong>{author_name}:</strong> {clean_text}")
+                message_list.append(f"- <strong>{author_name}:</strong> {clean_text}")
             
             # Join messages with newlines for better readability
             description = '\n'.join(message_list)
@@ -210,7 +210,7 @@ def generate_feed_items(user):
         feed_items.append({
             'content_type': 'decision',
             'title': decision.title,
-            'description': clean_tresc[:500] + '...' if clean_tresc and len(clean_tresc) > 500 else clean_tresc,
+            'description': clean_tresc[:125] + '...' if clean_tresc and len(clean_tresc) > 125 else clean_tresc,
             'author': decision.author,
             'timestamp': decision.data_ostatniej_modyfikacji,
             'url': f"/glosowania/details/{decision.pk}/",
