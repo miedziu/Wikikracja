@@ -92,15 +92,17 @@
 									</a>
 								</h6>
 								
-								{% if item.description %}
+								{% if item.description and item.content_type != 'event' %}
 									<p class="text-muted small mb-3">{{ item.description|safe|linebreaksbr }}</p>
 								{% endif %}
 								
-								<div class="d-flex justify-content-between">
-									<a href="{{ item.url }}" class="btn btn-sm btn-outline-primary">
-										{% trans 'View' %}
-									</a>
-								</div>
+								{% if item.content_type != 'event' %}
+									<div class="d-flex justify-content-between">
+										<a href="{{ item.url }}" class="btn btn-sm btn-outline-primary">
+											{% trans 'View' %}
+										</a>
+									</div>
+								{% endif %}
 							</div>
 						</div>
 					{% empty %}
