@@ -18,6 +18,8 @@
     right: 0;
     z-index: 1000;
     height: 50px;
+    transform: translateZ(0);
+    /* Force GPU acceleration for better mobile performance */
 }
 
 .btn-back-room {

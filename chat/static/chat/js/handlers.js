@@ -64,13 +64,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Mobile: scroll to last message when keyboard appears
+    // Mobile: handle viewport changes for keyboard
     if (window.visualViewport && window.innerWidth < 768) {
         let lastHeight = window.visualViewport.height;
+        
+        const updateHeaderPosition = () => {
+            const header = document.querySelector('.folded-room-header');
+            if (header && header.style.display !== 'none') {
+                const offsetTop = window.visualViewport.offsetTop;
+                header.style.top = `${offsetTop}px`;
+            }
+        };
         
         window.visualViewport.addEventListener('resize', () => {
             const currentHeight = window.visualViewport.height;
             const heightDiff = Math.abs(currentHeight - lastHeight);
+            
+            // Update header position to account for keyboard
+            updateHeaderPosition();
             
             // Keyboard appeared (viewport got smaller by significant amount)
             if (heightDiff > 100 && currentHeight < lastHeight) {
@@ -84,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             lastHeight = currentHeight;
         });
+        
+        window.visualViewport.addEventListener('scroll', updateHeaderPosition);
     }
 
     document.addEventListener('click', (e) => {
