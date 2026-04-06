@@ -152,8 +152,8 @@ def generate_feed_items(user):
         if next_occurrence and next_occurrence >= timezone.now() - td(days=1):
             upcoming_events.append((event, next_occurrence))
     
-    # Sort by next occurrence date
-    upcoming_events.sort(key=lambda x: x[1], reverse=True)
+    # Sort by next occurrence date (nearest first)
+    upcoming_events.sort(key=lambda x: x[1])
     
     for event, next_occurrence in upcoming_events:
         clean_description = strip_tags(event.description) if event.description else ''
@@ -245,8 +245,17 @@ def generate_feed_items(user):
             'object_id': activity.pk,
         })
     
-    # Sort all items by timestamp
-    feed_items.sort(key=lambda x: x['timestamp'], reverse=True)
+    # Sort all items by timestamp, but events should be in ascending order (nearest first)
+    events_items = [item for item in feed_items if item['content_type'] == 'event']
+    other_items = [item for item in feed_items if item['content_type'] != 'event']
+    
+    # Sort events by timestamp ascending (nearest first)
+    events_items.sort(key=lambda x: x['timestamp'])
+    # Sort other items by timestamp descending (newest first)
+    other_items.sort(key=lambda x: x['timestamp'], reverse=True)
+    
+    # Combine: events first (nearest to most distant), then other items (newest to oldest)
+    feed_items = events_items + other_items
     
     return feed_items
 
