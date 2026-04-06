@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-06 11:13+0200\n"
+"POT-Creation-Date: 2026-04-06 13:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1898,25 +1898,20 @@ msgstr ""
 msgid "Transaction"
 msgstr ""
 
-#: .\home\views.py:132
+#: .\home\views.py:136
 msgid "Untitled Book"
 msgstr ""
 
-#: .\home\views.py:177
-#, python-format
-msgid "Latest: %(message)s"
-msgstr ""
-
-#: .\home\views.py:183
+#: .\home\views.py:192
 #, python-format
 msgid "Messages in %(room_title)s"
 msgstr ""
 
-#: .\home\views.py:337
+#: .\home\views.py:347
 msgid "Your password has been changed."
 msgstr ""
 
-#: .\home\views.py:340
+#: .\home\views.py:350
 msgid "You typed something wrong. See what error appeared above and try again."
 msgstr ""
 

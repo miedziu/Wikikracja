@@ -142,20 +142,27 @@ def generate_feed_items(user):
             'object_id': book.pk,
         })
     
-    # Get upcoming events (including those starting within 1 day)
-    events = Event.objects.filter(
-        is_active=True,
-        start_date__gte=timezone.now() - td(days=1)
-    ).order_by('-start_date')
+    # Get upcoming events (including periodic events)
+    events = Event.objects.filter(is_active=True).select_related()
     
+    # Filter events that have upcoming occurrences and get their next occurrence
+    upcoming_events = []
     for event in events:
+        next_occurrence = event.get_next_occurrence()
+        if next_occurrence and next_occurrence >= timezone.now() - td(days=1):
+            upcoming_events.append((event, next_occurrence))
+    
+    # Sort by next occurrence date
+    upcoming_events.sort(key=lambda x: x[1], reverse=True)
+    
+    for event, next_occurrence in upcoming_events:
         clean_description = strip_tags(event.description) if event.description else ''
         feed_items.append({
             'content_type': 'event',
             'title': event.title,
             'description': clean_description[:125] + '...' if clean_description and len(clean_description) > 125 else clean_description,
             'author': None,
-            'timestamp': event.start_date,
+            'timestamp': next_occurrence,
             'url': f"/events/{event.pk}/",
             'is_read': event.pk in read_status_map[ReadStatus.ContentType.EVENT],
             'object_id': event.pk,
@@ -168,12 +175,18 @@ def generate_feed_items(user):
     for room in rooms:
         messages = room.messages.filter(
             time__gte=timezone.now() - td(days=30)
-        ).order_by('-time')[:5]  # Limit to recent messages per room
+        ).order_by('-time')[:5]  # Get newest messages first
         
         if messages:  # Only add room if it has recent messages
+            # Use first message (newest) for timestamp and author
+            latest_message = messages[0]
+            
+            # Reverse messages for chronological display (oldest to newest)
+            messages_reversed = list(reversed(messages))
+            
             # Create description showing all messages with authors
             message_list = []
-            for message in messages:
+            for message in messages_reversed:
                 clean_text = strip_tags(message.text)
                 if message.sender:
                     author_name = message.sender.username
@@ -183,9 +196,6 @@ def generate_feed_items(user):
             
             # Join messages with newlines for better readability
             description = '\n'.join(message_list)
-            
-            # Use latest message for timestamp and author
-            latest_message = messages[0]
             
             feed_items.append({
                 'content_type': 'room_messages',
