@@ -179,7 +179,7 @@ def generate_feed_items(user):
                     author_name = message.sender.username
                 else:
                     author_name = 'System'
-                message_list.append(f"{author_name}: {clean_text}")
+                message_list.append(f"<strong>{author_name}:</strong> {clean_text}")
             
             # Join messages with newlines for better readability
             description = '\n'.join(message_list)
