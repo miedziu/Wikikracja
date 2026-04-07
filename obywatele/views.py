@@ -16,7 +16,7 @@ from django.contrib.messages import error, success
 from django.core.mail import send_mail
 from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.db import DatabaseError
-from django.db.models import Case, Count, IntegerField, Q, Value, When
+from django.db.models import Case, Count, IntegerField, Q, Sum, Value, When
 from django.dispatch import receiver
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
@@ -237,6 +237,19 @@ def obywatele(request: HttpRequest):
         ),
     ).order_by(*order_by_fields))
 
+    # Get required reputation threshold
+    req_rep = required_reputation()
+
+    # Add near-threshold data to users (only need to check if reputation <= threshold + 1)
+    users_with_reputation = []
+    for user in uid:
+        if hasattr(user, 'uzytkownik'):
+            reputation = Rate.objects.filter(kandydat_id=user.uzytkownik.id).aggregate(Sum('rate'))['rate__sum'] or 0
+            user.near_threshold = reputation <= (req_rep + 1)
+        else:
+            user.near_threshold = False
+        users_with_reputation.append(user)
+
     default_directions = {
         'username': 'asc',
         'email': 'asc',
@@ -269,7 +282,7 @@ def obywatele(request: HttpRequest):
         request,
         'obywatele/start.html',
         {
-            'uid': uid,  # Don't change to 'user' - it will break menu
+            'uid': users_with_reputation,  # Don't change to 'user' - it will break menu
             'sort_meta': sort_meta,
             'current_sort': requested_sort,
         }

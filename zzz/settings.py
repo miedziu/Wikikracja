@@ -359,7 +359,7 @@ ACCOUNT_FORMS = {
 }
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/board/'
+LOGOUT_REDIRECT_URL = '/login/'
 ACCOUNT_SIGNUP_REDIRECT_URL = '/obywatele/onboarding/'
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*']  # , 'password2*'*/]

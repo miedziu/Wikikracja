@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-06 23:12+0200\n"
+"POT-Creation-Date: 2026-04-07 14:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -310,9 +310,9 @@ msgstr ""
 
 #: .\bookkeeping\models.py:23
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:26
-#: .\obywatele\models.py:42 .\obywatele\templates\obywatele\my_profile.html:32
+#: .\obywatele\models.py:42 .\obywatele\templates\obywatele\my_profile.html:54
 #: .\obywatele\templates\obywatele\start.html:50
-#: .\obywatele\templates\obywatele\szczegoly.html:58
+#: .\obywatele\templates\obywatele\szczegoly.html:120
 msgid "City"
 msgstr ""
 
@@ -456,6 +456,7 @@ msgstr ""
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:22 .\home\forms.py:17
 #: .\home\templates\home\login.html:15 .\obywatele\forms.py:28
 #: .\obywatele\templates\obywatele\start.html:30
+#: .\obywatele\templates\obywatele\szczegoly.html:43
 msgid "Email"
 msgstr ""
 
@@ -1013,6 +1014,10 @@ msgstr "Add Event"
 
 #: .\events\templates\events\event_list.html:28
 #: .\events\templates\events\event_list.html:114
+#: .\obywatele\templates\obywatele\szczegoly.html:15
+#: .\obywatele\templates\obywatele\szczegoly.html:17
+#: .\obywatele\templates\obywatele\szczegoly.html:26
+#: .\obywatele\templates\obywatele\szczegoly.html:28
 msgid "Next"
 msgstr "Next"
 
@@ -1033,6 +1038,10 @@ msgid "Add to Calendar"
 msgstr "Back to Calendar"
 
 #: .\events\templates\events\event_list.html:102
+#: .\obywatele\templates\obywatele\szczegoly.html:10
+#: .\obywatele\templates\obywatele\szczegoly.html:12
+#: .\obywatele\templates\obywatele\szczegoly.html:21
+#: .\obywatele\templates\obywatele\szczegoly.html:23
 msgid "Previous"
 msgstr "Previous"
 
@@ -1509,8 +1518,8 @@ msgstr ""
 #: .\glosowania\templates\glosowania\szczegoly.html:172
 #: .\obywatele\templates\obywatele\poczekalnia.html:49
 #: .\obywatele\templates\obywatele\poczekalnia.html:50
-#: .\obywatele\templates\obywatele\szczegoly.html:21
-#: .\obywatele\templates\obywatele\szczegoly.html:22
+#: .\obywatele\templates\obywatele\szczegoly.html:54
+#: .\obywatele\templates\obywatele\szczegoly.html:62
 msgid "Yes"
 msgstr ""
 
@@ -1518,8 +1527,8 @@ msgstr ""
 #: .\glosowania\templates\glosowania\szczegoly.html:174
 #: .\obywatele\templates\obywatele\poczekalnia.html:49
 #: .\obywatele\templates\obywatele\poczekalnia.html:50
-#: .\obywatele\templates\obywatele\szczegoly.html:21
-#: .\obywatele\templates\obywatele\szczegoly.html:22
+#: .\obywatele\templates\obywatele\szczegoly.html:56
+#: .\obywatele\templates\obywatele\szczegoly.html:64
 msgid "No"
 msgstr ""
 
@@ -1730,6 +1739,7 @@ msgstr ""
 #: .\home\templates\home\login.html:4 .\home\templates\home\login.html:13
 #: .\home\templates\home\login.html:34
 #: .\obywatele\management\commands\count_citizens.py:182
+#: .\obywatele\templates\obywatele\szczegoly.html:40
 msgid "Login"
 msgstr ""
 
@@ -1789,7 +1799,7 @@ msgstr ""
 #: .\home\templates\home\haslo.html:7
 #: .\home\templates\home\password_reset_confirm.html:7
 #: .\home\templates\home\password_reset_confirm.html:20
-#: .\obywatele\templates\obywatele\my_profile.html:15
+#: .\obywatele\templates\obywatele\my_profile.html:34
 msgid "Change password"
 msgstr ""
 
@@ -1917,19 +1927,17 @@ msgstr ""
 
 #: .\obywatele\forms.py:26 .\obywatele\forms.py:119 .\obywatele\forms.py:141
 #: .\obywatele\templates\obywatele\change_name.html:9
-#: .\obywatele\templates\obywatele\my_profile.html:10
+#: .\obywatele\templates\obywatele\my_profile.html:16
 #: .\obywatele\templates\obywatele\poczekalnia.html:27
 #: .\obywatele\templates\obywatele\start.html:60
-#: .\obywatele\templates\obywatele\szczegoly.html:18
 msgid "First name"
 msgstr ""
 
 #: .\obywatele\forms.py:27 .\obywatele\forms.py:120 .\obywatele\forms.py:142
 #: .\obywatele\templates\obywatele\change_name.html:10
-#: .\obywatele\templates\obywatele\my_profile.html:11
+#: .\obywatele\templates\obywatele\my_profile.html:19
 #: .\obywatele\templates\obywatele\poczekalnia.html:28
 #: .\obywatele\templates\obywatele\start.html:70
-#: .\obywatele\templates\obywatele\szczegoly.html:18
 msgid "Last name"
 msgstr ""
 
@@ -1966,8 +1974,6 @@ msgid "New email address confirmation"
 msgstr ""
 
 #: .\obywatele\forms.py:128 .\obywatele\forms.py:150
-#: .\obywatele\templates\obywatele\my_profile.html:36
-#: .\obywatele\templates\obywatele\szczegoly.html:50
 msgid "Communicator or Phone number"
 msgstr ""
 
@@ -2050,12 +2056,12 @@ msgid "Email entered"
 msgstr ""
 
 #: .\obywatele\models.py:21 .\obywatele\templates\obywatele\poczekalnia.html:25
-#: .\obywatele\templates\obywatele\szczegoly.html:21
+#: .\obywatele\templates\obywatele\szczegoly.html:52
 msgid "Email confirmed"
 msgstr ""
 
 #: .\obywatele\models.py:22 .\obywatele\templates\obywatele\poczekalnia.html:26
-#: .\obywatele\templates\obywatele\szczegoly.html:22
+#: .\obywatele\templates\obywatele\szczegoly.html:60
 msgid "Form completed"
 msgstr ""
 
@@ -2080,8 +2086,8 @@ msgstr ""
 msgid "Tasks performed in our group"
 msgstr ""
 
-#: .\obywatele\models.py:43 .\obywatele\templates\obywatele\my_profile.html:44
-#: .\obywatele\templates\obywatele\szczegoly.html:62
+#: .\obywatele\models.py:43 .\obywatele\templates\obywatele\my_profile.html:66
+#: .\obywatele\templates\obywatele\szczegoly.html:124
 msgid "Responsibilities"
 msgstr ""
 
@@ -2089,8 +2095,8 @@ msgstr ""
 msgid "Hobbies one have"
 msgstr ""
 
-#: .\obywatele\models.py:44 .\obywatele\templates\obywatele\my_profile.html:52
-#: .\obywatele\templates\obywatele\szczegoly.html:66
+#: .\obywatele\models.py:44 .\obywatele\templates\obywatele\my_profile.html:74
+#: .\obywatele\templates\obywatele\szczegoly.html:128
 msgid "Hobby"
 msgstr ""
 
@@ -2098,8 +2104,8 @@ msgstr ""
 msgid "Things you are willing to give away for free"
 msgstr ""
 
-#: .\obywatele\models.py:45 .\obywatele\templates\obywatele\my_profile.html:56
-#: .\obywatele\templates\obywatele\szczegoly.html:70
+#: .\obywatele\models.py:45 .\obywatele\templates\obywatele\my_profile.html:78
+#: .\obywatele\templates\obywatele\szczegoly.html:132
 msgid "To give away"
 msgstr ""
 
@@ -2107,8 +2113,8 @@ msgstr ""
 msgid "Stuff you can borrow to others"
 msgstr ""
 
-#: .\obywatele\models.py:46 .\obywatele\templates\obywatele\my_profile.html:60
-#: .\obywatele\templates\obywatele\szczegoly.html:74
+#: .\obywatele\models.py:46 .\obywatele\templates\obywatele\my_profile.html:82
+#: .\obywatele\templates\obywatele\szczegoly.html:136
 msgid "To borrow"
 msgstr ""
 
@@ -2116,8 +2122,8 @@ msgstr ""
 msgid "Stuff you have for sale"
 msgstr ""
 
-#: .\obywatele\models.py:47 .\obywatele\templates\obywatele\my_profile.html:64
-#: .\obywatele\templates\obywatele\szczegoly.html:78
+#: .\obywatele\models.py:47 .\obywatele\templates\obywatele\my_profile.html:86
+#: .\obywatele\templates\obywatele\szczegoly.html:140
 msgid "For sale"
 msgstr ""
 
@@ -2125,8 +2131,8 @@ msgstr ""
 msgid "What do you need"
 msgstr ""
 
-#: .\obywatele\models.py:48 .\obywatele\templates\obywatele\my_profile.html:68
-#: .\obywatele\templates\obywatele\szczegoly.html:82
+#: .\obywatele\models.py:48 .\obywatele\templates\obywatele\my_profile.html:90
+#: .\obywatele\templates\obywatele\szczegoly.html:144
 msgid "I need"
 msgstr ""
 
@@ -2134,8 +2140,8 @@ msgstr ""
 msgid "Practical skills one have"
 msgstr ""
 
-#: .\obywatele\models.py:49 .\obywatele\templates\obywatele\my_profile.html:76
-#: .\obywatele\templates\obywatele\szczegoly.html:86
+#: .\obywatele\models.py:49 .\obywatele\templates\obywatele\my_profile.html:98
+#: .\obywatele\templates\obywatele\szczegoly.html:148
 msgid "Skills"
 msgstr ""
 
@@ -2143,8 +2149,8 @@ msgstr ""
 msgid "Knowledge one have"
 msgstr ""
 
-#: .\obywatele\models.py:50 .\obywatele\templates\obywatele\my_profile.html:80
-#: .\obywatele\templates\obywatele\szczegoly.html:90
+#: .\obywatele\models.py:50 .\obywatele\templates\obywatele\my_profile.html:102
+#: .\obywatele\templates\obywatele\szczegoly.html:152
 msgid "Knowledge"
 msgstr ""
 
@@ -2152,8 +2158,8 @@ msgstr ""
 msgid "Things one would like to learn"
 msgstr ""
 
-#: .\obywatele\models.py:51 .\obywatele\templates\obywatele\my_profile.html:72
-#: .\obywatele\templates\obywatele\szczegoly.html:94
+#: .\obywatele\models.py:51 .\obywatele\templates\obywatele\my_profile.html:94
+#: .\obywatele\templates\obywatele\szczegoly.html:156
 msgid "I want to learn"
 msgstr ""
 
@@ -2161,8 +2167,8 @@ msgstr ""
 msgid "If running a business"
 msgstr ""
 
-#: .\obywatele\models.py:52 .\obywatele\templates\obywatele\my_profile.html:48
-#: .\obywatele\templates\obywatele\szczegoly.html:98
+#: .\obywatele\models.py:52 .\obywatele\templates\obywatele\my_profile.html:70
+#: .\obywatele\templates\obywatele\szczegoly.html:160
 msgid "Business"
 msgstr ""
 
@@ -2170,8 +2176,8 @@ msgstr ""
 msgid "Profession"
 msgstr ""
 
-#: .\obywatele\models.py:53 .\obywatele\templates\obywatele\my_profile.html:40
-#: .\obywatele\templates\obywatele\szczegoly.html:54
+#: .\obywatele\models.py:53 .\obywatele\templates\obywatele\my_profile.html:62
+#: .\obywatele\templates\obywatele\szczegoly.html:116
 msgid "Job"
 msgstr ""
 
@@ -2179,8 +2185,8 @@ msgstr ""
 msgid "What gift would you like to receive"
 msgstr ""
 
-#: .\obywatele\models.py:54 .\obywatele\templates\obywatele\my_profile.html:84
-#: .\obywatele\templates\obywatele\szczegoly.html:102
+#: .\obywatele\models.py:54 .\obywatele\templates\obywatele\my_profile.html:106
+#: .\obywatele\templates\obywatele\szczegoly.html:164
 msgid "Gift"
 msgstr ""
 
@@ -2188,8 +2194,8 @@ msgstr ""
 msgid "Other things worth mentioning"
 msgstr ""
 
-#: .\obywatele\models.py:55 .\obywatele\templates\obywatele\my_profile.html:88
-#: .\obywatele\templates\obywatele\szczegoly.html:106
+#: .\obywatele\models.py:55 .\obywatele\templates\obywatele\my_profile.html:110
+#: .\obywatele\templates\obywatele\szczegoly.html:168
 msgid "Other"
 msgstr ""
 
@@ -2197,8 +2203,8 @@ msgstr ""
 msgid "In your own words please explain why do you want join our group"
 msgstr ""
 
-#: .\obywatele\models.py:56 .\obywatele\templates\obywatele\my_profile.html:92
-#: .\obywatele\templates\obywatele\szczegoly.html:110
+#: .\obywatele\models.py:56 .\obywatele\templates\obywatele\my_profile.html:114
+#: .\obywatele\templates\obywatele\szczegoly.html:172
 msgid "Why do you want to join?"
 msgstr ""
 
@@ -2227,7 +2233,7 @@ msgid "Citizen has been blocked"
 msgstr ""
 
 #: .\obywatele\templates\obywatele\change_email.html:7
-#: .\obywatele\templates\obywatele\my_profile.html:16
+#: .\obywatele\templates\obywatele\my_profile.html:35
 msgid "Change email"
 msgstr ""
 
@@ -2272,40 +2278,45 @@ msgstr ""
 msgid "This is your profile"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\my_profile.html:9
+#: .\obywatele\templates\obywatele\my_profile.html:13
 msgid "Your email"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\my_profile.html:12
+#: .\obywatele\templates\obywatele\my_profile.html:22
 msgid "Your reputation"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\my_profile.html:12
+#: .\obywatele\templates\obywatele\my_profile.html:22
 msgid "required reputation"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\my_profile.html:13
+#: .\obywatele\templates\obywatele\my_profile.html:25
 msgid "You've been introduced by"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\my_profile.html:14
+#: .\obywatele\templates\obywatele\my_profile.html:28
 msgid "You've joined"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\my_profile.html:20
+#: .\obywatele\templates\obywatele\my_profile.html:36
 msgid "Change username"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\my_profile.html:25
-msgid "Those are your assets"
+#: .\obywatele\templates\obywatele\my_profile.html:43
+msgid "Your assets"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\my_profile.html:26
+#: .\obywatele\templates\obywatele\my_profile.html:44
 msgid "Edit my assets"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\my_profile.html:27
+#: .\obywatele\templates\obywatele\my_profile.html:48
 msgid "You don't have to fill all of them but the more information you'll give - the better we will be able to fullfill our needs. Also we will know each other better."
+msgstr ""
+
+#: .\obywatele\templates\obywatele\my_profile.html:58
+#: .\obywatele\templates\obywatele\szczegoly.html:112
+msgid "Communicator / Phone"
 msgstr ""
 
 #: .\obywatele\templates\obywatele\onboarding_details.html:6
@@ -2349,7 +2360,7 @@ msgid "Your email address is confirmed."
 msgstr ""
 
 #: .\obywatele\templates\obywatele\onboarding_waiting.html:17
-#: .\obywatele\views.py:360
+#: .\obywatele\views.py:373
 msgid "Your onboarding form has been saved."
 msgstr ""
 
@@ -2410,7 +2421,7 @@ msgid "Nick"
 msgstr ""
 
 #: .\obywatele\templates\obywatele\poczekalnia.html:24
-#: .\obywatele\templates\obywatele\szczegoly.html:23
+#: .\obywatele\templates\obywatele\szczegoly.html:69
 msgid "Ratings"
 msgstr ""
 
@@ -2419,7 +2430,7 @@ msgid "Candidate since"
 msgstr ""
 
 #: .\obywatele\templates\obywatele\poczekalnia.html:30
-#: .\obywatele\templates\obywatele\szczegoly.html:19
+#: .\obywatele\templates\obywatele\szczegoly.html:46
 msgid "Recommended by"
 msgstr ""
 
@@ -2444,7 +2455,7 @@ msgid "Contact"
 msgstr ""
 
 #: .\obywatele\templates\obywatele\start.html:80
-#: .\obywatele\templates\obywatele\szczegoly.html:20
+#: .\obywatele\templates\obywatele\szczegoly.html:49
 msgid "Joined at"
 msgstr ""
 
@@ -2452,37 +2463,47 @@ msgstr ""
 msgid "Last login"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\start.html:106
+#: .\obywatele\templates\obywatele\start.html:107
+msgid "This person has low reputation points"
+msgstr ""
+
+#: .\obywatele\templates\obywatele\start.html:113
 msgid "Copy email"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\start.html:115
+#: .\obywatele\templates\obywatele\start.html:122
 msgid "Never"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\szczegoly.html:28
+#: .\obywatele\templates\obywatele\szczegoly.html:78
 msgid "This is you"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\szczegoly.html:29
+#: .\obywatele\templates\obywatele\szczegoly.html:79
 msgid "You can find more setting in your profile"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\szczegoly.html:34
-msgid "Your relationship to this person is"
+#: .\obywatele\templates\obywatele\szczegoly.html:84
+msgid "What is your attitude towards this person?"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\szczegoly.html:37
+#: .\obywatele\templates\obywatele\szczegoly.html:89
 msgid "I accept this person"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\szczegoly.html:38
+#: .\obywatele\templates\obywatele\szczegoly.html:92
 msgid "Indifferent"
 msgstr ""
 
-#: .\obywatele\templates\obywatele\szczegoly.html:39
+#: .\obywatele\templates\obywatele\szczegoly.html:95
 msgid "I do not accept"
 msgstr ""
+
+#: .\obywatele\templates\obywatele\szczegoly.html:105
+#, fuzzy
+#| msgid "View Details"
+msgid "Profile Details"
+msgstr "View Details"
 
 #: .\obywatele\views.py:124
 msgid "Your new email has been saved."
@@ -2492,61 +2513,61 @@ msgstr ""
 msgid "Your name has been saved."
 msgstr ""
 
-#: .\obywatele\views.py:289
+#: .\obywatele\views.py:302
 msgid "Your profile does not exist. Please contact administrator."
 msgstr ""
 
-#: .\obywatele\views.py:344 .\obywatele\views.py:377
+#: .\obywatele\views.py:357 .\obywatele\views.py:390
 msgid "Could not find your onboarding account."
 msgstr ""
 
-#: .\obywatele\views.py:396
+#: .\obywatele\views.py:409
 msgid "Email already exist"
 msgstr ""
 
-#: .\obywatele\views.py:430
+#: .\obywatele\views.py:443
 msgid "The new user has been saved"
 msgstr ""
 
-#: .\obywatele\views.py:433 .\obywatele\views.py:434
+#: .\obywatele\views.py:446 .\obywatele\views.py:447
 msgid "New citizen has been proposed"
 msgstr ""
 
-#: .\obywatele\views.py:434
+#: .\obywatele\views.py:447
 msgid ""
 "proposed new citizen\n"
 "You can approve him/her here:"
 msgstr ""
 
-#: .\obywatele\views.py:446
+#: .\obywatele\views.py:459
 msgid "Please correct the highlighted errors."
 msgstr ""
 
-#: .\obywatele\views.py:505
+#: .\obywatele\views.py:518
 msgid "Changes was saved"
 msgstr ""
 
-#: .\obywatele\views.py:514
+#: .\obywatele\views.py:527
 msgid "Form is not valid!"
 msgstr ""
 
-#: .\obywatele\views.py:598
+#: .\obywatele\views.py:611
 msgid "positive"
 msgstr ""
 
-#: .\obywatele\views.py:601
+#: .\obywatele\views.py:614
 msgid "negative"
 msgstr ""
 
-#: .\obywatele\views.py:604
+#: .\obywatele\views.py:617
 msgid "neutral"
 msgstr ""
 
-#: .\obywatele\views.py:675
+#: .\obywatele\views.py:688
 msgid "Fill out your onboarding form"
 msgstr ""
 
-#: .\obywatele\views.py:676
+#: .\obywatele\views.py:689
 #, python-format
 msgid "Your email has been confirmed. Please fill out your onboarding form here: %(link)s"
 msgstr ""
