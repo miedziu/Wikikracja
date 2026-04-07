@@ -108,25 +108,70 @@
     margin-bottom: .1rem;
     display: flex;
     justify-content: space-between;
-}
-
-.message .message-content .message-header .username {
-    color: var(--bs-yellow);
-    font-weight: bold;
-}
-
-.message .message-content .message-header .message-info {
-    display: flex;
-    margin-left: 1rem;
     align-items: center;
 }
 
-.message .message-content .message-header .message-info .show-history,
-.message .message-content .message-header .message-info .edit-message {
-    cursor: pointer;
-    text-decoration: underline;
+.message .message-content .message-header .message-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.message .message-content .message-header .username {
+    color: #6c757d;
+    font-weight: bold;
+}
+
+.message .message-content .message-header .message-header-center {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 1;
+    justify-content: center;
+}
+
+.message .message-content .message-header .message-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.message .message-content .message-header .message-header-left .message-timestamp {
+    display: inline-flex;
+    align-items: center;
+    height: 1.875rem;
+    line-height: 1.875rem;
     font-size: smaller;
-    margin-right: 5px;
+    color: #6c757d !important;
+}
+
+.message .message-content .message-header .message-btn {
+    background-color: #495057;
+    color: #adb5bd;
+    border: 1px solid #495057;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    height: 1.875rem;
+    min-width: 1.875rem;
+}
+
+.message .message-content .message-header .message-btn:hover {
+    background-color: #343a40;
+    opacity: 0.9;
+}
+
+.message .message-content .message-header .message-btn i {
+    font-size: 0.875rem;
+}
+
+.message .message-content .message-header .message-header-right .msg-vote.active {
+    background-color: #28a745;
+    border-color: #28a745;
 }
 
 .message .message-content .msg-body {
@@ -152,33 +197,6 @@
     overflow-wrap: break-word;
 }
 
-.message .message-content .msg-vote {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: var(--bs-warning);
-    border-radius: 5px;
-    padding: 0 3px 0 3px;
-    margin-right: .2rem;
-}
-
-.message .message-content .msg-vote i,
-.message .message-content .msg-vote div {
-    padding: .2rem;
-    color: black;
-}
-
-.message .message-content .msg-vote.active {
-    font-weight: bold;
-}
-
-.message .message-content .msg-vote.active .fa-check {
-    color: var(--bs-teal);
-}
-
-.message .message-content .msg-vote.active .fa-times {
-    color: var(--bs-danger);
-}
 
 /* Preview images before sending */
 #room .image-preview-container {

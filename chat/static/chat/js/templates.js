@@ -67,27 +67,6 @@ const message_template = `
 <div class='message <% if (own) { %> own <% } %>' data-message-id="<%-message_id%>" data-room-id="<%-room_id%>">
   <div class='message-content'>
 
-    <div class='message-header'>
-      <span class='username'><%=username%></span>
-      <div class='message-info'>
-        <div class='show-history' <% if (!edited) { %> style='display:none' <% } %>
-          data-message-id='<%-message_id%>'> ${_("edited")}
-        </div>
-        <% if (own) { %>
-          <div class='edit-message ms-1' data-message-id="<%-message_id%>" >${_("edit")}</div>
-        <% } %>
-        <div class='message-timestamp ms-1' data-message-id='<%-message_id%>'><%- latest_ts %></div>
-        <button type='button'
-          class='btn btn-link btn-sm p-0 ms-1 copy-link-btn copy-message-url'
-          data-room-id='<%-room_id%>'
-          data-message-id='<%-message_id%>'
-          title='${_("Copy link")}'
-          aria-label='${_("Copy message link")}'>
-          <i class='fas fa-link'></i>
-        </button>
-      </div>
-    </div>
-
     <div class='msg-body'>
       <div class='attachment-image-container'>
         <% if (attachments && attachments.images) { %>
@@ -99,19 +78,43 @@ const message_template = `
       <span class='msg-text'><%-message%></span>
     </div>
 
-    <div class='footer'>
-      <% if (type == "public") { %>
-        <div class='d-flex d-flex justify-content-end'>
-          <div data-event-name='upvote' data-message-id="<%-message_id%>" class='msg-vote'>
-            <i class='fas fa-check'></i>
-          <div class='msg-upvotes'><%-upvotes%></div>
-          </div>
-          <div data-event-name='downvote' data-message-id="<%-message_id%>" class='msg-vote'>
-            <i class='fas fa-times'></i>
-          <div class='msg-downvotes'><%-downvotes%></div>
-          </div>
-        </div>
-      <% } %>
+    <div class='message-header'>
+      <div class='message-header-left'>
+        <span class='username'><%=username%></span>
+        <span class='message-timestamp ms-2' data-message-id='<%-message_id%>'><%- latest_ts %></span>
+      </div>
+      <div class='message-header-center'>
+        <button type='button' class='btn btn-sm ms-1 message-btn show-history' <% if (!edited) { %> style='display:none' <% } %>
+          data-message-id='<%-message_id%>'
+          title='${_("edited")}'>
+          <i class='fas fa-history'></i>
+        </button>
+        <% if (own) { %>
+          <button type='button' class='btn btn-sm ms-1 message-btn edit-message' data-message-id="<%-message_id%>"
+            title='${_("edit")}'>
+            <i class='fas fa-edit'></i>
+          </button>
+        <% } %>
+        <button type='button'
+          class='btn btn-sm ms-1 message-btn copy-message-url'
+          data-room-id='<%-room_id%>'
+          data-message-id='<%-message_id%>'
+          title='${_("Copy link")}'>
+          <i class='fas fa-link'></i>
+        </button>
+      </div>
+      <div class='message-header-right'>
+        <% if (type == "public") { %>
+          <button type='button' data-event-name='upvote' data-message-id="<%-message_id%>" class='btn btn-sm ms-1 message-btn msg-vote' title='${_("Upvote")}'>
+            <i class='fas fa-thumbs-up'></i>
+            <span class='msg-upvotes'><%-upvotes%></span>
+          </button>
+          <button type='button' data-event-name='downvote' data-message-id="<%-message_id%>" class='btn btn-sm ms-1 message-btn msg-vote' title='${_("Downvote")}'>
+            <i class='fas fa-thumbs-down'></i>
+            <span class='msg-downvotes'><%-downvotes%></span>
+          </button>
+        <% } %>
+      </div>
     </div>
 
   </div>
