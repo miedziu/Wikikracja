@@ -81,7 +81,7 @@ class Task(models.Model):
 
     def get_chat_room_title(self):
         return "%(title)s" % {
-            "title": self.title[:30]
+            "title": self.title[:90]
         }
 
     def get_chat_room_url(self):
