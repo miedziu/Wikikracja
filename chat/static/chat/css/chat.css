@@ -365,18 +365,19 @@ body:has(.chat-rooms) {
     color: #aaa;
 }
 
-.room-list .row {
+#room-list .row {
     margin-left: 0;
     margin-right: 0;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     width: 100%;
     max-width: 100%;
+    max-height: calc(100vh - 100px);
 }
 
 .room-list .col-scrollable {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    overflow: hidden;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -619,13 +620,21 @@ body:has(.chat-rooms) {
         max-width: 100%;
     }
 
-    /* Make chat controls sticky at bottom on desktop */
+    /* Make chat controls fixed at bottom on desktop */
     #room .chat-controls {
-        position: sticky;
+        position: fixed;
         bottom: 0;
+        left: 0;
+        right: 33.333333%; /* Account for room list width */
         background-color: var(--bs-dark);
         border-top: 1px solid var(--bs-secondary);
         z-index: 10;
+        padding: 0.5rem;
+    }
+
+    /* Add bottom padding to messages to avoid overlap with fixed input */
+    #room .messages {
+        padding-bottom: 80px;
     }
 }
 
