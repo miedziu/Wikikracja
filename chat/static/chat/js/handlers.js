@@ -269,6 +269,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Handle folded room title click to navigate back to room list
+    document.addEventListener('click', (e) => {
+        const roomTitle = e.target.closest('#folded-room-title');
+        if (roomTitle) {
+            e.preventDefault();
+            onBackToRoomList();
+        }
+    });
+
     // Handle window resize - reset mobile state on larger screens
     window.addEventListener('resize', () => {
         if (window.innerWidth >= 768) {

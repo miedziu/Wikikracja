@@ -106,6 +106,13 @@ body:has(.chat-rooms) {
     overflow: hidden;
     text-overflow: ellipsis;
     flex: 1;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    user-select: none;
+}
+
+.folded-room-title:hover {
+    color: var(--bs-info);
 }
 
 #room {
