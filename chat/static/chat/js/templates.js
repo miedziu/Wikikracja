@@ -44,7 +44,8 @@ const room_template = `
       <% } %>
       
       <!-- Message input -->
-      <textarea id="message-input" rows="1" placeholder="${_("Divide the message into several parts...")}"></textarea>
+      <textarea id="message-input" rows="1" placeholder="${_("Divide the message into several parts...")}" 
+                enterkeyhint="send"></textarea>
       
       <!-- Send button -->
       <button class='send-message chat-control btn btn-primary'>

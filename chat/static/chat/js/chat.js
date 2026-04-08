@@ -109,13 +109,13 @@ async function expandCategoryForRoom(room_id) {
 
     const categoryMap = {
         'content-pub-rooms-active': '#toggleButtonPubRoomsActive',
-        'content-pub-rooms-archive': '#toggleButtonPubRoomsArchive',
+        'content-pub-rooms-archive': '.archive-toggle[data-target="pub-rooms-archive"]',
         'content-tasks-active': '#toggleButtonTasksActive',
-        'content-tasks-archive': '#toggleButtonTasksArchive',
+        'content-tasks-archive': '.archive-toggle[data-target="tasks-archive"]',
         'content-votes-active': '#toggleButtonVotesActive',
-        'content-votes-archive': '#toggleButtonVotesArchive',
+        'content-votes-archive': '.archive-toggle[data-target="votes-archive"]',
         'content-prv-active': '#toggleButtonPrvActive',
-        'content-prv-archive': '#toggleButtonPrvArchive'
+        'content-prv-archive': '.archive-toggle[data-target="prv-archive"]'
     };
 
     const toggleButton = $(categoryMap[container.id]);
@@ -125,7 +125,11 @@ async function expandCategoryForRoom(room_id) {
             container.style.display = 'block';
             container.style.height = '';
             container.style.overflow = '';
-            toggleButton.classList.add('activated');
+            if (toggleButton.classList.contains('accordion')) {
+                toggleButton.classList.add('activated');
+            } else {
+                toggleButton.classList.add('active');
+            }
         }
     }
 }
@@ -166,8 +170,6 @@ export async function onRoomTryJoin(room_id) {
     DOM_API.createRoomDiv(CurrentRoomId, response.title, response.public, response.notifications);
     DOM_API.setFoldedRoomTitle(response.title);
     DOM_API.showFoldedRoomHeader();
-    DOM_API.updateMobileLayout();
-    $("#message-input")?.focus();
 }
 
 /**
@@ -240,7 +242,6 @@ export async function onReceiveMessages(messages) {
         }
     }
     if (shouldStickToBottom && msgdiv) msgdiv.scrollTop = msgdiv.scrollHeight;
-    $("#message-input")?.focus();
 }
 
 /**

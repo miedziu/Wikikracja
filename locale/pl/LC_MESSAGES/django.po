@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-07 23:09+0200\n"
+"POT-Creation-Date: 2026-04-08 11:53+0200\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -65,7 +65,7 @@ msgstr "Zaktualizowane"
 #: .\board\models.py:16 .\board\templates\board\board.html:32
 #: .\board\templates\board\board.html:52
 #: .\board\templates\board\post_detail.html:11
-#: .\chat\templates\chat\chat.html:39 .\events\models.py:52
+#: .\chat\templates\chat\chat.html:74 .\events\models.py:52
 #: .\events\templates\events\event_detail.html:80
 #: .\events\templates\events\event_list.html:67
 msgid "Public"
@@ -187,6 +187,7 @@ msgid "Delete"
 msgstr "Skasuj"
 
 #: .\board\templates\board\post_detail.html:11
+#: .\chat\templates\chat\chat.html:157
 #: .\events\templates\events\event_detail.html:84
 #: .\events\templates\events\event_list.html:71
 msgid "Private"
@@ -573,72 +574,87 @@ msgstr "Skocz do czatu żeby to zrobić {HOST}/chat"
 msgid "New room"
 msgstr "Nowy pokój"
 
-#: .\chat\templates\chat\chat.html:26
+#: .\chat\templates\chat\chat.html:49
 msgid "Back to room list"
 msgstr "Powrót do listy pokoi"
 
-#: .\chat\templates\chat\chat.html:41
-msgid "Public chat rooms are archived if they are not used for"
-msgstr "Publiczne pokoje czatu są archiwizowane, jeżeli nie są używane"
+#: .\chat\templates\chat\chat.html:62
+msgid "Info"
+msgstr "Informacje"
 
-#: .\chat\templates\chat\chat.html:41
-msgid "days. After"
-msgstr "dni. Po"
+#: .\chat\templates\chat\chat.html:65
+msgid "Add room"
+msgstr "Dodaj pokój"
 
-#: .\chat\templates\chat\chat.html:41
-msgid "days they are deleted. Private messages are archived when user is blocked and deleted after"
-msgstr "dniach są usuwane. Prywatne wiadomości są archiwizowane, gdy użytkownik jest blokowany i usuwany po"
+#: .\chat\templates\chat\chat.html:75 .\chat\templates\chat\chat.html:101
+#: .\chat\templates\chat\chat.html:127 .\chat\templates\chat\chat.html:158
+msgid "Show archived rooms"
+msgstr "Pokaż zarchiwizowane pokoje"
 
-#: .\chat\templates\chat\chat.html:41
-#: .\obywatele\templates\obywatele\parameters.html:23
-msgid "days"
-msgstr "dniach"
-
-#: .\chat\templates\chat\chat.html:48 .\chat\templates\chat\chat.html:62
-#: .\chat\templates\chat\chat.html:76 .\chat\templates\chat\chat.html:90
-#: .\chat\templates\chat\chat.html:104 .\chat\templates\chat\chat.html:118
-#: .\chat\templates\chat\chat.html:137 .\chat\templates\chat\chat.html:150
+#: .\chat\templates\chat\chat.html:84 .\chat\templates\chat\chat.html:93
+#: .\chat\templates\chat\chat.html:110 .\chat\templates\chat\chat.html:119
+#: .\chat\templates\chat\chat.html:136 .\chat\templates\chat\chat.html:145
+#: .\chat\templates\chat\chat.html:167 .\chat\templates\chat\chat.html:176
 #: .\tasks\templates\tasks\task_list.html:31
 #: .\tasks\templates\tasks\task_list.html:35
 msgid "None"
 msgstr "Brak"
 
-#: .\chat\templates\chat\chat.html:55
-msgid "Public Archived"
-msgstr "Publiczne archiwum"
-
-#: .\chat\templates\chat\chat.html:69 .\home\templates\home\base.html:79
+#: .\chat\templates\chat\chat.html:100 .\chat\templates\chat\chat.html:218
+#: .\home\templates\home\base.html:79
 msgid "Tasks"
 msgstr "Zadania"
 
-#: .\chat\templates\chat\chat.html:83
-msgid "Tasks Archived"
-msgstr "Zadania archiwum"
-
-#: .\chat\templates\chat\chat.html:97
+#: .\chat\templates\chat\chat.html:126 .\chat\templates\chat\chat.html:222
 msgid "Referendums"
 msgstr "Głosowania"
 
-#: .\chat\templates\chat\chat.html:111
-msgid "Referendums Archived"
-msgstr "Głosowania archiwum"
-
-#: .\chat\templates\chat\chat.html:130
-msgid "Private Messages"
-msgstr "Wiadomości prywatne"
-
-#: .\chat\templates\chat\chat.html:143
-msgid "Private Archived"
-msgstr "Prywatne archiwum"
-
-#: .\chat\templates\chat\chat.html:166
+#: .\chat\templates\chat\chat.html:192
 msgid "Changes history"
 msgstr "Historia zmian"
 
-#: .\chat\templates\chat\chat.html:171
+#: .\chat\templates\chat\chat.html:197 .\chat\templates\chat\chat.html:235
 #: .\tasks\templates\tasks\task_detail.html:155
 msgid "Close"
 msgstr "Zamknij"
+
+#: .\chat\templates\chat\chat.html:209
+msgid "Chat Information"
+msgstr "Informacje o czacie"
+
+#: .\chat\templates\chat\chat.html:214
+msgid "Public Rooms"
+msgstr "Publiczne"
+
+#: .\chat\templates\chat\chat.html:215
+#, python-format
+msgid "Public chat rooms are archived if they are not used for %(archive_days)s days. After %(delete_days)s days they are deleted."
+msgstr "Publiczne pokoje czatu są archiwizowane, jeśli nie są używane przez %(archive_days)s dni. Po %(delete_days)s dniach są usuwane."
+
+#: .\chat\templates\chat\chat.html:219
+msgid "Task rooms are created for specific tasks and projects. They are protected from automatic deletion and are used for collaborative work discussions."
+msgstr "Pokoje zadań są tworzone dla konkretnych zadań i projektów. Są one chronione przed automatycznym usunięciem i służą do dyskusji nad pracą zespołową."
+
+#: .\chat\templates\chat\chat.html:223
+msgid "Referendum rooms are created for voting and decision-making processes. They are protected from automatic deletion and provide a space for discussions about proposals."
+msgstr "Pokoje głosowań są tworzone dla procesów głosowania i podejmowania decyzji. Są one chronione przed automatycznym usunięciem i zapewniają przestrzeń do dyskusji na temat propozycji."
+
+#: .\chat\templates\chat\chat.html:226
+msgid "Private Messages"
+msgstr "Prywatne wiadomości"
+
+#: .\chat\templates\chat\chat.html:227
+#, python-format
+msgid "Private messages are archived when user is blocked and deleted after %(delete_days)s days."
+msgstr "Prywatne wiadomości są archiwizowane, gdy użytkownik jest blokowany i usuwany po %(delete_days)s dniach."
+
+#: .\chat\templates\chat\chat.html:230
+msgid "Archives"
+msgstr "Archiwa"
+
+#: .\chat\templates\chat\chat.html:231
+msgid "Click the archive button (folder icon) next to each category to show archived rooms."
+msgstr "Kliknij przycisk archiwum (ikona folderu) obok każdej kategorii, aby pokazać zarchiwizowane pokoje."
 
 #: .\chat\templates\chat\room_link.html:16
 msgid "Mark as unread"
@@ -2347,6 +2363,10 @@ msgstr "Próg akceptacji"
 #: .\obywatele\templates\obywatele\parameters.html:22
 msgid "Candidate removal after"
 msgstr "Usunięcie kandydata po upływie"
+
+#: .\obywatele\templates\obywatele\parameters.html:23
+msgid "days"
+msgstr "dniach"
 
 #: .\obywatele\templates\obywatele\parameters.html:27
 #: .\obywatele\templates\obywatele\poczekalnia.html:11

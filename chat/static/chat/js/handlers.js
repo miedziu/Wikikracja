@@ -83,16 +83,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', () => DOM_API.updateMobileLayout());
-        window.visualViewport.addEventListener('scroll', () => DOM_API.updateMobileLayout());
-    }
-    window.addEventListener('resize', () => DOM_API.updateMobileLayout());
-
     document.addEventListener('click', (e) => {
         const container = e.target.closest('.attachment-image-container');
         if (container) {
-            DOM_API.openBigImage([...$$("img", container)].map(img => img.src));
+            const images = Array.from(container.querySelectorAll('.attached-image'));
+            const index = images.indexOf(e.target);
+            if (index !== -1) {
+                showImageViewer(images, index);
+            }
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        const archiveBtn = e.target.closest('.archive-toggle');
+        if (archiveBtn) {
+            const targetId = archiveBtn.dataset.target;
+            const archiveSection = document.getElementById(`content-${targetId}`);
+            if (archiveSection) {
+                const isHidden = archiveSection.style.display === 'none' || getComputedStyle(archiveSection).display === 'none';
+                if (isHidden) {
+                    archiveSection.style.display = 'block';
+                    archiveBtn.classList.add('active');
+                    localStorage.setItem(`chat-archive-${targetId}`, 'visible');
+                } else {
+                    archiveSection.style.display = 'none';
+                    archiveBtn.classList.remove('active');
+                    localStorage.setItem(`chat-archive-${targetId}`, 'hidden');
+                }
+            }
         }
     });
 

@@ -453,15 +453,4 @@ export default class DomApi {
         if (chatRooms) chatRooms.classList.remove('mobile-room-selected');
     }
 
-    updateMobileLayout() {
-        if (window.innerWidth >= 768) return;
-        const vvHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-        const offsetTop = window.visualViewport ? window.visualViewport.offsetTop : 0;
-        const controls = document.querySelector('#room .chat-controls');
-        const controlsHeight = controls ? controls.offsetHeight : 50;
-        const messagesHeight = vvHeight - 50 - controlsHeight;
-        document.documentElement.style.setProperty('--messages-height', `${messagesHeight}px`);
-        const header = document.querySelector('.folded-room-header');
-        if (header) header.style.top = `${offsetTop}px`;
-    }
 }

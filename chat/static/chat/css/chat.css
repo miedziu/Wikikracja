@@ -2,8 +2,8 @@
 .container-fluid:has(.chat-rooms) {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 56px);
-    height: calc(100vh - 56px);
+    flex: 1;
+    min-height: 0;
     padding: 0;
 }
 
@@ -327,14 +327,47 @@
 }
 
 #content-pub-rooms-active,
-#content-pub-rooms-archive,
 #content-tasks-active,
-#content-tasks-archive,
 #content-votes-active,
-#content-votes-archive,
-#content-prv-active,
-#content-prv-archive {
+#content-prv-active {
     display: none;
+}
+
+.archive-section {
+    display: none;
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
+
+.archive-section .room-link {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+.archive-section .room-link:hover {
+    opacity: 1;
+}
+
+.archive-toggle {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+    color: var(--bs-light);
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.archive-toggle:hover {
+    background-color: var(--bs-info);
+    border-color: var(--bs-info);
+    color: var(--bs-dark);
+}
+
+.archive-toggle.active {
+    background-color: var(--bs-info);
+    border-color: var(--bs-info);
+    color: var(--bs-dark);
 }
 
 .accordion {
@@ -423,6 +456,54 @@
     overflow-x: hidden;
 }
 
+.room-list-controls {
+    background-color: var(--bs-dark);
+    border-bottom: 1px solid var(--bs-secondary);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.room-list-controls .btn {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+    white-space: nowrap;
+}
+
+/* Mobile adjustments for info modal */
+@media (max-width: 767px) {
+    .room-list-controls {
+        padding: 0.5rem !important;
+    }
+    
+    .room-list-controls .btn {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .modal-body .alert {
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+    }
+    
+    .modal-body h6 {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .modal-body p {
+        font-size: 0.8rem;
+    }
+}
+
 .messages,
 .room-list {
     scrollbar-color: var(--bs-light) var(--bs-body-bg);
@@ -473,8 +554,8 @@
     }
 
     #room .messages {
-        height: var(--messages-height, calc(100dvh - 100px));
-        flex: none;
+        flex: 1 1 0;
+        height: 0;
         padding-top: 50px;
     }
 
@@ -501,13 +582,8 @@
 
     /* Make chat controls sticky at bottom on mobile */
     #room .chat-controls {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
         background-color: var(--bs-dark);
         padding: 0.2rem 0.5rem;
-        z-index: 999;
         border-top: 1px solid var(--bs-secondary);
     }
 
@@ -521,8 +597,13 @@
     }
 
     .chat-rooms.mobile-room-selected .chat-root-messages {
-        flex: 1;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         max-width: 100%;
+        overflow: hidden;
     }
 
     .chat-rooms.mobile-room-selected .folded-room-header {

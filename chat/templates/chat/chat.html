@@ -14,6 +14,29 @@
 
   <script>
     const TRANSLATIONS = {{ translations|default:"{}"|safe }};
+    
+    // Restore archive states from localStorage on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const archiveTargets = ['pub-rooms-archive', 'tasks-archive', 'votes-archive', 'prv-archive'];
+      
+      archiveTargets.forEach(targetId => {
+        const archiveSection = document.getElementById(`content-${targetId}`);
+        const archiveBtn = document.querySelector(`.archive-toggle[data-target="${targetId}"]`);
+        
+        if (archiveSection && archiveBtn) {
+          const savedState = localStorage.getItem(`chat-archive-${targetId}`);
+          
+          // Default to hidden (archives not shown by default)
+          if (savedState === 'visible') {
+            archiveSection.style.display = 'block';
+            archiveBtn.classList.add('active');
+          } else {
+            archiveSection.style.display = 'none';
+            archiveBtn.classList.remove('active');
+          }
+        }
+      });
+    });
   </script>
 
   <!-- ============================================================= -->
@@ -32,13 +55,26 @@
 
     <!-- Room list -->
     <div class="room-list col-md-5" id="room-list">
+      <!-- Top controls -->
+      <div class="room-list-controls p-2 border-bottom">
+        <div class="d-flex gap-2 justify-content-end">
+          <button class="btn btn-sm btn-outline-light" id="info-btn" data-bs-toggle="modal" data-bs-target="#chat-info-modal">
+            <i class="fas fa-info-circle me-1"></i>{% trans 'Info' %}
+          </button>
+          <a href="{% url 'chat:add_room' %}" class="btn btn-sm btn-outline-light">
+            <i class="fas fa-plus me-1"></i>{% trans 'Add room' %}
+          </a>
+        </div>
+      </div>
+      
       <div class="row">
         <div class="col p-1">
-          <!-- Public rooms active -->
+          <!-- Public rooms -->
           <p class="mb-0 py-1 text-muted">
             <button class="btn accordion" id="toggleButtonPubRoomsActive">{% trans 'Public' %}</button>
-            <a class="btn" href="{% url 'chat:add_room' %}"><i class="fas fa-plus"></i></a>
-            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="left" title="{% trans 'Public chat rooms are archived if they are not used for' %} {{ ARCHIVE_PUBLIC_CHAT_ROOM }} {% trans 'days. After' %} {{ DELETE_PUBLIC_CHAT_ROOM }} {% trans 'days they are deleted. Private messages are archived when user is blocked and deleted after' %} {{ DELETE_PUBLIC_CHAT_ROOM }} {% trans 'days' %}."></i>
+            <button class="btn btn-sm archive-toggle" data-target="pub-rooms-archive" title="{% trans 'Show archived rooms' %}">
+              <i class="fas fa-archive"></i>
+            </button>
           </p>
           <div id="content-pub-rooms-active" class="list-of-rooms">
             {% for room in public_rooms_active %}
@@ -49,12 +85,7 @@
               </p>
             {% endfor %}
           </div>
-
-          <!-- Public rooms archived -->
-          <p class="mb-0 py-1 text-muted">
-            <button class="btn accordion" id="toggleButtonPubRoomsArchive">{% trans 'Public Archived' %}</button>
-          </p>
-          <div id="content-pub-rooms-archive" class="list-of-rooms">
+          <div id="content-pub-rooms-archive" class="list-of-rooms archive-section">
             {% for room in public_rooms_archived %}
               {% include 'chat/room_link.html' %}
             {% empty %}
@@ -64,9 +95,12 @@
             {% endfor %}
           </div>
 
-          <!-- Tasks active -->
+          <!-- Tasks -->
           <p class="mb-0 py-1 text-muted">
             <button class="btn accordion" id="toggleButtonTasksActive">{% trans 'Tasks' %}</button>
+            <button class="btn btn-sm archive-toggle" data-target="tasks-archive" title="{% trans 'Show archived rooms' %}">
+              <i class="fas fa-archive"></i>
+            </button>
           </p>
           <div id="content-tasks-active" class="list-of-rooms">
             {% for room in tasks_active %}
@@ -77,12 +111,7 @@
               </p>
             {% endfor %}
           </div>
-
-          <!-- Tasks archived -->
-          <p class="mb-0 py-1 text-muted">
-            <button class="btn accordion" id="toggleButtonTasksArchive">{% trans 'Tasks Archived' %}</button>
-          </p>
-          <div id="content-tasks-archive" class="list-of-rooms">
+          <div id="content-tasks-archive" class="list-of-rooms archive-section">
             {% for room in tasks_archived %}
               {% include 'chat/room_link.html' %}
             {% empty %}
@@ -92,9 +121,12 @@
             {% endfor %}
           </div>
 
-          <!-- Votes active -->
+          <!-- Votes -->
           <p class="mb-0 py-1 text-muted">
             <button class="btn accordion" id="toggleButtonVotesActive">{% trans 'Referendums' %}</button>
+            <button class="btn btn-sm archive-toggle" data-target="votes-archive" title="{% trans 'Show archived rooms' %}">
+              <i class="fas fa-archive"></i>
+            </button>
           </p>
           <div id="content-votes-active" class="list-of-rooms">
             {% for room in votes_active %}
@@ -105,12 +137,7 @@
               </p>
             {% endfor %}
           </div>
-
-          <!-- Votes archived -->
-          <p class="mb-0 py-1 text-muted">
-            <button class="btn accordion" id="toggleButtonVotesArchive">{% trans 'Referendums Archived' %}</button>
-          </p>
-          <div id="content-votes-archive" class="list-of-rooms">
+          <div id="content-votes-archive" class="list-of-rooms archive-section">
             {% for room in votes_archived %}
               {% include 'chat/room_link.html' %}
             {% empty %}
@@ -125,9 +152,12 @@
       <!-- Private -->
       <div class="row">
         <div class="col p-1">
-          <!-- Private active -->
+          <!-- Private -->
           <p class="mb-0 py-1 text-muted">
-            <button class="btn accordion" id="toggleButtonPrvActive">{% trans 'Private Messages' %}</button>
+            <button class="btn accordion" id="toggleButtonPrvActive">{% trans 'Private' %}</button>
+            <button class="btn btn-sm archive-toggle" data-target="prv-archive" title="{% trans 'Show archived rooms' %}">
+              <i class="fas fa-archive"></i>
+            </button>
           </p>
           <div id="content-prv-active" class="list-of-pms">
             {% for room in private_active %}
@@ -138,11 +168,7 @@
               </p>
             {% endfor %}
           </div>
-          <!-- Private archived -->
-          <p class="mb-0 py-1 text-muted">
-            <button class="btn accordion" id="toggleButtonPrvArchive">{% trans 'Private Archived' %}</button>
-          </p>
-          <div id="content-prv-archive" class="list-of-pms">
+          <div id="content-prv-archive" class="list-of-pms archive-section">
             {% for room in private_archived %}
               {% include 'chat/room_link.html' %}
             {% empty %}
@@ -174,6 +200,44 @@
     </div>
   </div>
   <!-- End Modal -->
+
+  <!-- Info modal -->
+  <div id="chat-info-modal" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{% trans 'Chat Information' %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <h6><i class="fas fa-info-circle me-2"></i>{% trans 'Public Rooms' %}</h6>
+            <p class="mb-0">{% blocktrans with archive_days=ARCHIVE_PUBLIC_CHAT_ROOM delete_days=DELETE_PUBLIC_CHAT_ROOM %}Public chat rooms are archived if they are not used for {{ archive_days }} days. After {{ delete_days }} days they are deleted.{% endblocktrans %}</p>
+          </div>
+          <div class="alert alert-success">
+            <h6><i class="fas fa-tasks me-2"></i>{% trans 'Tasks' %}</h6>
+            <p class="mb-0">{% trans 'Task rooms are created for specific tasks and projects. They are protected from automatic deletion and are used for collaborative work discussions.' %}</p>
+          </div>
+          <div class="alert alert-primary">
+            <h6><i class="fas fa-vote-yea me-2"></i>{% trans 'Referendums' %}</h6>
+            <p class="mb-0">{% trans 'Referendum rooms are created for voting and decision-making processes. They are protected from automatic deletion and provide a space for discussions about proposals.' %}</p>
+          </div>
+          <div class="alert alert-secondary">
+            <h6><i class="fas fa-lock me-2"></i>{% trans 'Private Messages' %}</h6>
+            <p class="mb-0">{% blocktrans with delete_days=DELETE_PUBLIC_CHAT_ROOM %}Private messages are archived when user is blocked and deleted after {{ delete_days }} days.{% endblocktrans %}</p>
+          </div>
+          <div class="alert alert-warning">
+            <h6><i class="fas fa-archive me-2"></i>{% trans 'Archives' %}</h6>
+            <p class="mb-0">{% trans 'Click the archive button (folder icon) next to each category to show archived rooms.' %}</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Info Modal -->
 
 {% endblock %}
 
