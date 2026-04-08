@@ -59,7 +59,33 @@ document.addEventListener('DOMContentLoaded', () => {
             this.classList.toggle('activated');
             const contentEl = $('#' + accordionMap[this.id]);
             if (contentEl) slideToggle(contentEl, 300);
+            
+            // Save accordion state to localStorage
+            const isActivated = this.classList.contains('activated');
+            localStorage.setItem(`chat-accordion-${this.id}`, isActivated ? 'expanded' : 'collapsed');
         });
+    }
+
+    // Restore accordion states from localStorage
+    for (const acc of document.getElementsByClassName('accordion')) {
+        const savedState = localStorage.getItem(`chat-accordion-${acc.id}`);
+        if (savedState === 'expanded') {
+            acc.classList.add('activated');
+            const contentEl = $('#' + accordionMap[acc.id]);
+            if (contentEl) {
+                contentEl.style.display = 'block';
+                contentEl.style.height = '';
+                contentEl.style.overflow = '';
+            }
+        } else if (savedState === 'collapsed') {
+            acc.classList.remove('activated');
+            const contentEl = $('#' + accordionMap[acc.id]);
+            if (contentEl) {
+                contentEl.style.display = 'none';
+                contentEl.style.height = '';
+                contentEl.style.overflow = '';
+            }
+        }
     }
 
     document.addEventListener("click", (e) => {
