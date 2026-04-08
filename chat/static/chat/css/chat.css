@@ -160,6 +160,13 @@
     min-width: 1.875rem;
 }
 
+.message .message-content .message-header .message-btn.msg-vote {
+    background-color: var(--bs-dark);
+    color: var(--bs-white);
+    border: 1px solid var(--bs-info);
+    opacity: 1;
+}
+
 .message .message-content .message-header .message-btn:hover {
     background-color: #343a40;
     opacity: 0.9;

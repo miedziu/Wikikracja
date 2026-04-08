@@ -82,8 +82,6 @@ const message_template = `
       <div class='message-header-left'>
         <span class='username'><%=username%></span>
         <span class='message-timestamp ms-2' data-message-id='<%-message_id%>'><%- latest_ts %></span>
-      </div>
-      <div class='message-header-center'>
         <button type='button' class='btn btn-sm ms-1 message-btn show-history' <% if (!edited) { %> style='display:none' <% } %>
           data-message-id='<%-message_id%>'
           title='${_("edited")}'>

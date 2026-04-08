@@ -106,22 +106,21 @@ export function formatDate(someDateTimeStamp) {
 }
 
 /**
- * Formats a timestamp into a time string (HH:MM:SS)
+ * Formats a timestamp into a time string (HH:MM)
  * @param {number|string|Date} ts - Unix timestamp or Date object
- * @returns {string} - Formatted time string (e.g., "14:30:45")
+ * @returns {string} - Formatted time string (e.g., "14:30")
  */
 export function formatTime(ts) {
     let date = new Date(ts);
     let hours = date.getHours();
     let minutes = "0" + date.getMinutes();
-    let seconds = "0" + date.getSeconds();
-    return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return hours + ':' + minutes.substr(-2);
 }
 
 /**
  * Formats a timestamp into date and time string
  * @param {number|string|Date} ts - Unix timestamp or Date object
- * @returns {string} - Formatted date and time (e.g., "Jan 15 14:30:45")
+ * @returns {string} - Formatted date and time (e.g., "Jan 15 14:30")
  */
 export function formatDateTime(ts) {
     let date = formatDate(ts);
