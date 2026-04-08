@@ -47,7 +47,7 @@ const room_template = `
         <!-- Those two-->
 
       <div class='chat-controls-row'>
-        <input type="text" id="message-input">
+        <textarea id="message-input" rows="1" placeholder="${_("Divide the message into several parts...")}"></textarea>
         <button class='send-message chat-control btn btn-primary'>
           <i class='fas fa-paper-plane'></i>
         </button>

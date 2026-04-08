@@ -111,18 +111,18 @@
     align-items: center;
 }
 
-.message .message-content .message-header .message-header-left {
+.message-header-left {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.message .message-content .message-header .username {
+.username {
     color: #6c757d;
     font-weight: bold;
 }
 
-.message .message-content .message-header .message-header-center {
+.message-header-center {
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -130,7 +130,7 @@
     justify-content: center;
 }
 
-.message .message-content .message-header .message-header-right {
+.message-header-right {
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -145,7 +145,7 @@
     color: #6c757d !important;
 }
 
-.message .message-content .message-header .message-btn {
+.message-btn {
     background-color: #495057;
     color: #adb5bd;
     border: 1px solid #495057;
@@ -160,23 +160,23 @@
     min-width: 1.875rem;
 }
 
-.message .message-content .message-header .message-btn.msg-vote {
+.message-btn.msg-vote {
     background-color: var(--bs-dark);
     color: var(--bs-white);
     border: 1px solid var(--bs-info);
     opacity: 1;
 }
 
-.message .message-content .message-header .message-btn:hover {
+.message-btn:hover {
     background-color: #343a40;
     opacity: 0.9;
 }
 
-.message .message-content .message-header .message-btn i {
+.message-btn i {
     font-size: 0.875rem;
 }
 
-.message .message-content .message-header .message-header-right .msg-vote.active {
+.msg-vote.active {
     background-color: #28a745;
     border-color: #28a745;
 }
@@ -243,17 +243,17 @@
     color: #d9d9d9;
 }
 
-#room .chat-controls .chat-control {
+.chat-control {
     font-size: 1.25rem;
 }
 
-#room .chat-controls .chat-controls-row {
+.chat-controls-row {
     display: flex;
     flex: 1;
     gap: .1rem;
 }
 
-#room .chat-controls .chat-controls-row #message-input {
+#message-input {
     border: 1px solid #444;
     border-radius: .3rem;
     background-color: #303030;
@@ -262,26 +262,20 @@
     padding: 0.5rem;
     font-size: 1rem;
     line-height: 1.5;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none;
-    box-sizing: border-box;
+    font-family: inherit;
+    resize: none;
+    overflow: hidden;
+    min-height: 38px;
+    max-height: 120px;
 }
 
-#room .chat-controls .chat-controls-row #message-input:focus {
+#message-input:focus {
     border-color: var(--bs-primary);
     box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
-#room .chat-controls .chat-controls-row #message-input::placeholder {
+#message-input::placeholder {
     color: #aaa;
-}
-
-#room .chat-controls .chat-controls-row input#message-input[type="text"] {
-    -webkit-user-select: text;
-    user-select: text;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .room-list .row {

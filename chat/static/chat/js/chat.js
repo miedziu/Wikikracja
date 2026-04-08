@@ -411,7 +411,10 @@ export async function onSubmitMessage(message, editing_message_id) {
         WS_API.sendMessage(CurrentRoomId, message, DOM_API.getAnonymousValue(), attachments);
         // remove files from input and image preview
         DOM_API.clearFiles();
-        DOM_API.getMessageInput().value = "";
+        const messageInput = DOM_API.getMessageInput();
+        messageInput.value = "";
+        messageInput.style.height = 'auto';
+        messageInput.style.height = '38px';
         // Reset editing mode if it was active
         if (DOM_API.isEditing()) {
             DOM_API.stopEditing();

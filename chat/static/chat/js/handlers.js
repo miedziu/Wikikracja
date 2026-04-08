@@ -25,6 +25,24 @@ import { $, $$ } from './utility.js';
 const DOM_API = new DomApi();
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Auto-resize textarea functionality
+    function autoResizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    }
+
+    // Setup auto-resize for message input
+    document.addEventListener('input', (e) => {
+        if (e.target.id === 'message-input') {
+            autoResizeTextarea(e.target);
+        }
+    });
+
+    // Initial resize for existing textarea
+    const messageInput = $('#message-input');
+    if (messageInput) {
+        autoResizeTextarea(messageInput);
+    }
     const accordionMap = {
         'toggleButtonPubRoomsActive': 'content-pub-rooms-active',
         'toggleButtonPubRoomsArchive': 'content-pub-rooms-archive',
@@ -52,7 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener("keydown", (e) => {
         if (e.target.id !== "message-input") return;
-        if (e.keyCode == 13) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
             onSubmitMessage(DOM_API.getEnteredText(), DOM_API.getEditedMessageId());
         }
         if (e.key == "ArrowUp") {
