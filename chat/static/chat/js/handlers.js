@@ -115,7 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const images = Array.from(container.querySelectorAll('.attached-image'));
             const index = images.indexOf(e.target);
             if (index !== -1) {
-                showImageViewer(images, index);
+                const imageSrcs = images.map(img => img.src);
+                DOM_API.openBigImage(imageSrcs);
             }
         }
     });
