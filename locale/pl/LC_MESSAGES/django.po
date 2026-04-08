@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-08 11:53+0200\n"
+"POT-Creation-Date: 2026-04-08 15:00+0200\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr "Podtytuł"
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:28
 #: .\elibrary\forms.py:12 .\elibrary\models.py:16
 #: .\elibrary\templates\elibrary\book_confirm_delete.html:15
-#: .\glosowania\models.py:125
+#: .\glosowania\models.py:126
 #: .\glosowania\templates\glosowania\szczegoly.html:198
 #: .\tasks\templates\tasks\task_detail.html:36
 msgid "Author"
@@ -1239,61 +1239,65 @@ msgstr "Jeśli proponowane prawo zastępuje inne przepisy, wprowadź tutaj ich n
 msgid "The path this bill took."
 msgstr "Historia propozycji"
 
-#: .\glosowania\models.py:115
+#: .\glosowania\models.py:65 .\tasks\models.py:67
+msgid "chat room"
+msgstr "Pokój czatu"
+
+#: .\glosowania\models.py:116
 msgid "draft"
 msgstr "szkic"
 
-#: .\glosowania\models.py:120
+#: .\glosowania\models.py:121
 msgid "Positive"
 msgstr "Argument Za"
 
-#: .\glosowania\models.py:121
+#: .\glosowania\models.py:122
 msgid "Negative"
 msgstr "Argument Przeciw"
 
-#: .\glosowania\models.py:124
+#: .\glosowania\models.py:125
 #: .\glosowania\templates\glosowania\delete_argument.html:13
 #: .\glosowania\templates\glosowania\edit_argument.html:10 .\home\models.py:18
 #: .\home\models.py:49 .\home\templatetags\feed_filters.py:35
 msgid "Decision"
 msgstr "Referendum"
 
-#: .\glosowania\models.py:126
+#: .\glosowania\models.py:127
 #: .\glosowania\templates\glosowania\delete_argument.html:14
 msgid "Argument Type"
 msgstr "Typ argumentu"
 
-#: .\glosowania\models.py:126
+#: .\glosowania\models.py:127
 msgid "Is this a positive or negative argument?"
 msgstr "Czy to argument pozytywny czy negatywny?"
 
-#: .\glosowania\models.py:127
+#: .\glosowania\models.py:128
 msgid "Argument Content"
 msgstr "Treść argumentu"
 
-#: .\glosowania\models.py:127
+#: .\glosowania\models.py:128
 msgid "Enter your argument. You can include links."
 msgstr "Wprowadź swój argument. Możesz dodać linki."
 
-#: .\glosowania\models.py:128
+#: .\glosowania\models.py:129
 msgid "Created At"
 msgstr "Utworzono"
 
-#: .\glosowania\models.py:129
+#: .\glosowania\models.py:130
 #: .\glosowania\templates\glosowania\delete_argument.html:22
 #: .\glosowania\templates\glosowania\edit_argument.html:14
 msgid "Last Modified"
 msgstr "Ostatnia modyfikacja"
 
-#: .\glosowania\models.py:133
+#: .\glosowania\models.py:134
 msgid "Argument"
 msgstr "Argument"
 
-#: .\glosowania\models.py:134
+#: .\glosowania\models.py:135
 msgid "Arguments"
 msgstr "Argumenty"
 
-#: .\glosowania\signals.py:47
+#: .\glosowania\signals.py:50
 #, python-brace-format
 msgid ""
 "This chat room has been created for project #{id}.\n"
@@ -1524,11 +1528,11 @@ msgstr "Już zagłosowałeś."
 msgid "Result"
 msgstr "Wynik"
 
-#: .\glosowania\templates\glosowania\szczegoly.html:166 .\tasks\models.py:109
+#: .\glosowania\templates\glosowania\szczegoly.html:166 .\tasks\models.py:107
 msgid "For"
 msgstr "Za"
 
-#: .\glosowania\templates\glosowania\szczegoly.html:166 .\tasks\models.py:108
+#: .\glosowania\templates\glosowania\szczegoly.html:166 .\tasks\models.py:106
 msgid "Against"
 msgstr "Przeciw"
 
@@ -2572,16 +2576,12 @@ msgstr "Ukończone"
 msgid "Cancelled"
 msgstr "Anulowane"
 
-#: .\tasks\models.py:67
-msgid "chat room"
-msgstr "Pokój czatu"
-
-#: .\tasks\models.py:133 .\tasks\templates\tasks\task_detail.html:46
+#: .\tasks\models.py:131 .\tasks\templates\tasks\task_detail.html:46
 #: .\tasks\templates\tasks\task_detail.html:136
 msgid "Success"
 msgstr "Sukces"
 
-#: .\tasks\models.py:134 .\tasks\templates\tasks\task_detail.html:47
+#: .\tasks\models.py:132 .\tasks\templates\tasks\task_detail.html:47
 #: .\tasks\templates\tasks\task_detail.html:142
 msgid "Failure"
 msgstr "Porażka"

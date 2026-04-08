@@ -80,7 +80,7 @@ class Decyzja(models.Model):
         # Use English prefix (not translated) for consistency in room categorization
         return "Vote #%(id)s: %(title)s" % {
             "id": self.pk,
-            "title": self.title[:20]
+            "title": self.title[:30]
         }
 
     def get_chat_room(self):
