@@ -52,7 +52,7 @@ body:has(.chat-rooms) {
 
 /* Specifically target the room list column */
 .chat-rooms > div[class*="col-"].room-list {
-    max-width: 41.666667%; /* col-md-5 equivalent */
+    max-width: 33.333333%; /* col-md-4 equivalent */
     overflow: hidden;
 }
 
