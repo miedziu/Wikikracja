@@ -114,7 +114,7 @@
 .message-header-left {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.1rem;
 }
 
 .username {
@@ -133,7 +133,7 @@
 .message-header-right {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.1rem;
 }
 
 .message .message-content .message-header .message-header-left .message-timestamp {
@@ -213,7 +213,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    padding: .3rem 0;
+    padding: 0;
+    /* Remove padding to eliminate gap */
 }
 
 #room .image-preview-container .preview-images .image-preview {
@@ -442,8 +443,8 @@
         max-height: calc(100dvh - 150px);
         /* Account for fixed header (50px) and controls (60px) */
         padding-top: 50px;
-        padding-bottom: 1px;
-        /* Minimal gap for fixed controls */
+        padding-bottom: 0;
+        /* No gap - messages glued to controls */
     }
 
     #room .messages .message {
