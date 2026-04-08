@@ -56,6 +56,14 @@ class Decyzja(models.Model):
     za = models.SmallIntegerField(default=0, editable=False)
     przeciw = models.SmallIntegerField(default=0, editable=False)
     status = models.SmallIntegerField(default=1, editable=False)
+    chat_room = models.ForeignKey(
+        "chat.Room",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="decyzja",
+        verbose_name=_("chat room"),
+    )
 
     # 1.Proposition
     # 2.Discussion
@@ -76,10 +84,7 @@ class Decyzja(models.Model):
         }
 
     def get_chat_room(self):
-        try:
-            return Room.objects.get(title=self.get_chat_room_title())
-        except Room.DoesNotExist:
-            return None
+        return self.chat_room
 
     def get_chat_room_url(self):
         room = self.get_chat_room()
@@ -90,10 +95,6 @@ class Decyzja(models.Model):
     @property
     def chat_room_url(self):
         return self.get_chat_room_url()
-
-    @property
-    def chat_room(self):
-        return self.get_chat_room()
 
     def get_chat_room_pulse_class(self, user):
         """Return CSS class for chat room pulse indicator if there are unseen messages"""

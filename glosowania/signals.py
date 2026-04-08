@@ -24,8 +24,7 @@ def create_chat_room_for_referendum(sender, instance, created, **kwargs):
     if created and instance.status == 1:
         # Create room title based on project ID and title
         # Use English prefix (not translated) for consistency in room categorization
-        room_title = "Vote #%(id)s: %(title)s" % {
-            "id": instance.pk,
+        room_title = "%(title)s" % {
             "title": instance.title[:20]
         }
 
@@ -40,6 +39,10 @@ def create_chat_room_for_referendum(sender, instance, created, **kwargs):
                 # Add all active users to the room
                 active_users = User.objects.filter(is_active=True)
                 room.allowed.set(active_users)
+
+                # Link room to Decyzja instance
+                instance.chat_room = room
+                instance.save(update_fields=['chat_room'])
 
                 # Create initial welcome message in the room
                 HOST = get_site_domain()
@@ -62,15 +65,9 @@ def delete_decyzja_chat_room(sender, instance, **kwargs):
     Note: Currently, Decyzja objects are not deleted in the system, but this signal
     is here for future-proofing in case deletion functionality is added.
     """
-    # Use English prefix (not translated) for consistency
-    room_title = "Vote #%(id)s: %(title)s" % {
-        "id": instance.pk,
-        "title": instance.title[:20]
-    }
-
-    try:
-        room = Room.objects.get(title=room_title)
+    room = instance.chat_room
+    if room:
         room.delete()
-        log.info(f"Deleted chat room '{room_title}' for referendum #{instance.pk}")
-    except Room.DoesNotExist:
-        log.info(f"Chat room '{room_title}' does not exist, nothing to delete")
+        log.info(f"Deleted chat room '{room.title}' for referendum #{instance.pk}")
+    else:
+        log.info(f"No chat room linked to referendum #{instance.pk}, nothing to delete")

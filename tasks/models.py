@@ -80,9 +80,7 @@ class Task(models.Model):
         return self.status == self.Status.ACTIVE
 
     def get_chat_room_title(self):
-        # Use English prefix (not translated) for consistency in room categorization
-        return "Task #%(id)s: %(title)s" % {
-            "id": self.id,
+        return "%(title)s" % {
             "title": self.title[:50]
         }
 

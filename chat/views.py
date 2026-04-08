@@ -74,15 +74,20 @@ def chat(request: HttpRequest):
     private_active = allowed_rooms.filter(public=False, archived=False)
     private_archived = allowed_rooms.filter(public=False, archived=True)
 
-    # Split public rooms into categories based on title patterns
-    # Tasks start with "Task #", Votes start with "Vote #"
-    # Note: We use English prefixes in room titles (not translated) for consistency
-    public_rooms_active = public_active.exclude(title__startswith="Task #").exclude(title__startswith="Vote #")
-    public_rooms_archived = public_archived.exclude(title__startswith="Task #").exclude(title__startswith="Vote #")
-    tasks_active = public_active.filter(title__startswith="Task #")
-    tasks_archived = public_archived.filter(title__startswith="Task #")
-    votes_active = public_active.filter(title__startswith="Vote #")
-    votes_archived = public_archived.filter(title__startswith="Vote #")
+    # Split public rooms into categories based on database relations
+    # Get room IDs for tasks and votes
+    from tasks.models import Task
+    from glosowania.models import Decyzja
+    
+    task_room_ids = Task.objects.filter(chat_room__isnull=False).values_list('chat_room_id', flat=True)
+    vote_room_ids = Decyzja.objects.filter(chat_room__isnull=False).values_list('chat_room_id', flat=True)
+    
+    public_rooms_active = public_active.exclude(id__in=task_room_ids).exclude(id__in=vote_room_ids)
+    public_rooms_archived = public_archived.exclude(id__in=task_room_ids).exclude(id__in=vote_room_ids)
+    tasks_active = public_active.filter(id__in=task_room_ids)
+    tasks_archived = public_archived.filter(id__in=task_room_ids)
+    votes_active = public_active.filter(id__in=vote_room_ids)
+    votes_archived = public_archived.filter(id__in=vote_room_ids)
 
     # Render that in the chat template
     return render(request, "chat/chat.html", {
