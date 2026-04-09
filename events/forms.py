@@ -15,8 +15,10 @@ class DateTimeLocalInput(forms.DateTimeInput):
         if value is None:
             return ''
         if hasattr(value, 'strftime'):
-            # Format datetime for datetime-local input (YYYY-MM-DDTHH:MM)
-            return value.strftime('%Y-%m-%dT%H:%M')
+            # Convert to local timezone for datetime-local input
+            from django.utils import timezone
+            local_time = timezone.localtime(value)
+            return local_time.strftime('%Y-%m-%dT%H:%M')
         return value
 
 
@@ -85,6 +87,28 @@ class EventForm(forms.ModelForm):
             Column('is_active', css_class='mb-3 col-md-6'),
             Column('is_public', css_class='mb-3 col-md-6'),
         ), Submit('submit', _('Save Event'), css_class='btn btn-primary'))
+
+    def clean_start_date(self):
+        start_date = self.cleaned_data.get('start_date')
+        if start_date:
+            # datetime-local input comes without timezone info
+            # Django treats it as current timezone, which is correct
+            from django.utils import timezone
+            if timezone.is_naive(start_date):
+                # Make timezone-aware using current timezone
+                start_date = timezone.make_aware(start_date)
+        return start_date
+
+    def clean_end_date(self):
+        end_date = self.cleaned_data.get('end_date')
+        if end_date:
+            # datetime-local input comes without timezone info
+            # Django treats it as current timezone, which is correct
+            from django.utils import timezone
+            if timezone.is_naive(end_date):
+                # Make timezone-aware using current timezone
+                end_date = timezone.make_aware(end_date)
+        return end_date
 
     def clean(self):
         cleaned_data = super().clean()

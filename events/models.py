@@ -86,8 +86,7 @@ class Event(models.Model):
                 if week[weekday] != 0:
                     day = week[weekday]
                     # Combine with the time from start_date
-                    result = self.start_date.replace(year=year, month=month, day=day)
-                    return result
+                    return self.start_date.replace(year=year, month=month, day=day)
         else:
             # Get the nth occurrence (1-indexed)
             occurrence_count = 0
@@ -97,8 +96,7 @@ class Event(models.Model):
                     if occurrence_count == nth:
                         day = week[weekday]
                         # Combine with the time from start_date
-                        result = self.start_date.replace(year=year, month=month, day=day)
-                        return result
+                        return self.start_date.replace(year=year, month=month, day=day)
 
         return None
 

@@ -99,13 +99,12 @@ def start_scheduler():
     )
     log.info("Scheduled job: update_site every hour")
 
-    meeting_notification_cron = os.getenv('MEETING_NOTIFICATION_CRON', '50 19 * * 2')
-    # meeting_notification_cron ='* * * * *'
+    # Check for events starting every minute
     scheduler.add_job(
         run_meeting_notification,
-        trigger=CronTrigger.from_crontab(meeting_notification_cron),
+        trigger=CronTrigger(minute='*'),
         id='meeting_notification',
-        name='Send notification about meeteing',
+        name='Send notification when event starts',
         replace_existing=True,
     )
 
@@ -116,25 +115,53 @@ def start_scheduler():
 
 
 def run_meeting_notification():
-
+    """Send push notifications for events that are starting now"""
+    from events.models import Event
+    from django.utils import timezone
+    from datetime import timedelta
+    
+    # Get events that are starting now (within the current minute)
+    now = timezone.now()
+    start_of_minute = now.replace(second=0, microsecond=0)
+    end_of_minute = start_of_minute + timedelta(minutes=1)
+    
+    starting_events = Event.objects.filter(
+        is_active=True,
+        start_date__gte=start_of_minute,
+        start_date__lt=end_of_minute
+    ).order_by('start_date')
+    
+    if not starting_events.exists():
+        return  # Silent return - no events starting this minute
+    
     webpush_devices = WebPushDevice.objects.filter(active=True)
-    if webpush_devices.exists():
+    if not webpush_devices.exists():
+        log.info("No active webpush devices found")
+        return
+    
+    for event in starting_events:
         try:
+            # Format event time for display
+            event_time = event.start_date.strftime('%H:%M')
+            
+            # Build notification message
             message = json.dumps({
-                "title": "Przypomnienie",
-                "body": "Zapraszam na spotkanie",
+                "title": "Wydarzenie rozpoczyna sie!",
+                "body": f"{event.title}{f' - {event.place}' if event.place else ''}",
                 "icon": '/favicon.ico',
                 "badge": '/favicon.ico',
                 "data": {
-                    'click_action': "https://rozmowy.wikikracja.pl/otwarte",
-                    'room_id': 1,
+                    'click_action': f"https://rozmowy.wikikracja.pl/otwarte" if not event.link else event.link,
+                    'event_id': event.id,
                 }
             })
+            
             # WebPush requires VAPID signing
             webpush_devices.send_message(message)
-            log.info("Push notification sent")
+            log.info(f"Push notification sent for event: {event.title}")
+            
         except Exception as e:
-            log.error(f"WebPush failed: {e}")
+            log.error(f"WebPush failed for event {event.id}: {e}")
 
 
 def _run_command(command_name):
