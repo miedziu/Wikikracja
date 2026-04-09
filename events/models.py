@@ -86,7 +86,11 @@ class Event(models.Model):
                 if week[weekday] != 0:
                     day = week[weekday]
                     # Combine with the time from start_date
-                    return self.start_date.replace(year=year, month=month, day=day)
+                    result = self.start_date.replace(year=year, month=month, day=day)
+                    # Ensure timezone-aware after replace
+                    if timezone.is_naive(result):
+                        result = timezone.make_aware(result)
+                    return result
         else:
             # Get the nth occurrence (1-indexed)
             occurrence_count = 0
@@ -96,7 +100,11 @@ class Event(models.Model):
                     if occurrence_count == nth:
                         day = week[weekday]
                         # Combine with the time from start_date
-                        return self.start_date.replace(year=year, month=month, day=day)
+                        result = self.start_date.replace(year=year, month=month, day=day)
+                        # Ensure timezone-aware after replace
+                        if timezone.is_naive(result):
+                            result = timezone.make_aware(result)
+                        return result
 
         return None
 
@@ -120,6 +128,9 @@ class Event(models.Model):
                     next_date = next_date.replace(year=next_date.year + 1, month=1)
                 else:
                     next_date = next_date.replace(month=next_date.month + 1)
+                # Ensure timezone-aware after replace
+                if timezone.is_naive(next_date):
+                    next_date = timezone.make_aware(next_date)
         elif self.frequency == 'monthly_ordinal':
             # For monthly ordinal, we need to find the next occurrence of the specified weekday
             if self.monthly_ordinal is None or self.monthly_weekday is None:
@@ -149,6 +160,9 @@ class Event(models.Model):
         elif self.frequency == 'yearly':
             while next_date <= now:
                 next_date = next_date.replace(year=next_date.year + 1)
+                # Ensure timezone-aware after replace
+                if timezone.is_naive(next_date):
+                    next_date = timezone.make_aware(next_date)
 
         return next_date
 

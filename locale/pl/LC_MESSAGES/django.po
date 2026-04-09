@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-09 21:03+0200\n"
+"POT-Creation-Date: 2026-04-09 22:02+0200\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -756,81 +756,81 @@ msgstr "Wgraj pliki"
 msgid "Add eBook"
 msgstr "Dodaj eBook"
 
-#: .\events\forms.py:27 .\events\models.py:49
+#: .\events\forms.py:32 .\events\models.py:49
 msgid "Week of month"
 msgstr "Tydzień miesiąca"
 
-#: .\events\forms.py:27
+#: .\events\forms.py:32
 msgid "Which occurrence in the month?"
 msgstr "Która wystąpienie w miesiącu?"
 
-#: .\events\forms.py:29 .\events\models.py:25
+#: .\events\forms.py:34 .\events\models.py:25
 #: .\events\templates\events\event_list.html:99
 msgid "First"
 msgstr "Pierwszy"
 
-#: .\events\forms.py:30 .\events\models.py:26
+#: .\events\forms.py:35 .\events\models.py:26
 msgid "Second"
 msgstr "Drugi"
 
-#: .\events\forms.py:31 .\events\models.py:27
+#: .\events\forms.py:36 .\events\models.py:27
 msgid "Third"
 msgstr "Trzeci"
 
-#: .\events\forms.py:32 .\events\models.py:28
+#: .\events\forms.py:37 .\events\models.py:28
 msgid "Fourth"
 msgstr "Czwarty"
 
-#: .\events\forms.py:33 .\events\models.py:29
+#: .\events\forms.py:38 .\events\models.py:29
 #: .\events\templates\events\event_list.html:117
 msgid "Last"
 msgstr "Ostatni"
 
-#: .\events\forms.py:36 .\events\models.py:50
+#: .\events\forms.py:41 .\events\models.py:50
 msgid "Day of week"
 msgstr "Dzień tygodnia"
 
-#: .\events\forms.py:36
+#: .\events\forms.py:41
 msgid "Which day of the week?"
 msgstr "Która dzień tygodnia?"
 
-#: .\events\forms.py:38 .\events\models.py:33
+#: .\events\forms.py:43 .\events\models.py:33
 msgid "Monday"
 msgstr "Poniedziałek"
 
-#: .\events\forms.py:39 .\events\models.py:34
+#: .\events\forms.py:44 .\events\models.py:34
 msgid "Tuesday"
 msgstr "Wtorek"
 
-#: .\events\forms.py:40 .\events\models.py:35
+#: .\events\forms.py:45 .\events\models.py:35
 msgid "Wednesday"
 msgstr "Środa"
 
-#: .\events\forms.py:41 .\events\models.py:36
+#: .\events\forms.py:46 .\events\models.py:36
 msgid "Thursday"
 msgstr "Czwartek"
 
-#: .\events\forms.py:42 .\events\models.py:37
+#: .\events\forms.py:47 .\events\models.py:37
 msgid "Friday"
 msgstr "Piątek"
 
-#: .\events\forms.py:43 .\events\models.py:38
+#: .\events\forms.py:48 .\events\models.py:38
 msgid "Saturday"
 msgstr "Sobota"
 
-#: .\events\forms.py:44 .\events\models.py:39
+#: .\events\forms.py:49 .\events\models.py:39
 msgid "Sunday"
 msgstr "Niedziela"
 
-#: .\events\forms.py:60
+#: .\events\forms.py:65
 msgid "Event location or venue"
 msgstr "Miejsce"
 
-#: .\events\forms.py:89
+#: .\events\forms.py:94
 msgid "Save Event"
 msgstr "Zapisz Wydarzenie"
 
-#: .\events\forms.py:122 .\events\forms.py:124
+#: .\events\forms.py:127 .\events\forms.py:129
 msgid "This field is required for monthly ordinal events."
 msgstr "To pole jest wymagane dla wydarzeń powtarzających się w określonym dniu tygodnia."
 

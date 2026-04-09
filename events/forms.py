@@ -17,7 +17,12 @@ class DateTimeLocalInput(forms.DateTimeInput):
         if hasattr(value, 'strftime'):
             # Convert to local timezone for datetime-local input
             from django.utils import timezone
-            local_time = timezone.localtime(value)
+            if timezone.is_naive(value):
+                # If naive, assume it's already in local timezone
+                local_time = value
+            else:
+                # If aware, convert to local timezone
+                local_time = timezone.localtime(value)
             return local_time.strftime('%Y-%m-%dT%H:%M')
         return value
 
