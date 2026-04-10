@@ -1,5 +1,6 @@
 # OGÓLNE
 
+- dynamiczne przenoszenie nieaktywnych czatów do archiwum. Np tylko ostatnie 5 jest widoczne.
 - Chat: filtr tylko nieprzeczytane
 - Chat: automatycznie rozwijaj kategorię w której jest aktywny pokój
 - Do emaila powitalnego dodać https://lobbyobywatelskie.wikikracja.pl/board/view/25/
