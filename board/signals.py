@@ -1,8 +1,12 @@
 # Third party imports
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+
+# First party imports
+from zzz.utils import get_site_domain
 
 # Local folder imports
 from .models import Post
@@ -34,16 +38,18 @@ def notify_important_chat_on_important_post(sender, instance, created, **kwargs)
         return
 
     # Determine if this is a new important post or an update to an existing one
-    post_url = reverse('board:view_post', args=[instance.pk])
+    post_path = reverse('board:view_post', args=[instance.pk])
+    protocol = 'http' if settings.DEBUG else 'https'
+    post_url = f"{protocol}://{get_site_domain()}{post_path}"
 
     if created:
-        message = _("New important announcement by <strong>%(username)s</strong>: <a href='%(post_url)s'>%(title)s</a>") % {
+        message = _("New important announcement by %(username)s: %(title)s - %(post_url)s") % {
             'username': instance.author.username,
             'post_url': post_url,
             'title': instance.title,
         }
     else:
-        message = _("Updated important announcement by <strong>%(username)s</strong>: <a href='%(post_url)s'>%(title)s</a>") % {
+        message = _("Updated important announcement by %(username)s: %(title)s - %(post_url)s") % {
             'username': instance.author.username,
             'post_url': post_url,
             'title': instance.title,
