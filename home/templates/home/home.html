@@ -159,9 +159,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	// Handle toggle unread filter button
 	const toggleButton = document.getElementById('toggle-unread');
 	if (toggleButton) {
-		// Set initial state based on URL parameter
+		// Set initial state from localStorage, fallback to URL parameter
+		const savedFilterState = localStorage.getItem('showUnreadOnly');
 		const urlParams = new URLSearchParams(window.location.search);
-		const isFiltered = urlParams.get('filter') === 'unread';
+		const isFiltered = savedFilterState !== null ? 
+			savedFilterState === 'true' : 
+			urlParams.get('filter') === 'unread';
+		
 		toggleButton.setAttribute('data-filtered', isFiltered.toString());
 		updateButtonText(toggleButton, isFiltered);
 		
@@ -172,6 +176,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			// Update button state
 			this.setAttribute('data-filtered', newFilteredState.toString());
 			updateButtonText(this, newFilteredState);
+			
+			// Save to localStorage
+			localStorage.setItem('showUnreadOnly', newFilteredState.toString());
 			
 			// Update URL and reload page
 			const url = new URL(window.location);
