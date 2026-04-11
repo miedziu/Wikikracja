@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-11 20:44+0200\n"
+"POT-Creation-Date: 2026-04-11 21:57+0200\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -65,7 +65,7 @@ msgstr "Zaktualizowane"
 #: .\board\models.py:16 .\board\templates\board\board.html:32
 #: .\board\templates\board\board.html:52
 #: .\board\templates\board\post_detail.html:11
-#: .\chat\templates\chat\chat.html:74 .\events\models.py:52
+#: .\chat\templates\chat\chat.html:77 .\events\models.py:52
 #: .\events\templates\events\event_detail.html:80
 #: .\events\templates\events\event_list.html:77
 msgid "Public"
@@ -187,7 +187,7 @@ msgid "Delete"
 msgstr "Skasuj"
 
 #: .\board\templates\board\post_detail.html:11
-#: .\chat\templates\chat\chat.html:152
+#: .\chat\templates\chat\chat.html:155
 #: .\events\templates\events\event_detail.html:84
 #: .\events\templates\events\event_list.html:81
 msgid "Private"
@@ -580,80 +580,88 @@ msgid "Back to room list"
 msgstr "Powrót do listy pokoi"
 
 #: .\chat\templates\chat\chat.html:62
-msgid "Info"
-msgstr "Informacje"
+msgid "Room"
+msgstr "Pokój"
 
 #: .\chat\templates\chat\chat.html:65
-msgid "Add room"
-msgstr "Dodaj pokój"
+msgid "Info"
+msgstr "Info"
 
-#: .\chat\templates\chat\chat.html:75 .\chat\templates\chat\chat.html:101
-#: .\chat\templates\chat\chat.html:127 .\chat\templates\chat\chat.html:153
+#: .\chat\templates\chat\chat.html:67
+msgid "Show only unread rooms"
+msgstr "Poka tylko nieprzeczytane pokoje"
+
+#: .\chat\templates\chat\chat.html:68
+msgid "Unread"
+msgstr "Nieprzeczytane"
+
+#: .\chat\templates\chat\chat.html:78 .\chat\templates\chat\chat.html:104
+#: .\chat\templates\chat\chat.html:130 .\chat\templates\chat\chat.html:156
 msgid "Show archived rooms"
 msgstr "Pokaż zarchiwizowane pokoje"
 
-#: .\chat\templates\chat\chat.html:84 .\chat\templates\chat\chat.html:93
-#: .\chat\templates\chat\chat.html:110 .\chat\templates\chat\chat.html:119
-#: .\chat\templates\chat\chat.html:136 .\chat\templates\chat\chat.html:145
-#: .\chat\templates\chat\chat.html:162 .\chat\templates\chat\chat.html:171
+#: .\chat\templates\chat\chat.html:87 .\chat\templates\chat\chat.html:96
+#: .\chat\templates\chat\chat.html:113 .\chat\templates\chat\chat.html:122
+#: .\chat\templates\chat\chat.html:139 .\chat\templates\chat\chat.html:148
+#: .\chat\templates\chat\chat.html:165 .\chat\templates\chat\chat.html:174
 #: .\tasks\templates\tasks\task_list.html:31
 #: .\tasks\templates\tasks\task_list.html:35
 msgid "None"
 msgstr "Brak"
 
-#: .\chat\templates\chat\chat.html:100 .\chat\templates\chat\chat.html:213
+#: .\chat\templates\chat\chat.html:103 .\chat\templates\chat\chat.html:216
 #: .\home\templates\home\base.html:79
 msgid "Tasks"
 msgstr "Zadania"
 
-#: .\chat\templates\chat\chat.html:126 .\chat\templates\chat\chat.html:217
+#: .\chat\templates\chat\chat.html:129 .\chat\templates\chat\chat.html:220
 msgid "Referendums"
 msgstr "Głosowania"
 
-#: .\chat\templates\chat\chat.html:187
+#: .\chat\templates\chat\chat.html:190
 msgid "Changes history"
 msgstr "Historia zmian"
 
-#: .\chat\templates\chat\chat.html:192 .\chat\templates\chat\chat.html:230
+#: .\chat\templates\chat\chat.html:195 .\chat\templates\chat\chat.html:233
 #: .\tasks\templates\tasks\task_detail.html:155
 msgid "Close"
 msgstr "Zamknij"
 
-#: .\chat\templates\chat\chat.html:204
+#: .\chat\templates\chat\chat.html:207
 msgid "Chat Information"
 msgstr "Informacje o czacie"
 
-#: .\chat\templates\chat\chat.html:209
+#: .\chat\templates\chat\chat.html:212
 msgid "Public Rooms"
 msgstr "Publiczne"
 
-#: .\chat\templates\chat\chat.html:210
+#: .\chat\templates\chat\chat.html:213
 #, python-format
 msgid "Public chat rooms are archived if they are not used for %(archive_days)s days. After %(delete_days)s days they are deleted."
 msgstr "Publiczne pokoje czatu są archiwizowane, jeśli nie są używane przez %(archive_days)s dni. Po %(delete_days)s dniach są usuwane."
 
-#: .\chat\templates\chat\chat.html:214
+#: .\chat\templates\chat\chat.html:217
 msgid "Task rooms are created for specific tasks and projects. They are protected from automatic deletion and are used for collaborative work discussions."
 msgstr "Pokoje zadań są tworzone dla konkretnych zadań i projektów. Są one chronione przed automatycznym usunięciem i służą do dyskusji nad pracą zespołową."
 
-#: .\chat\templates\chat\chat.html:218
+#: .\chat\templates\chat\chat.html:221
 msgid "Referendum rooms are created for voting and decision-making processes. They are protected from automatic deletion and provide a space for discussions about proposals."
 msgstr "Pokoje głosowań są tworzone dla procesów głosowania i podejmowania decyzji. Są one chronione przed automatycznym usunięciem i zapewniają przestrzeń do dyskusji na temat propozycji."
 
-#: .\chat\templates\chat\chat.html:221
+#: .\chat\templates\chat\chat.html:224
 msgid "Private Messages"
 msgstr "Prywatne wiadomości"
 
-#: .\chat\templates\chat\chat.html:222
+#: .\chat\templates\chat\chat.html:225
 #, python-format
 msgid "Private messages are archived when user is blocked and deleted after %(delete_days)s days."
 msgstr "Prywatne wiadomości są archiwizowane, gdy użytkownik jest blokowany i usuwany po %(delete_days)s dniach."
 
-#: .\chat\templates\chat\chat.html:225
+#: .\chat\templates\chat\chat.html:228
 msgid "Archives"
 msgstr "Archiwa"
 
-#: .\chat\templates\chat\chat.html:226
+#: .\chat\templates\chat\chat.html:229
 msgid "Click the archive button (folder icon) next to each category to show archived rooms."
 msgstr "Kliknij przycisk archiwum (ikona folderu) obok każdej kategorii, aby pokazać zarchiwizowane pokoje."
 
@@ -1828,24 +1836,28 @@ msgstr "nieprzeczytane"
 msgid "Filter options"
 msgstr "Opcje filtrowania"
 
-#: .\home\templates\home\home.html:66 .\home\templates\home\home.html:258
+#: .\home\templates\home\home.html:66 .\home\templates\home\home.html:276
 msgid "Mark all as read"
 msgstr "Oznacz wszystkie jako przeczytane"
 
-#: .\home\templates\home\home.html:70 .\home\templates\home\home.html:191
-msgid "Show unread only"
-msgstr "Pokaż tylko nieprzeczytane"
+#: .\home\templates\home\home.html:70
+msgid "Show all"
+msgstr "Pokaż wszystkie"
+
+#: .\home\templates\home\home.html:70
+msgid "Unread only"
+msgstr "Tylko nieprzeczytane"
 
 #: .\home\templates\home\home.html:85
 msgid "Activity Feed"
 msgstr "Kanał aktywności"
 
-#: .\home\templates\home\home.html:109 .\home\templates\home\home.html:359
+#: .\home\templates\home\home.html:109 .\home\templates\home\home.html:377
 msgid "Mark as read"
 msgstr "Oznacz jako przeczytane"
 
-#: .\home\templates\home\home.html:115 .\home\templates\home\home.html:234
-#: .\home\templates\home\home.html:310 .\home\templates\home\home.html:384
+#: .\home\templates\home\home.html:115 .\home\templates\home\home.html:252
+#: .\home\templates\home\home.html:328 .\home\templates\home\home.html:402
 msgid "Mark unread"
 msgstr "Oznacz jako nieprzeczytane"
 
@@ -1861,19 +1873,15 @@ msgstr "Zobacz"
 msgid "No recent activity"
 msgstr "Brak ostatniej aktywności"
 
-#: .\home\templates\home\home.html:189
-msgid "Show all"
-msgstr "Pokaż wszystkie"
-
-#: .\home\templates\home\home.html:209
+#: .\home\templates\home\home.html:227
 msgid "Processing..."
 msgstr "Przetwarzanie..."
 
-#: .\home\templates\home\home.html:271
+#: .\home\templates\home\home.html:289
 msgid "No unread items"
 msgstr "Brak nieprzeczytanych pozycji"
 
-#: .\home\templates\home\home.html:277
+#: .\home\templates\home\home.html:295
 msgid "Mark all items as read"
 msgstr "Oznacz wszystkie jako przeczytane"
 
@@ -1942,20 +1950,20 @@ msgstr "Członkostwo"
 msgid "Transaction"
 msgstr "Transakcja"
 
-#: .\home\views.py:143
+#: .\home\views.py:157
 msgid "Untitled Book"
 msgstr "Książka bez tytułu"
 
-#: .\home\views.py:213
+#: .\home\views.py:227
 #, python-format
 msgid "Messages in %(room_title)s"
 msgstr "Wiadomości w %(room_title)s"
 
-#: .\home\views.py:454
+#: .\home\views.py:482
 msgid "Your password has been changed."
 msgstr "Twoje hasło zostało zmienione."
 
-#: .\home\views.py:457
+#: .\home\views.py:485
 msgid "You typed something wrong. See what error appeared above and try again."
 msgstr "Coś źle wpisałeś. Zobacz, jaki błąd pojawił się powyżej i spróbuj ponownie."
 

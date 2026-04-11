@@ -1,18 +1,12 @@
 # OGÓLNE
 
-- Chat: na pc automatycznie rozwijaj kategorię w której jest aktywny pokój i zwijaj inne kategorie.
-- Start: zapamiętuj stan guzika 'Show unread only' w localStorage przeglądarki
-- Chat: guzik powrotu do listy pokoi chowa się gdy klawiatura ekranowa podnosi się na mobile.
-- Start: godzina wydarzenia pokazuje się nieprawidłowo w Start.
-- Chat: filtr tylko nieprzeczytane
-- swipe left right żeby przejść do różnych działów
-- Chat: w pierwszej wiadomości w automatycznym czacie musi być tytuł Zadania albo Głosowania.
-- dynamiczne przenoszenie nieaktywnych czatów do archiwum. Np tylko ostatnie 5 jest widoczne.
 - Do emaila powitalnego dodać https://lobbyobywatelskie.wikikracja.pl/board/view/25/
 - Nowa osoba akceptuje zasady w momencie pierwszego logowania
 - Dokończyć Fixtures i dodać je do skryptu instalacyjnego. Fixtures z przepisami, pokojami i ogłoszeniami. Start: (publiczna strona startowa dla niezalogowanych) i Footer: (publiczna stopka). Customowy email. Wszystkie te elementy dać do nowego działu.
 - Backup kontaktów, przepisów, ogłoszeń, itd. Każdy powinien móc zrobić w postaci fixtures i md.
 - Ograniczyć możliwość dodawania treść po to żeby uniknąć manipulacji polegającej na tym, że zły aktor zarzuca grupę dużą ilością głosowań i przemyca w ten sposób niekorzystne dla grupy rozwiązania.
+- dynamiczne przenoszenie nieaktywnych czatów do archiwum. Np tylko ostatnie 5 jest widoczne.
+- ? swipe left right żeby przejść do różnych działów
 
 # ZADANIA (TASKS)
 
@@ -272,3 +266,8 @@ Do oddania / na sprzedaż / do wypożyczenia:
 - Głosowania: Pozytywy, negatywy referendum - każdy może komentować oba?
 - Bookkeeping: Raporty używają "lazy loading" i przez to nie odświeżają się
 - Bookkeeping: Kasowanie/edycja wpisów tylko przez autora
+- Chat: na pc automatycznie rozwijaj kategorię w której jest aktywny pokój i zwijaj inne kategorie.
+- Start: zapamiętuj stan guzika 'Show unread only' w localStorage przeglądarki
+- Chat: guzik powrotu do listy pokoi chowa się gdy klawiatura ekranowa podnosi się na mobile.
+- Start: godzina wydarzenia pokazuje się nieprawidłowo w Start.
+- Chat: filtr tylko nieprzeczytane
