@@ -18,7 +18,7 @@
     <div class="col-md-6">
       <div class="mb-3">
         <label for="yearSelect">{% trans 'Select Year' %}:</label>
-        <select id="yearSelect" class="form-select">
+        <select id="yearSelect" class="form-select" data-report-list-url="/bookkeeping/report/">
           {% for available_year in available_years %}
             <option value="{{ available_year }}" {% if available_year == year %}selected{% endif %}>
               {{ available_year }}
