@@ -24,17 +24,21 @@ def create_chat_room_for_referendum(sender, instance, created, **kwargs):
     if created and instance.status == 1:
         # Create room title based on project ID and title
         # Use English prefix (not translated) for consistency in room categorization
-        room_title = "%(title)s" % {
-            "title": instance.title[:20]
-        }
+        room_title = instance.get_chat_room_title()
 
-        # Check if room already exists (safety check)
+        # Check if room already exists (e.g. from a previous attempt)
         existing_room = Room.objects.filter(title__iexact=room_title).first()
+        
+        if existing_room:
+            log.info(f"Chat room '{room_title}' already exists, linking to referendum #{instance.pk}")
+            instance.chat_room = existing_room
+            instance.save(update_fields=['chat_room'])
+            return
 
         if not existing_room:
             try:
-                # Create new private chat room for voting
-                room = Room.objects.create(title=room_title, public=False, archived=False, protected=True)
+                # Create new public chat room for voting
+                room = Room.objects.create(title=room_title, public=True, archived=False, protected=True)
 
                 # Add all active users to the room
                 active_users = User.objects.filter(is_active=True)
