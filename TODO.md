@@ -1,22 +1,21 @@
 # OGÓLNE
 
-- Możliwość wyłączenia wszystkich powiadomień!
 - Do formularza wstępnego: Czy jesteś zwolennikiem DB? Czy zgadzasz się na przestrzeganie naszych zasad?
 - Do emaila powitalnego dodać https://lobbyobywatelskie.wikikracja.pl/board/view/25/
 - Zalogowanie się w systemie oznacza zgodę na warunki. Będąc członkiem grupy masz wpływ na przepisy w takim samym stopniu jak każdy inny obywatel.
 
-- Wszędzie: jedno zdanie gdzie jesteś i co tu jest
 - Chat: Przenieś pokoje z Czat do odpowiednich działów do: Zadania, Głosowania, Ludzie
-- Board: zmienić na dokumenty i może zrobić katalogi
-- Głosowania: W emailu o głosowaniu - dodać tytuł propozycji
-- Chat: Mniej powiadomień - tylko tam gdzie się wypowiedziałem
 - Bookkeeping: reguły cykliczne: składka, abonament z i do nas
 - Dokończyć Fixtures i dodać je do skryptu instalacyjnego. Fixtures z przepisami, pokojami i ogłoszeniami. Start: (publiczna strona startowa dla niezalogowanych) i Footer: (publiczna stopka). Customowy email. Wszystkie te elementy dać do nowego działu.
 - Backup kontaktów, przepisów, ogłoszeń, itd. Każdy powinien móc zrobić w postaci fixtures i md.
 - Wszędzie: Ograniczyć możliwość dodawania treść po to żeby uniknąć manipulacji polegającej na tym, że zły aktor zarzuca grupę dużą ilością głosowań i przemyca w ten sposób niekorzystne dla grupy rozwiązania.
-- Chat: dynamiczne przenoszenie nieaktywnych czatów do archiwum. Np tylko ostatnie 5 jest widoczne.
 - Mobile: ? swipe left right żeby przejść do różnych działów
 - Mapa ze społecznościami. Zlinkować otwarte grupy.
+
+## Mam wątpliwości, zapytać grupę
+- Dodaj Wszędzie: jedno zdanie gdzie jesteś i co tu jest
+- Board: zmienić na dokumenty i może zrobić katalogi
+- Chat: Mniej powiadomień - tylko tam gdzie się wypowiedziałem.
 
 # ZADANIA (TASKS)
 
@@ -266,3 +265,5 @@ Do oddania / na sprzedaż / do wypożyczenia:
 - Chat: guzik powrotu do listy pokoi chowa się gdy klawiatura ekranowa podnosi się na mobile.
 - Start: godzina wydarzenia pokazuje się nieprawidłowo w Start.
 - Chat: filtr tylko nieprzeczytane
+- Możliwość wyłączenia wszystkich powiadomień!
+- Głosowania: W emailu o głosowaniu - dodać tytuł propozycji

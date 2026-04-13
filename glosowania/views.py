@@ -47,7 +47,7 @@ def dodaj(request: HttpRequest):
             messages.success(request, (message))
 
             log.info(f'EMAIL_DIAG trigger=new_law_proposal source=glosowania.views.dodaj actor_user_id={request.user.id} actor_username={request.user.username} decision_id={form.id} subject={_("New law proposal")}')
-            SendEmail(_('New law proposal'), _('{user} added new law proposal\nYou can read it here: {url}').format(user=request.user.username.capitalize(), url=build_site_url(f'/glosowania/details/{form.id}')))
+            SendEmail(_('New law proposal'), _('{user} added new law proposal: "{title}"\nYou can read it here: {url}').format(user=request.user.username.capitalize(), title=form.title, url=build_site_url(f'/glosowania/details/{form.id}')))
             return redirect('glosowania:proposition')
         else:
             return render(request, 'glosowania/dodaj.html', {
@@ -80,7 +80,7 @@ def edit(request: HttpRequest, pk: int):
             message = _("Saved.")
             messages.success(request, (message))
 
-            SendEmail(_("Proposal no. {} has been modified").format(decision.id), _('{user} modified proposal\nYou can read new version here: {url}').format(user=request.user.username.capitalize(), url=build_site_url(f'/glosowania/details/{decision.id}')))
+            SendEmail(_("Proposal no. {} has been modified").format(decision.id), _('{user} modified proposal: "{title}"\nYou can read new version here: {url}').format(user=request.user.username.capitalize(), title=decision.title, url=build_site_url(f'/glosowania/details/{decision.id}')))
             return redirect('glosowania:proposition')
     else:  # request.method != 'POST':
         form = DecyzjaForm(initial={
