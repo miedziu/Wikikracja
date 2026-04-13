@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 23:50+0200\n"
+"POT-Creation-Date: 2026-04-14 00:21+0200\n"
 "PO-Revision-Date: 2025-04-14 01:32+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <LL@li.org>\n"
@@ -89,20 +89,20 @@ msgstr "Nowe ważne ogłoszenie od %(username)s: %(title)s - %(post_url)s"
 msgid "Updated important announcement by %(username)s: %(title)s - %(post_url)s"
 msgstr "Zaktualizowane ważne ogłoszenie od %(username)s: %(title)s - %(post_url)s"
 
-#: .\board\templates\board\archive.html:12
+#: .\board\templates\board\archive.html:14
 #: .\board\templates\board\board.html:16
 msgid "Archive"
 msgstr "Archiwum"
 
-#: .\board\templates\board\archive.html:13
+#: .\board\templates\board\archive.html:15
 msgid "Back to Board"
 msgstr "Powrót do Ogłoszeń"
 
-#: .\board\templates\board\archive.html:26
+#: .\board\templates\board\archive.html:28
 msgid "Archived on"
 msgstr "Zarchiwizowane"
 
-#: .\board\templates\board\archive.html:33
+#: .\board\templates\board\archive.html:35
 msgid "No archived posts yet."
 msgstr "Nie ma jeszcze zarchiwizowanych ogłoszeń"
 
