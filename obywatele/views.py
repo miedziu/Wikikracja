@@ -18,8 +18,10 @@ from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.db import DatabaseError
 from django.db.models import Case, Count, IntegerField, Q, Sum, Value, When
 from django.dispatch import receiver
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.utils.translation import gettext_lazy as _
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
@@ -509,6 +511,36 @@ def my_profile(request: HttpRequest):
         'population': population(),
         'required_reputation': required_reputation(),
     })
+
+
+@login_required
+@require_POST
+def toggle_notification(request: HttpRequest):
+    import json
+    
+    NOTIFICATION_FIELDS = {
+        'obywatele': 'email_notifications_obywatele',
+        'glosowania': 'email_notifications_glosowania',
+        'chat': 'email_notifications_chat',
+    }
+    
+    try:
+        data = json.loads(request.body)
+        notification_type = request.GET.get('type')
+        enabled = data.get('enabled', False)
+        
+        field_name = NOTIFICATION_FIELDS.get(notification_type)
+        if not field_name:
+            return JsonResponse({'success': False, 'error': 'Invalid notification type'})
+        
+        profile = request.user.uzytkownik
+        setattr(profile, field_name, enabled)
+        profile.save()
+        
+        return JsonResponse({'success': True})
+        
+    except (json.JSONDecodeError, AttributeError) as e:
+        return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
 @login_required

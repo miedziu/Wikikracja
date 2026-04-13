@@ -172,7 +172,7 @@ class Command(BaseCommand):
             email_footer = _("Why you received this email? Here is explanation: {url}").format(url=INFO_URL)
             email_message = EmailMessage(
                 from_email=str(s.DEFAULT_FROM_EMAIL),
-                bcc=list(User.objects.filter(is_active=True).values_list('email', flat=True)),
+                bcc=list(User.objects.filter(is_active=True, uzytkownik__email_notifications_glosowania=True).values_list('email', flat=True)),
                 subject=f'[{HOST}] {subject}',
                 body=message + "\n\n" + email_footer,
             )

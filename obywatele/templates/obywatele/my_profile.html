@@ -1,6 +1,12 @@
 {% extends 'home/base.html' %}
 {% load static %}
 {% load i18n %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'obywatele/css/profile.css' %}">
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'obywatele/js/profile.js' %}"></script>
+{% endblock %}
 {% block content %}
 <div class="container section">
 	<div class="card mb-3">
@@ -112,6 +118,95 @@
 						<tr>
 							<th scope="row">{% trans "Why do you want to join?" %}</th>
 							<td>{{ profile.why|default:"-" }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class="card-header">
+			<span class="section-heading">{% trans "Email Notifications" %}</span>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-hover align-middle mb-0">
+					<tbody>
+						<tr>
+							<td style="width: 20%;">
+								<strong>{% trans "Citizenship" %}</strong>
+							</td>
+							<td style="width: 50%;">
+								<small class="text-muted">{% trans "New citizens, membership requests" %}</small>
+							</td>
+							<td style="width: 15%;" class="text-center">
+								<div class="form-check form-switch d-inline-block">
+									<input class="form-check-input" type="checkbox" id="toggle-obywatele" 
+										   {% if profile.email_notifications_obywatele %}checked{% endif %}
+										   data-url="{% url 'obywatele:toggle_notification' %}?type=obywatele">
+								</div>
+							</td>
+							<td style="width: 15%;" class="text-center">
+								<span id="status-obywatele" 
+									  class="badge {% if profile.email_notifications_obywatele %}bg-success{% else %}bg-secondary{% endif %}"
+									  data-enabled-text="{% trans 'Enabled' %}"
+									  data-disabled-text="{% trans 'Disabled' %}"
+									  data-saving-text="{% trans 'Saving...' %}"
+									  data-error-text="{% trans 'Error' %}">
+									{% if profile.email_notifications_obywatele %}{% trans "Enabled" %}{% else %}{% trans "Disabled" %}{% endif %}
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>{% trans "Voting" %}</strong>
+							</td>
+							<td>
+								<small class="text-muted">{% trans "Law proposals, voting reminders, results" %}</small>
+							</td>
+							<td class="text-center">
+								<div class="form-check form-switch d-inline-block">
+									<input class="form-check-input" type="checkbox" id="toggle-glosowania" 
+										   {% if profile.email_notifications_glosowania %}checked{% endif %}
+										   data-url="{% url 'obywatele:toggle_notification' %}?type=glosowania">
+								</div>
+							</td>
+							<td class="text-center">
+								<span id="status-glosowania" 
+									  class="badge {% if profile.email_notifications_glosowania %}bg-success{% else %}bg-secondary{% endif %}"
+									  data-enabled-text="{% trans 'Enabled' %}"
+									  data-disabled-text="{% trans 'Disabled' %}"
+									  data-saving-text="{% trans 'Saving...' %}"
+									  data-error-text="{% trans 'Error' %}">
+									{% if profile.email_notifications_glosowania %}{% trans "Enabled" %}{% else %}{% trans "Disabled" %}{% endif %}
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>{% trans "Chat" %}</strong>
+							</td>
+							<td>
+								<small class="text-muted">{% trans "New messages in chat rooms" %}</small>
+							</td>
+							<td class="text-center">
+								<div class="form-check form-switch d-inline-block">
+									<input class="form-check-input" type="checkbox" id="toggle-chat" 
+										   {% if profile.email_notifications_chat %}checked{% endif %}
+										   data-url="{% url 'obywatele:toggle_notification' %}?type=chat">
+								</div>
+							</td>
+							<td class="text-center">
+								<span id="status-chat" 
+									  class="badge {% if profile.email_notifications_chat %}bg-success{% else %}bg-secondary{% endif %}"
+									  data-enabled-text="{% trans 'Enabled' %}"
+									  data-disabled-text="{% trans 'Disabled' %}"
+									  data-saving-text="{% trans 'Saving...' %}"
+									  data-error-text="{% trans 'Error' %}">
+									{% if profile.email_notifications_chat %}{% trans "Enabled" %}{% else %}{% trans "Disabled" %}{% endif %}
+								</span>
+							</td>
 						</tr>
 					</tbody>
 				</table>

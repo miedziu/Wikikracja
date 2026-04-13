@@ -370,7 +370,7 @@ def delete_argument(request: HttpRequest, argument_id: int):
 
 
 def SendEmail(subject: str, message: str):
-    # bcc: all active users
+    # bcc: all active users with voting notifications enabled
     # subject: Custom
     # message: Custom
     translation.activate(s.LANGUAGE_CODE)
@@ -378,7 +378,11 @@ def SendEmail(subject: str, message: str):
     info_url = "https://wikikracja.pl/powiadomienia-email/"
     email_footer = _("Why you received this email? Here is explanation: {url}").format(url=info_url)
 
-    recipients = list(User.objects.filter(is_active=True).values_list('email', flat=True))
+    # Filter users based on voting notification preferences
+    recipients = list(User.objects.filter(
+        is_active=True,
+        uzytkownik__email_notifications_glosowania=True
+    ).values_list('email', flat=True))
     email_message = EmailMessage(
         from_email=str(s.DEFAULT_FROM_EMAIL),
         bcc=recipients,
