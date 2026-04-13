@@ -505,11 +505,54 @@ def dodaj(request: HttpRequest):
 def my_profile(request: HttpRequest):
     user = request.user
     profile = request.user.uzytkownik
+    
+    asset_fields = [
+        {'field': 'city', 'label': _('City')},
+        {'field': 'phone', 'label': _('Communicator / Phone')},
+        {'field': 'job', 'label': _('Job')},
+        {'field': 'responsibilities', 'label': _('Responsibilities')},
+        {'field': 'business', 'label': _('Business')},
+        {'field': 'hobby', 'label': _('Hobby')},
+        {'field': 'to_give_away', 'label': _('To give away')},
+        {'field': 'to_borrow', 'label': _('To borrow')},
+        {'field': 'for_sale', 'label': _('For sale')},
+        {'field': 'i_need', 'label': _('I need')},
+        {'field': 'want_to_learn', 'label': _('I want to learn')},
+        {'field': 'skills', 'label': _('Skills')},
+        {'field': 'knowledge', 'label': _('Knowledge')},
+        {'field': 'gift', 'label': _('Gift')},
+        {'field': 'other', 'label': _('Other')},
+        {'field': 'why', 'label': _('Why do you want to join?')},
+    ]
+    
+    notifications = [
+        {
+            'type': 'obywatele',
+            'title': _('Citizenship'),
+            'description': _('New citizens, membership requests'),
+            'enabled': profile.email_notifications_obywatele,
+        },
+        {
+            'type': 'glosowania',
+            'title': _('Voting'),
+            'description': _('Law proposals, voting reminders, results'),
+            'enabled': profile.email_notifications_glosowania,
+        },
+        {
+            'type': 'chat',
+            'title': _('Chat'),
+            'description': _('New messages in chat rooms'),
+            'enabled': profile.email_notifications_chat,
+        },
+    ]
+    
     return render(request, 'obywatele/my_profile.html', {
         'profile': profile,
         'user': user,
         'population': population(),
         'required_reputation': required_reputation(),
+        'asset_fields': asset_fields,
+        'notifications': notifications,
     })
 
 

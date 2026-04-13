@@ -114,18 +114,14 @@
 .post-content h6 { font-size: 1rem; }
 
 .post-content p {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   text-align: justify;
 }
 
 .post-content ul,
 .post-content ol {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   padding-left: 2rem;
-}
-
-.post-content li {
-  margin-bottom: 0.5rem;
 }
 
 .post-content blockquote {
