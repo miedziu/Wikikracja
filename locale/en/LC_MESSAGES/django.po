@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-11 22:17+0200\n"
+"POT-Creation-Date: 2026-04-12 23:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr "Title"
 msgid "Subtitle"
 msgstr ""
 
-#: .\board\models.py:13 .\board\templates\board\post_detail.html:11
+#: .\board\models.py:13 .\board\templates\board\post_detail.html:21
 #: .\bookkeeping\models.py:46
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:28
 #: .\elibrary\forms.py:12 .\elibrary\models.py:16
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
-#: .\board\models.py:14 .\board\templates\board\post_detail.html:11
+#: .\board\models.py:14 .\board\templates\board\post_detail.html:21
 #: .\bookkeeping\models.py:39
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:23
 #: .\events\templates\events\event_detail.html:107
@@ -58,14 +58,14 @@ msgstr "Created"
 
 #: .\board\models.py:15 .\board\templates\board\board.html:32
 #: .\board\templates\board\board.html:52
-#: .\board\templates\board\post_detail.html:11
+#: .\board\templates\board\post_detail.html:21
 #: .\events\templates\events\event_detail.html:109
 msgid "Updated"
 msgstr "Updated"
 
 #: .\board\models.py:16 .\board\templates\board\board.html:32
 #: .\board\templates\board\board.html:52
-#: .\board\templates\board\post_detail.html:11
+#: .\board\templates\board\post_detail.html:21
 #: .\chat\templates\chat\chat.html:82 .\events\models.py:52
 #: .\events\templates\events\event_detail.html:80
 #: .\events\templates\events\event_list.html:77
@@ -176,7 +176,7 @@ msgid "Are you sure you want to delete this post?"
 msgstr ""
 
 #: .\board\templates\board\post_confirm_delete.html:19
-#: .\board\templates\board\post_detail.html:15
+#: .\board\templates\board\post_detail.html:25
 #: .\bookkeeping\templates\bookkeeping\category_list.html:32
 #: .\bookkeeping\templates\bookkeeping\partner_list.html:54
 #: .\bookkeeping\templates\bookkeeping\transaction_list.html:63
@@ -187,14 +187,14 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: .\board\templates\board\post_detail.html:11
+#: .\board\templates\board\post_detail.html:21
 #: .\chat\templates\chat\chat.html:160
 #: .\events\templates\events\event_detail.html:84
 #: .\events\templates\events\event_list.html:81
 msgid "Private"
 msgstr ""
 
-#: .\board\templates\board\post_detail.html:14
+#: .\board\templates\board\post_detail.html:24
 #: .\bookkeeping\templates\bookkeeping\category_confirm_delete.html:58
 #: .\bookkeeping\templates\bookkeeping\category_list.html:31
 #: .\bookkeeping\templates\bookkeeping\partner_confirm_delete.html:58
@@ -210,7 +210,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: .\board\templates\board\post_detail.html:17
+#: .\board\templates\board\post_detail.html:27
 #: .\chat\templates\chat\add.html:16
 #: .\glosowania\templates\glosowania\dodaj.html:37
 #: .\glosowania\templates\glosowania\edit.html:32
@@ -1314,7 +1314,7 @@ msgstr ""
 msgid "Arguments"
 msgstr ""
 
-#: .\glosowania\signals.py:50
+#: .\glosowania\signals.py:54
 #, python-brace-format
 msgid ""
 "This chat room has been created for project #{id}.\n"

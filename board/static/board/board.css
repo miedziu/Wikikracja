@@ -50,3 +50,225 @@
 .board-post-card--pinned h3 a {
   color: #00ff229d;
 }
+
+/* Post detail styling */
+.post-header {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(2px);
+}
+
+.post-title {
+  color: #ecf0f1 !important;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.5px;
+}
+
+.post-subtitle {
+  color: #bdc3c7 !important;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+  font-style: italic;
+  opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.post-content {
+  color: #ecf0f1;
+  line-height: 1.8;
+  font-size: 1.1rem;
+  padding: 1rem 0;
+}
+
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+  color: #3498db;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.post-content h1 { font-size: 2rem; }
+.post-content h2 { font-size: 1.75rem; }
+.post-content h3 { font-size: 1.5rem; }
+.post-content h4 { font-size: 1.25rem; }
+.post-content h5 { font-size: 1.1rem; }
+.post-content h6 { font-size: 1rem; }
+
+.post-content p {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+.post-content ul,
+.post-content ol {
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+}
+
+.post-content li {
+  margin-bottom: 0.5rem;
+}
+
+.post-content blockquote {
+  border-left: 4px solid #3498db;
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: #95a5a6;
+}
+
+.post-content code {
+  background: rgba(52, 152, 219, 0.2);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #3498db;
+}
+
+.post-content pre {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 2rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Modern table styling - override darkly theme with high specificity */
+.board-post-card table,
+.board-post-card .table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100% !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  background: linear-gradient(135deg, #1a1a1a, #2d2d2d) !important;
+}
+
+.board-post-card table th,
+.board-post-card .table th,
+.board-post-card table thead th,
+.board-post-card .table thead th {
+  background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+  color: #ecf0f1 !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-size: 0.85rem !important;
+  padding: 16px 20px !important;
+  border: none !important;
+  border-bottom: 3px solid #3498db !important;
+  text-align: center !important;
+  position: relative !important;
+  border-width: 0 !important;
+  border-style: solid !important;
+  border-color: transparent !important;
+}
+
+.board-post-card table th::after,
+.board-post-card .table th::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, #3498db, transparent) !important;
+}
+
+.board-post-card table td,
+.board-post-card .table td,
+.board-post-card table tbody td,
+.board-post-card .table tbody td {
+  padding: 14px 20px !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #bdc3c7 !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-width: 0 0 1px 0 !important;
+  border-style: solid !important;
+  border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent !important;
+}
+
+.board-post-card table tr:hover td,
+.board-post-card .table tr:hover td {
+  background: rgba(52, 152, 219, 0.1) !important;
+  color: #ecf0f1 !important;
+  transform: scale(1.02) !important;
+}
+
+.board-post-card table tr:last-child td,
+.board-post-card .table tr:last-child td {
+  border-bottom: none !important;
+  border-width: 0 !important;
+}
+
+/* Alternating row colors */
+.board-post-card table tr:nth-child(even) td,
+.board-post-card .table tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.board-post-card table tr:nth-child(even):hover td,
+.board-post-card .table tr:nth-child(even):hover td {
+  background: rgba(52, 152, 219, 0.15) !important;
+}
+
+/* Special styling for date cells */
+.board-post-card table td:nth-child(n+2),
+.board-post-card .table td:nth-child(n+2) {
+  font-family: 'Courier New', monospace !important;
+  font-weight: 500 !important;
+}
+
+/* Force override all darkly table rules */
+.board-post-card table *,
+.board-post-card .table * {
+  border-width: 0 !important;
+  border-style: solid !important;
+}
+
+.board-post-card table td,
+.board-post-card table th,
+.board-post-card .table td,
+.board-post-card .table th {
+  border-width: 0 !important;
+  border-style: solid !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .board-post-card table,
+  .board-post-card .table {
+    font-size: 0.9rem !important;
+  }
+  
+  .board-post-card table th,
+  .board-post-card table td,
+  .board-post-card .table th,
+  .board-post-card .table td {
+    padding: 10px 12px !important;
+  }
+}
