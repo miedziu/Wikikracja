@@ -1,10 +1,17 @@
+# Third party imports
+from django.contrib.auth import views as auth_views
 from django.urls import path
 from django.views.generic import TemplateView
+
+# Local folder imports
 from . import views
-from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('mark-as-read/', views.mark_as_read, name='mark_as_read'),
+    path('mark-all-read/', views.mark_all_read, name='mark_all_read'),
+    path('mark-unread/', views.mark_unread, name='mark_unread'),
+    path('save-filter-state/', views.save_filter_state, name='save_filter_state'),
 
     # not in use at this point. Contact through https://wikikracja.pl/kontakt/
     # path('contact/', TemplateView.as_view(template_name="home/contact.html"), name='contact'),
@@ -15,10 +22,10 @@ urlpatterns = [
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='home/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='home/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='home/password_reset_complete.html'), name='password_reset_complete'),
-    
+
     # for generating dynamic manifest content
     path('manifest.json', views.manifest, name='manifest'),
-    
+
     # Service Worker - serve with correct MIME type
     path('sw.js', views.service_worker, name='service_worker'),
     path('firebase-messaging-sw.js', views.firebase_messaging_sw, name='firebase-messaging-sw'),

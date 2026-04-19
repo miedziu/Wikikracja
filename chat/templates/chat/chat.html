@@ -4,103 +4,85 @@
 {% load filters %}
 
 {% block content_fullscreen %}
-	<link rel="stylesheet" href="{% static 'chat/css/chat.css' %}">
-  <link rel="stylesheet" href="{% static 'chat/css/photoswipe/photoswipe.css' %}" />
-  <link rel="stylesheet" href="{% static 'chat/css/photoswipe/default-skin.css' %}" />
-  <script src="{% static 'chat/js/photoswipe/photoswipe.min.js' %}"></script>
-  <script src="{% static 'chat/js/photoswipe/photoswipe-ui-default.min.js' %}"></script>
+{% now "U" as version %}
+	<link rel="stylesheet" href="{% static 'chat/css/chat.css' %}?v={{ version }}">
 
   <!-- Main chat script -->
-  <script src="{% static 'chat/js/chat.js' %}" type="module"></script>
-  <script src="{% static 'chat/js/ejs.min.js' %}"></script>
+  <script src="{% static 'chat/js/chat.js' %}?v={{ version }}" type="module"></script>
+  <script src="{% static 'chat/js/handlers.js' %}?v={{ version }}" type="module"></script>
+  <script src="{% static 'chat/js/ejs.min.js' %}?v={{ version }}"></script>
 
   <script>
-    const LAST_USED_ROOM_ID = {{ last_used_room|default:"null"|safe }};
-    const TRANSLATIONS = {{ translations|default:"{}"|safe }};    
-  </script>
-
-  <script>
-    $(document).ready(function () {
-      $('#toggleButtonPubRoomsActive').click(function () {
-        $('#content-pub-rooms-active').slideToggle(300)
-      })
-      $('#toggleButtonPubRoomsArchive').click(function () {
-        $('#content-pub-rooms-archive').slideToggle(300)
-      })
-      $('#toggleButtonTasksActive').click(function () {
-        $('#content-tasks-active').slideToggle(300)
-      })
-      $('#toggleButtonTasksArchive').click(function () {
-        $('#content-tasks-archive').slideToggle(300)
-      })
-      $('#toggleButtonVotesActive').click(function () {
-        $('#content-votes-active').slideToggle(300)
-      })
-      $('#toggleButtonVotesArchive').click(function () {
-        $('#content-votes-archive').slideToggle(300)
-      })
-      $('#toggleButtonPrvActive').click(function () {
-        $('#content-prv-active').slideToggle(300)
-      })
-      $('#toggleButtonPrvArchive').click(function () {
-        $('#content-prv-archive').slideToggle(300)
-      })
-    })
+    const TRANSLATIONS = {{ translations|default:"{}"|safe }};
     
-    window.onload = function () {
-      let acc = document.getElementsByClassName('accordion')
-      for (var i = 0; i < acc.length; i++) {
-        acc[i].addEventListener('click', function () {
-          this.classList.toggle('activated')
-        })
-      }
-    }
-    
-    // Function to expand category containing the active room
-    window.expandCategoryForRoom = function(room_id) {
-      const roomLink = $(`.room-link[data-room-id="${room_id}"]`)
-      if (roomLink.length === 0) return
+    // Restore archive states from localStorage on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const archiveTargets = ['pub-rooms-archive', 'tasks-archive', 'votes-archive', 'prv-archive'];
       
-      const container = roomLink.closest('.list-of-rooms, .list-of-pms')
-      if (container.length === 0) return
-      
-      const containerId = container.attr('id')
-      const categoryMap = {
-        'content-pub-rooms-active': '#toggleButtonPubRoomsActive',
-        'content-pub-rooms-archive': '#toggleButtonPubRoomsArchive',
-        'content-tasks-active': '#toggleButtonTasksActive',
-        'content-tasks-archive': '#toggleButtonTasksArchive',
-        'content-votes-active': '#toggleButtonVotesActive',
-        'content-votes-archive': '#toggleButtonVotesArchive',
-        'content-prv-active': '#toggleButtonPrvActive',
-        'content-prv-archive': '#toggleButtonPrvArchive'
-      }
-      
-      const toggleButton = categoryMap[containerId]
-      if (toggleButton && !$(toggleButton).hasClass('activated')) {
-        container.show()
-        $(toggleButton).addClass('activated')
-      }
-    }
+      archiveTargets.forEach(targetId => {
+        const archiveSection = document.getElementById(`content-${targetId}`);
+        const archiveBtn = document.querySelector(`.archive-toggle[data-target="${targetId}"]`);
+        
+        if (archiveSection && archiveBtn) {
+          const savedState = localStorage.getItem(`chat-archive-${targetId}`);
+          const hasUnreadRooms = archiveSection.querySelector('.room-not-seen') !== null;
+          
+          // Auto-expand if has unread rooms, otherwise respect saved state
+          if (hasUnreadRooms || savedState === 'visible') {
+            archiveSection.style.display = 'block';
+            archiveBtn.classList.add('active');
+            // Save state if auto-expanded due to unread rooms
+            if (hasUnreadRooms && savedState !== 'visible') {
+              localStorage.setItem(`chat-archive-${targetId}`, 'visible');
+            }
+          } else {
+            archiveSection.style.display = 'none';
+            archiveBtn.classList.remove('active');
+          }
+        }
+      });
+    });
   </script>
 
   <!-- ============================================================= -->
 
-  <div class="chat-page-header"></div>
-
   <div class="row chat-rooms">
     <!-- Messages and Input field -->
-    <div class="chat-root-messages col-md-7"></div>
+    <div class="chat-root-messages col-md-7">
+      <!-- Folded room header - shown when room is selected on mobile -->
+      <div class="folded-room-header" id="folded-room-header">
+        <button class="btn btn-sm btn-back-room" id="back-to-room-list" aria-label="{% trans 'Back to room list' %}">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <span class="folded-room-title" id="folded-room-title"></span>
+      </div>
+    </div>
 
     <!-- Room list -->
-    <div class="room-list col-md-5">
+    <div class="room-list col-md-5" id="room-list">
+      <!-- Top controls -->
+      <div class="room-list-controls p-2 border-bottom">
+        <div class="d-flex gap-2 justify-content-end">
+          <a href="{% url 'chat:add_room' %}" class="btn btn-sm btn-outline-light">
+            <i class="fas fa-plus me-1"></i>{% trans 'Room' %}
+          </a>
+          <button class="btn btn-sm btn-outline-light" id="info-btn" data-bs-toggle="modal" data-bs-target="#chat-info-modal">
+            <i class="fas fa-info-circle me-1"></i>{% trans 'Info' %}
+          </button>
+          <button class="btn btn-sm btn-outline-light" id="unread-filter-btn" title="{% trans 'Show only unread rooms' %}">
+            <i class="fas fa-eye-slash me-1"></i>{% trans 'Unread' %}
+          </button>
+        </div>
+      </div>
+      
       <div class="row">
         <div class="col p-1">
-          <!-- Public rooms active -->
-          <p class="mt-0 mb-0 text-muted">
+          <!-- Public rooms -->
+          <p class="mb-0 py-1 text-muted">
             <button class="btn accordion" id="toggleButtonPubRoomsActive">{% trans 'Public' %}</button>
-            <a class="btn" href="{% url 'chat:add_room' %}"><i class="fas fa-plus"></i></a>
-            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="left" title="{% trans 'Public chat rooms are archived if they are not used for' %} {{ ARCHIVE_PUBLIC_CHAT_ROOM }} {% trans 'days. After' %} {{ DELETE_PUBLIC_CHAT_ROOM }} {% trans 'days they are deleted. Private messages are archived when user is blocked and deleted after' %} {{ DELETE_PUBLIC_CHAT_ROOM }} {% trans 'days' %}."></i>
+            <button class="btn btn-sm archive-toggle" data-target="pub-rooms-archive" title="{% trans 'Show archived rooms' %}">
+              <i class="fas fa-archive"></i>
+            </button>
           </p>
           <div id="content-pub-rooms-active" class="list-of-rooms">
             {% for room in public_rooms_active %}
@@ -111,12 +93,7 @@
               </p>
             {% endfor %}
           </div>
-
-          <!-- Public rooms archived -->
-          <p class="mt-0 mb-0 text-muted">
-            <button class="btn accordion" id="toggleButtonPubRoomsArchive">{% trans 'Public Archived' %}</button>
-          </p>
-          <div id="content-pub-rooms-archive" class="list-of-rooms">
+          <div id="content-pub-rooms-archive" class="list-of-rooms archive-section">
             {% for room in public_rooms_archived %}
               {% include 'chat/room_link.html' %}
             {% empty %}
@@ -126,9 +103,12 @@
             {% endfor %}
           </div>
 
-          <!-- Tasks active -->
-          <p class="mt-0 mb-0 text-muted">
+          <!-- Tasks -->
+          <p class="mb-0 py-1 text-muted">
             <button class="btn accordion" id="toggleButtonTasksActive">{% trans 'Tasks' %}</button>
+            <button class="btn btn-sm archive-toggle" data-target="tasks-archive" title="{% trans 'Show archived rooms' %}">
+              <i class="fas fa-archive"></i>
+            </button>
           </p>
           <div id="content-tasks-active" class="list-of-rooms">
             {% for room in tasks_active %}
@@ -139,12 +119,7 @@
               </p>
             {% endfor %}
           </div>
-
-          <!-- Tasks archived -->
-          <p class="mt-0 mb-0 text-muted">
-            <button class="btn accordion" id="toggleButtonTasksArchive">{% trans 'Tasks Archived' %}</button>
-          </p>
-          <div id="content-tasks-archive" class="list-of-rooms">
+          <div id="content-tasks-archive" class="list-of-rooms archive-section">
             {% for room in tasks_archived %}
               {% include 'chat/room_link.html' %}
             {% empty %}
@@ -154,9 +129,12 @@
             {% endfor %}
           </div>
 
-          <!-- Votes active -->
-          <p class="mt-0 mb-0 text-muted">
+          <!-- Votes -->
+          <p class="mb-0 py-1 text-muted">
             <button class="btn accordion" id="toggleButtonVotesActive">{% trans 'Referendums' %}</button>
+            <button class="btn btn-sm archive-toggle" data-target="votes-archive" title="{% trans 'Show archived rooms' %}">
+              <i class="fas fa-archive"></i>
+            </button>
           </p>
           <div id="content-votes-active" class="list-of-rooms">
             {% for room in votes_active %}
@@ -167,12 +145,7 @@
               </p>
             {% endfor %}
           </div>
-
-          <!-- Votes archived -->
-          <p class="mt-0 mb-0 text-muted">
-            <button class="btn accordion" id="toggleButtonVotesArchive">{% trans 'Referendums Archived' %}</button>
-          </p>
-          <div id="content-votes-archive" class="list-of-rooms">
+          <div id="content-votes-archive" class="list-of-rooms archive-section">
             {% for room in votes_archived %}
               {% include 'chat/room_link.html' %}
             {% empty %}
@@ -181,15 +154,13 @@
               </p>
             {% endfor %}
           </div>
-        </div>
-      </div>
 
-      <!-- Private -->
-      <div class="row">
-        <div class="col p-1">
-          <!-- Private active -->
-          <p class="mt-0 mb-0 text-muted">
-            <button class="btn accordion" id="toggleButtonPrvActive">{% trans 'Private Messages' %}</button>
+          <!-- Private -->
+          <p class="mb-0 py-1 text-muted">
+            <button class="btn accordion" id="toggleButtonPrvActive">{% trans 'Private' %}</button>
+            <button class="btn btn-sm archive-toggle" data-target="prv-archive" title="{% trans 'Show archived rooms' %}">
+              <i class="fas fa-archive"></i>
+            </button>
           </p>
           <div id="content-prv-active" class="list-of-pms">
             {% for room in private_active %}
@@ -200,11 +171,7 @@
               </p>
             {% endfor %}
           </div>
-          <!-- Private archived -->
-          <p class="mt-0 mb-0 text-muted">
-            <button class="btn accordion" id="toggleButtonPrvArchive">{% trans 'Private Archived' %}</button>
-          </p>
-          <div id="content-prv-archive" class="list-of-pms">
+          <div id="content-prv-archive" class="list-of-pms archive-section">
             {% for room in private_archived %}
               {% include 'chat/room_link.html' %}
             {% empty %}
@@ -237,56 +204,44 @@
   </div>
   <!-- End Modal -->
 
-  <!-- ======================================================================== -->
-
-  <div class="pswp" tabindex="-1" role="dialog">
-    <div class="pswp__bg"></div>
-
-    <!-- Slides wrapper with overflow:hidden. -->
-    <div class="pswp__scroll-wrap">
-      <div class="pswp__container">
-        <div class="pswp__item"></div>
-        <div class="pswp__item"></div>
-        <div class="pswp__item"></div>
-      </div>
-
-      <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
-      <div class="pswp__ui pswp__ui--hidden">
-        <div class="pswp__top-bar">
-          <!-- Controls are self-explanatory. Order can be changed. -->
-          <div class="pswp__counter"></div>
-          <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-          <button class="pswp__button pswp__button--share" title="Share"></button>
-          <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-          <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-
-          <!--                                               
-           Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR 
-           element will get class pswp__preloader
-           active when preloader is running  -->
-          <div class="pswp__preloader">
-            <div class="pswp__preloader__icn">
-              <div class="pswp__preloader__cut">
-                <div class="pswp__preloader__donut"></div>
-              </div>
-            </div>
+  <!-- Info modal -->
+  <div id="chat-info-modal" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{% trans 'Chat Information' %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <h6><i class="fas fa-info-circle me-2"></i>{% trans 'Public Rooms' %}</h6>
+            <p class="mb-0">{% blocktrans with archive_days=ARCHIVE_PUBLIC_CHAT_ROOM delete_days=DELETE_PUBLIC_CHAT_ROOM %}Public chat rooms are archived if they are not used for {{ archive_days }} days. After {{ delete_days }} days they are deleted.{% endblocktrans %}</p>
+          </div>
+          <div class="alert alert-success">
+            <h6><i class="fas fa-tasks me-2"></i>{% trans 'Tasks' %}</h6>
+            <p class="mb-0">{% trans 'Task rooms are created for specific tasks and projects. They are protected from automatic deletion and are used for collaborative work discussions.' %}</p>
+          </div>
+          <div class="alert alert-primary">
+            <h6><i class="fas fa-vote-yea me-2"></i>{% trans 'Referendums' %}</h6>
+            <p class="mb-0">{% trans 'Referendum rooms are created for voting and decision-making processes. They are protected from automatic deletion and provide a space for discussions about proposals.' %}</p>
+          </div>
+          <div class="alert alert-secondary">
+            <h6><i class="fas fa-lock me-2"></i>{% trans 'Private Messages' %}</h6>
+            <p class="mb-0">{% blocktrans with delete_days=DELETE_PUBLIC_CHAT_ROOM %}Private messages are archived when user is blocked and deleted after {{ delete_days }} days.{% endblocktrans %}</p>
+          </div>
+          <div class="alert alert-warning">
+            <h6><i class="fas fa-archive me-2"></i>{% trans 'Archives' %}</h6>
+            <p class="mb-0">{% trans 'Click the archive button (folder icon) next to each category to show archived rooms.' %}</p>
           </div>
         </div>
-
-        <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-          <div class="pswp__share-tooltip"></div>
-        </div>
-
-        <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
-
-        <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
-
-        <div class="pswp__caption">
-          <div class="pswp__caption__center"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
         </div>
       </div>
     </div>
   </div>
+  <!-- End Info Modal -->
+
 {% endblock %}
 
 {% block extra_body %}{% endblock %}

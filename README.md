@@ -58,7 +58,7 @@ Try the live demo: **https://demo.wikikracja.pl/**
    python -m venv .venv
 
    source .venv/bin/activate # Linux / macOS
-   .venv\Scripts\Activate.ps1 # Windows
+   .venv\Scripts\activate # Windows
    ```
 
 3. **Install dependencies (manual option)**
@@ -92,7 +92,7 @@ Try the live demo: **https://demo.wikikracja.pl/**
 7. **Run development server**
    ```bash
    # Using helper script
-   python ./scripts/start_dev.py
+   python ./scripts/start_dev.py --full
    
    # Or manually
    python manage.py runserver
@@ -100,7 +100,6 @@ Try the live demo: **https://demo.wikikracja.pl/**
 
 8. **Access the application**
    - Web: http://localhost:8000
-   - Admin: http://localhost:8000/admin
 
 ### Docker Development
 

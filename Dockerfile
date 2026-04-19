@@ -1,52 +1,69 @@
+# Optimized multi-stage Dockerfile with Alpine for production
 # check=skip=SecretsUsedInArgOrEnv
 
-# 1. First - Builder stage
-FROM python:3.14-slim AS builder
+# 1. Builder stage - dependencies first (better cache utilization)
+FROM python:3.14-alpine AS builder
 WORKDIR /app
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    DEBUG=True 
-    
-RUN apt-get update && apt-get install -y --no-install-recommends gettext 
 
+# Build environment
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    DEBUG=True \
+    SECRET_KEY=build-time-insecure-secret-key
+
+# Install build dependencies only once
+RUN apk add --no-cache gettext-dev
+
+# Install Python dependencies to user directory
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir --no-compile --user -r requirements.txt
 
-# Copy application code
+# Copy application code (after dependencies for better caching)
 COPY . /app/
 
-# Compile translations and collect static files
+# Build-time operations
 RUN python manage.py compilemessages -v 0 --ignore=.git/* --ignore=static/* --ignore=.mypy_cache/* \
-    && python manage.py collectstatic --noinput -v 2 \
-    && echo "=== Verifying collected static files ===" \
-    && ls -la /app/static/ \
-    && echo "=== Static files count ===" \
-    && find /app/static -type f | wc -l
+    && python manage.py collectstatic --noinput -v 2
 
-
-# 2. Second - Final stage - minimal runtime image
-FROM python:3.14-slim
+# 2. Runtime stage - minimal Alpine image
+FROM python:3.14-alpine AS runtime
 WORKDIR /app
+
+# Runtime environment
 ENV PYTHONUNBUFFERED=1 \
     SCHEDULER_ENABLED=true \
-    DEBUG=True \
     SECRET_KEY=build-time-insecure-secret-key \
-    PATH=/root/.local/bin:$PATH
+    PATH=/root/.local/bin:$PATH \
+    EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
 
-# Copy Python packages from builder stage
-COPY --from=builder /root/.local /root/.local
-# Copy collected static files from builder stage
-COPY --from=builder /app/static /app/static
-
-# Copy application code
-COPY . /app/
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    mc \
-    sqlite3 \
-    vim \
-    && rm -rf /var/lib/apt/lists/* \
+# Install ONLY runtime dependencies
+RUN apk add --no-cache sqlite \
     && mkdir -p /app/db /app/media /app/static
 
+# Copy only what's needed from builder
+COPY --from=builder /root/.local /root/.local
+COPY --from=builder /app/static /app/static
+COPY --from=builder /app/locale /app/locale
+COPY --from=builder /app/manage.py /app/
+COPY --from=builder /app/requirements.txt /app/
+
+# Copy application modules (exclude development files)
+COPY --from=builder /app/obywatele /app/obywatele
+COPY --from=builder /app/home /app/home
+COPY --from=builder /app/board /app/board
+COPY --from=builder /app/chat /app/chat
+COPY --from=builder /app/events /app/events
+COPY --from=builder /app/tasks /app/tasks
+COPY --from=builder /app/elibrary /app/elibrary
+COPY --from=builder /app/glosowania /app/glosowania
+COPY --from=builder /app/bookkeeping /app/bookkeeping
+COPY --from=builder /app/zzz /app/zzz
+COPY --from=builder /app/templates /app/templates
+COPY --from=builder /app/locale /app/locale
+
 EXPOSE 8000
+
+# Health check and startup
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import django; django.setup(); from django.http import HttpResponse; print('OK')" || exit 1
 
 CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py update_site && python manage.py runserver 0.0.0.0:8000"]

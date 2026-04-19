@@ -1,7 +1,9 @@
+# Third party imports
 from django import template
-
-from chat.models import Room
 from django.db.models import Count
+
+# First party imports
+from chat.models import Room
 
 register = template.Library()
 
@@ -10,6 +12,16 @@ register = template.Library()
 def name_for(room, user):
     """Returns name of room given user will see"""
     return room.displayed_name(user)
+
+
+@register.filter('is_seen_by')
+def is_seen_by(room, user):
+    """Returns True if the room has been seen by the user"""
+    # Use pre-computed annotations if available
+    if hasattr(room, 'is_seen') and hasattr(room, 'messages_count'):
+        return "true" if (room.is_seen or room.messages_count == 0) else "false"
+    # Fallback to direct query
+    return "true" if (room.messages.all().count() == 0 or room.seen_by.filter(id=user.id).exists()) else "false"
 
 
 @register.filter('seen_by')
@@ -21,20 +33,24 @@ def seen_by(room, user):
     return "" if (room.messages.all().count() == 0 or room.seen_by.filter(id=user.id).exists()) else "room-not-seen"
 
 
+@register.filter('is_muted_by')
+def is_muted_by(room, user):
+    """Returns True if the room is muted by the user"""
+    # Use prefetched data if available
+    if hasattr(room, '_prefetched_objects_cache') and 'muted_by' in room._prefetched_objects_cache:
+        return any(u.id == user.id for u in room.muted_by.all())
+    return room.muted_by.filter(id=user.id).exists()
+
+
 @register.filter("has_messages")
 def has_messages(user):
-    rooms_with_new_messages = (
-            Room.objects.filter(allowed=user.id, archived=False)
-            .exclude(seen_by=user.id)
-            .annotate(messages_count=Count('messages'))
-            .filter(messages_count__gt=0)
-        )
+    rooms_with_new_messages = (Room.objects.filter(allowed=user.id, archived=False).exclude(seen_by=user.id).annotate(messages_count=Count('messages')).filter(messages_count__gt=0))
     count = rooms_with_new_messages.count()
     return "chat-has-messages" if count > 0 else ""
-    
+
     # from django.core.cache import cache
     # rooms_with_new_messages = cache.get('has_messages')
-    
+
     # if not rooms_with_new_messages:
     #     rooms_with_new_messages = (
     #             Room.objects.filter(allowed=user.id, archived=False)
@@ -45,9 +61,3 @@ def has_messages(user):
     #     cache.set("has_messages", rooms_with_new_messages, timeout=60)
     # count = rooms_with_new_messages.count()
     # return "chat-has-messages" if count > 0 else ""
-
-
-@register.filter('is_muted_by')
-def is_muted_by(room, user):
-    """Returns True if the room is muted by the user"""
-    return room.muted_by.filter(id=user.id).exists()

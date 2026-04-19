@@ -2,34 +2,6 @@
 {% load i18n %}
 
 {% block content %}
-<style>
-  .task-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .task-actions form {
-    margin: 0;
-    display: inline-flex;
-  }
-  .task-actions .btn {
-    white-space: nowrap;
-  }
-  .chat-room-pulse {
-    animation: text-flash 2s infinite;
-  }
-  @keyframes text-flash {
-    0%, 100% {
-      opacity: 1;
-      color: #0d6efd;
-    }
-    50% {
-      opacity: 0.3;
-      color: #0d6efd;
-    }
-  }
-</style>
 <div class="container my-4">
   <a href="{% url 'tasks:list' %}" class="btn btn-link px-0 mb-3">&larr; {% trans "Back to list" %}</a>
 
@@ -38,9 +10,9 @@
       <div class="d-flex justify-content-between align-items-center">
         <h1 class="h4">
           {{ task.title }}
-          {% if task.chat_room_url %}
+{% if task.chat_room_url %}
             <a href="{{ task.chat_room_url }}" target="_blank" class="text-decoration-none ms-3 {{ task.chat_room_pulse_class }}">
-              <i class="bi bi-chat-dots"></i>
+              <i class="fas fa-comments"></i>
             </a>
           {% endif %}
         </h1>
@@ -60,11 +32,10 @@
           {% endwith %}
         {% endif %}
       </div>
-      <p class="text-muted small mb-1">{% trans "Created" %}: {{ task.created_at|date:"Y-m-d H:i" }}</p>
       <p class="text-muted small mb-1">{% trans "Author" %}: {{ task.created_by|default:_("Unknown") }}</p>
-      <p class="text-muted small mb-3">
-        {% trans "Owner" %}: {{ task.assigned_to|default:_("Nobody") }} |
-        {% trans "Status" %}: {{ task.get_status_display }}
+      <p class="text-muted small mb-1">{% trans "Owner" %}: {{ task.assigned_to|default:_("None") }}</p>
+      <p class="text-muted small mb-1">{% trans "Status" %}: {{ task.get_status_display }}</p>
+      <p class="text-muted small mb-1">{% trans "Created" %}: {{ task.created_at|date:"Y-m-d H:i" }}</p>
       </p>
 
       <p>{{ task.description|linebreaks }}</p>
@@ -85,7 +56,7 @@
         <input type="hidden" name="value" value="1">
         <input type="hidden" name="next" value="{{ request.get_full_path }}">
         <button class="btn {% if vote_value == 1 %}btn-info text-dark{% else %}btn-outline-info{% endif %}" type="submit">
-        + {% trans "I want to help" %}
+        <i class="fas fa-plus"></i> {% trans "I want to help" %}
         </button>
       </form>
 
@@ -94,7 +65,7 @@
         <input type="hidden" name="value" value="-1">
         <input type="hidden" name="next" value="{{ request.get_full_path }}">
         <button class="btn {% if vote_value == -1 %}btn-light text-dark{% else %}btn-outline-light{% endif %}" type="submit">
-          - {% trans "Let's not do that" %}
+          <i class="fas fa-minus"></i> {% trans "Let's not do that" %}
         </button>
       </form>
       {% endwith %}

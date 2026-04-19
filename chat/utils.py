@@ -1,36 +1,13 @@
+# Standard library imports
 import datetime
 import inspect
 import logging
-
 from typing import Union
-from channels.db import database_sync_to_async
-from .exceptions import ClientError
-from django.utils import timezone
-from .models import Room, Message
+
+# Local folder imports
+from .models import Message, Room
 
 log = logging.getLogger(__name__)
-
-# This decorator turns this function from a synchronous function into an async
-# one we can call from our async consumers, that handles Django DBs correctly.
-# For more, see http://channels.readthedocs.io/en/latest/topics/databases.html
-@database_sync_to_async
-def get_room_or_error(room_id, user):
-    """
-    Tries to fetch a room for the user, checking permissions along the way.
-    """
-    # Check if the user is logged in
-    if not user.is_authenticated:
-        raise ClientError("USER_HAS_TO_LOGIN")
-    
-    # Find the room they requested (by ID)
-    try:
-        room = Room.objects.get(pk=room_id)
-        # room = Room.objects.filter(pk=room_id, allowed=user.id).first()
-    except Room.DoesNotExist:
-        # raise ClientError("ROOM_INVALID")  # Blocks user from clicking on different room so not the best approach
-        room = Room.objects.first()
-        # TODO: Create room START autmatically if there is no public rooms at all
-    return room
 
 
 # added those wrappers to encapsulate underlying data structure
@@ -65,7 +42,7 @@ class OnlineUserRegistry:
         return list(self._reg.keys())
 
     def get_consumer(self, user):
-        return self._reg[user.id]
+        return self._reg.get(user.id)
 
 
 class RoomRegistry:
@@ -73,7 +50,9 @@ class RoomRegistry:
         self._reg = {}
 
     def join(self, room_id):
-        self._reg[int(room_id)] = {'joined_at': datetime.datetime.now()}
+        self._reg[int(room_id)] = {
+            'joined_at': datetime.datetime.now()
+        }
 
     def leave(self, room_id):
         if self._reg.get(int(room_id)):
@@ -147,21 +126,22 @@ class Handlers:
             assert positional[1] == "proxy"
             assert args is None
             assert kwargs is None
-            
+
             # Calculate which parameters are required (no default value)
             all_params = positional[2:]  # Skip 'self' and 'proxy'
             num_defaults = len(defaults)
             num_required = len(all_params) - num_defaults
             required_params = all_params[:num_required]
             optional_params = all_params[num_required:]
-            
+
             self.map[command] = {
-                'handler': func, 
+                'handler': func,
                 'args': all_params,
                 'required': required_params,
                 'optional': optional_params
             }
             return func
+
         return inner
 
 
@@ -186,52 +166,49 @@ def helper_method(helper):
         return_value = await helper(consumer, proxy, *args, **kwargs)
         proxy.set_implicit_consumer_mode()
         return return_value
+
     return inner
 
 
 def send_message_to_room(room_title, message_text, sender=None, anonymous=True):
     """
     Send a message to a specific chat room
-    
     Args:
         room_title (str): The title of the room to send the message to
         message_text (str): The message text to send
         sender (User, optional): The user sending the message. Defaults to None (system message)
         anonymous (bool, optional): Whether the message should be anonymous. Defaults to True.
-    
     Returns:
         Message: The created message object or None if room not found
     """
     try:
-        from channels.layers import get_channel_layer
+        # Third party imports
         from asgiref.sync import async_to_sync
-        from .group_messages import format_chat_message
+        from channels.layers import get_channel_layer
+
+        # Local folder imports
         from .consumers import ChatConsumer
+        from .group_messages import format_chat_message
 
         # Create the message in the database
         try:
             room = Room.objects.get(title=room_title)
         except Room.DoesNotExist:
-            logger.error(f"Room '{room_title}' does not exist")
+            log.error(f"Room '{room_title}' does not exist")
             return None
-        message = Message.objects.create(
-            sender=sender,
-            text=message_text,
-            room=room,
-            anonymous=anonymous
-        )
+        message = Message.objects.create(sender=sender, text=message_text, room=room, anonymous=anonymous)
         log.info(f"Message sent to room '{room_title}': {message_text[:50]}...")
-        
+
         # Mark the room as unseen for all users except the sender
         users_to_mark_unseen = room.allowed.all()
         if sender:
             users_to_mark_unseen = users_to_mark_unseen.exclude(id=sender.id)
-        
+
         room.seen_by.remove(*users_to_mark_unseen)
-        
+
         # Send WebSocket notification to all connected clients in the room
         channel_layer = get_channel_layer()
-        
+
         # Format the message data
         message_data = format_chat_message(
             room_id=room.id,
@@ -247,26 +224,26 @@ def send_message_to_room(room_title, message_text, sender=None, anonymous=True):
             latest_date=message.time,
             attachments={},
         )
-        
+
         # Send the message to the room group
-        async_to_sync(channel_layer.group_send)(
-            f"room-{room.id}",
-            {
-                "type": "chat_message",
-                "message": message_data
-            }
-        )
-        
+        async_to_sync(channel_layer.group_send)(f"room-{room.id}", {
+            "type": "chat.message",
+            **message_data
+        })
+
         # Send browser notification to each online user who should receive it
+        # Batch fetch muted user IDs to avoid N+1 queries
+        muted_user_ids = set(room.muted_by.filter(id__in=[u.id for u in users_to_mark_unseen]).values_list('id', flat=True))
+
         for user in users_to_mark_unseen:
             # Skip if the user has muted the room
-            if room.muted_by.filter(id=user.id).exists():
+            if user.id in muted_user_ids:
                 continue
-                
+
             # Check if user is online and has an active connection
             if user.id in ChatConsumer.online_registry._reg:
                 consumer = ChatConsumer.online_registry.get_consumer(user)
-                
+
                 # Send notification in the same format as regular chat notifications
                 async_to_sync(consumer.send_json)({
                     "notification": {
@@ -276,12 +253,12 @@ def send_message_to_room(room_title, message_text, sender=None, anonymous=True):
                         'room_id': room.id
                     }
                 })
-                
+
                 # Also trigger the onRoomUnsee function to highlight the chat link
                 async_to_sync(consumer.send_json)({
                     "unsee_room": room.id
                 })
-        
+
         return message
     except Room.DoesNotExist:
         log.error(f"Room '{room_title}' not found")

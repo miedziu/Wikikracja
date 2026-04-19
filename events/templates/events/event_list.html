@@ -20,12 +20,16 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title">{{ event.title }}</h5>
-                                
-                                {% if event.frequency != 'once' and event.is_upcoming %}
+
+                                {% if event.frequency != 'once' %}
                                     {% with next_occurrence=event.get_next_occurrence %}
                                         {% if next_occurrence %}
                                             <div class="alert alert-success mb-3 py-2">
                                                 <strong><i class="fas fa-calendar-check"></i> {% trans "Next" %}:</strong> {{ next_occurrence|date:"D, Y-m-d H:i" }}
+                                            </div>
+                                        {% else %}
+                                            <div class="alert alert-secondary mb-3 py-2" style="background-color: #222222ea; opacity: 0.7;">
+                                                <strong><i class="fas fa-calendar-check"></i> {% trans "No upcoming occurrences" %}:</strong> {{ event.start_date|date:"D, Y-m-d H:i" }}
                                             </div>
                                         {% endif %}
                                     {% endwith %}
@@ -34,9 +38,13 @@
                                         <div class="alert alert-success mb-3 py-2">
                                             <strong><i class="fas fa-calendar-check"></i> {% trans "Date" %}:</strong> {{ event.start_date|date:"D, Y-m-d H:i" }}
                                         </div>
+                                    {% else %}
+                                        <div class="alert alert-secondary mb-3 py-2" style="background-color: #222222ea; opacity: 0.7;">
+                                            <strong><i class="fas fa-calendar-check"></i> {% trans "Date" %}:</strong> {{ event.start_date|date:"D, Y-m-d H:i" }}
+                                        </div>
                                     {% endif %}
                                 {% endif %}
-                                
+
                                 {% if event.link %}
                                     <div class="alert alert-primary mb-3 py-2">
                                         <strong><i class="fas fa-link"></i> {% trans "Link do spotkania" %}:</strong><br>
@@ -44,9 +52,9 @@
                                         <i class="fas fa-external-link-alt fa-sm"></i>
                                     </div>
                                 {% endif %}
-                                
+
                                 <p class="card-text">{{ event.description|urlize|linebreaks|truncatewords_html:20 }}</p>
-                                
+
                                 {% if event.place %}
                                     <div class="mb-2">
                                         <small class="text-muted">
@@ -54,13 +62,15 @@
                                         </small>
                                     </div>
                                 {% endif %}
-                                
+
                                 <div class="mb-2">
                                     <span class="badge text-bg-{% if event.frequency == 'once' %}secondary{% else %}info{% endif %}">
                                         {{ event.get_frequency_display }}
                                     </span>
                                     {% if event.is_upcoming %}
                                         <span class="badge text-bg-success">{% trans "Upcoming" %}</span>
+                                    {% elif event.frequency == 'once' and event.start_date <= now %}
+                                        <span class="badge text-bg-secondary" style="opacity: 0.7;">{% trans "Past" %}</span>
                                     {% endif %}
                                     {% if event.is_public %}
                                         <span class="badge text-bg-primary" title="{% trans 'Visible to everyone' %}">
@@ -83,7 +93,7 @@
                                     </a>
                                 {% endif %}
                                 <a href="{{ event.google_calendar_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success" title="{% trans 'Add to Google Calendar' %}">
-                                    <i class="bi bi-calendar-plus"></i> {% trans "Add to Calendar" %}
+                                    <i class="far fa-calendar-plus"></i> {% trans "Add to Calendar" %}
                                 </a>
                             </div>
                         </div>

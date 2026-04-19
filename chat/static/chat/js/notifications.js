@@ -1,48 +1,57 @@
-import { makeNotification } from './utility.js';
+/**
+ * @file
+ * WebSocket notification handling module.
+ * Manages WebSocket connection for receiving real-time notifications
+ * and handles displaying them to the user.
+ */
 
-$(document).ready( ()=> {
-  if (!Notification) {
-      // console.log("Connecting aborted in !Notification");
-      return;
-  }
-  if (Notification.permission !== 'granted' && localStorage.notifications !== "No") {
-      // console.log("Connecting aborted in permission !==granted");
-      return;
-  }   
-      
-  let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-  let ws_path = ws_scheme + '://' + window.location.host + "/chat/stream/";
-  console.log("Connecting to " + ws_path);
+import { makeNotification, $ } from './utility.js';
+import { getSharedWebSocket } from './websocket-manager.js';
 
-  let socket = new ReconnectingWebSocket(ws_path);
+/**
+ * Handles incoming WebSocket notifications
+ * @param {Object} notification - Notification data object
+ * @param {string} notification.title - Notification title
+ * @param {string} notification.body - Notification body text
+ * @param {number} [notification.room_id] - Optional room ID associated with notification
+ */
+export function onReceiveNotification(notification) {
+    makeNotification(notification);
+}
 
-  socket.onmessage = (e) => {
-    let data = JSON.parse(e.data);
-    // console.log("Got websocket message ", data);
+/**
+ * Handles room unsee events (marks room as having unread messages)
+ */
+export function onRoomUnsee() {
+    $(".nav-link[data-route='chat']")?.classList.add("chat-has-messages");
+}
 
+/**
+ * Message handler for notification events
+ * Registers with shared WebSocket manager to receive relevant messages
+ * @param {Object} data - WebSocket message data
+ */
+function handleNotificationMessage(data) {
     // Handle errors
     if (data.error) {
-      console.error(data.error);
-      return;
+        console.error(data.error);
+        return;
     }
 
     if (data.notification) {
-       let notif = data.notification;
-       onReceiveNotification(notif);
-
+        let notif = data.notification;
+        onReceiveNotification(notif);
     } else if (data.unsee_room) {
-       onRoomUnsee(data.unsee_room);
-
-    } else {
-        //  console.log("Cannot handle message!");
+        onRoomUnsee();
     }
-  }
+}
+
+// Initialize shared WebSocket connection for notifications when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    if (Notification?.permission !== 'granted')
+        return;
+
+    // Get shared WebSocket connection and register handler
+    let ws = getSharedWebSocket();
+    ws.addMessageHandler(handleNotificationMessage);
 });
-
-export function onReceiveNotification(notification) {
-  makeNotification(notification);
-}
-
-export function onRoomUnsee(room_id) {
-  $(".nav-link[data-route='chat']").addClass("chat-has-messages");
-}

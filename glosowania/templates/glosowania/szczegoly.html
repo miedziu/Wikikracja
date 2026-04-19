@@ -6,32 +6,16 @@
 
 {% block glosowania %}
 
-<style>
-  .chat-room-pulse {
-    animation: text-flash 2s infinite;
-  }
-  @keyframes text-flash {
-    0%, 100% {
-      opacity: 1;
-      color: #0d6efd;
-    }
-    50% {
-      opacity: 0.3;
-      color: #0d6efd;
-    }
-  }
-</style>
-
 	{% if prev %} <a href="{% url 'glosowania:details' pk=prev.id %}"> << </a> {% else %} << {% endif %} |
 	{% if next %} <a href="{% url 'glosowania:details' pk=next.id %}"> >> </a> {% else %} >> {% endif %}
 
 	<div>
 		<h5><u><b>{% trans 'Bill number' %}</b></u> {{ id.id }}</h5>
 		<h5>
-			<u><b>{% trans 'Bill title' %}</b></u> {{ id.title }}
+			<u><b>{% trans 'Bill title' %}</b></u> {{ id.display_title }}
 			{% if chat_room %}
 				<a href="{% url 'chat:chat' %}#room_id={{ chat_room.id }}" target="_blank" class="text-decoration-none ms-3 {{ chat_room_pulse_class }}">
-					<i class="bi bi-chat-dots"></i>
+					<i class="fas fa-comments"></i>
 				</a>
 			{% endif %}
 		</h5>
@@ -152,7 +136,7 @@
 
 
 	{% comment %} REFERENDUM {% endcomment %}
-	{% if id.status == 3 %}
+	{% if id.status == 3 and id.is_author_signed %}
 	<hr>
 		{% if not voted %}
 			<form action="#" method="get">
@@ -206,7 +190,7 @@
 				<br>
 				<b>{% trans 'History' %}</b> {{ id.path }}
 				<br>
-				<b>{% trans 'Date created' %}</b> {{ id.data_powstania }} | 
+				<b>{% trans 'Date created' %}</b> {{ id.data_powstania }} |
 				<b>{% trans 'Date of collecting signatures' %}</b> {{ id.data_zebrania_podpisow|default_if_none:"--" }} |
 				<b>{% trans 'Start referendum' %}</b> {{ id.data_referendum_start|default_if_none:"--" }} |
 				{% comment %} {% trans 'End referendum' %}: {{ corrected_data_referendum_stop|default_if_none:"--" }} {% endcomment %}

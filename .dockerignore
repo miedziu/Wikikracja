@@ -12,6 +12,8 @@ __pycache__/
 .pytest_cache/
 .coverage
 *.cover
+.venv*
+venv*
 
 # IDE/editor files
 .idea/
@@ -28,29 +30,26 @@ __pycache__/
 *.pem
 *.key
 *.crt
-.venv*
-venv*
 
 # Temporary and local files
 tmp/
 temp/
 *.tmp
-
-# Documentation
-README.md
-LICENSE
-
-# Docker files
-Dockerfile
-Dockerfile.*
-docker-compose*.yml
-
-# Miscellaneous
 *.bak
 *.old
 *.orig
 
-# Local database
+# Documentation
+README.md
+LICENSE
+TODO.md
+DEPLOYMENT_INSTRUCTIONS.md
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+
+# Development database
 /db/*.sqlite3
 
 # Locale compiled files (will be compiled in container)
@@ -60,5 +59,25 @@ docker-compose*.yml
 htmlcov/
 coverage.xml
 
-# Own
+# Lock files
 *.lock
+
+# Media files (use volumes in production)
+/media/*
+!/media/.gitignore
+
+# Static files (will be collected)
+/static/*
+!/static/.gitignore
+
+# Development scripts
+/scripts/
+!.gitignore
+
+# Tests
+/tests/
+test_*
+*_test.py
+
+# Migrations that are already applied
+# (keep only recent ones for faster builds)

@@ -6,6 +6,7 @@ run migrations and start Daphne.
 With --full: additionally pip install -r requirements.txt, makemigrations for
 listed apps, makemessages/compilemessages and collectstatic.
 """
+# Standard library imports
 import argparse
 import os
 import secrets
@@ -53,15 +54,22 @@ def load_env():
 def db_path():
     try:
         sys.path.insert(0, str(BASE_DIR))
+        # First party imports
         from zzz.settings_base import DATABASES
-        return str(DATABASES["default"]["NAME"])        
+        return str(DATABASES["default"]["NAME"])
     except Exception:
         return str(DB_DEFAULT)
 
 
-def run(cmd):
+def run(cmd, allow_failure=False):
     print("$", " ".join(cmd))
-    subprocess.run(cmd, check=True, cwd=BASE_DIR, env=os.environ.copy())
+    try:
+        subprocess.run(cmd, check=True, cwd=BASE_DIR, env=os.environ.copy())
+    except subprocess.CalledProcessError as e:
+        if allow_failure:
+            print(f"Warning: Command failed with exit code {e.returncode}")
+        else:
+            raise
 
 
 def main():
@@ -99,7 +107,7 @@ def main():
     if args.full:
         run(manage + ["makemessages", "-v", "0", "--no-wrap", "--no-obsolete", "-l", "en", "--ignore=.git/*", "--ignore=static/*", "--ignore=.mypy_cache/*"])
         run(manage + ["makemessages", "-v", "0", "--no-wrap", "--no-obsolete", "-l", "pl", "--ignore=.git/*", "--ignore=static/*", "--ignore=.mypy_cache/*"])
-        run(manage + ["compilemessages", "-v", "0", "--ignore=.git/*", "--ignore=static/*", "--ignore=.mypy_cache/*"])
+        run(manage + ["compilemessages", "-v", "0"], allow_failure=True)
         run(manage + ["collectstatic", "-v", "0", "--no-input", "-c"])
 
     print("\nDevelopment instance started\n")

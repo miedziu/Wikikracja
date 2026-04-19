@@ -1,38 +1,31 @@
-from django.conf import settings as s
-from django.core.mail import send_mail
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.models import User
-from django.contrib.messages import success, error
-from django.db.models import Sum, Case, When, Value, IntegerField, Q
-from django.http import HttpRequest
-from django.shortcuts import get_object_or_404
-from django.shortcuts import redirect
-from django.shortcuts import render
-from django.utils.timezone import now
-from datetime import timedelta as td
-from django.utils.translation import gettext_lazy as _
-from random import choice
-from string import ascii_letters, digits
+# Standard library imports
 import logging
-from obywatele.forms import UserForm, ProfileForm, EmailChangeForm, UsernameChangeForm, OnboardingDetailsForm
-from obywatele.models import Uzytkownik, Rate
-from django.utils import translation
-from django.core.mail import EmailMessage
-from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
-# from django.core.management import call_command
-import threading
 import time
-from obywatele.tables import UzytkownikTable
-from obywatele.filters import UzytkownikFilter
+
+# Third party imports
+from allauth.account.models import EmailAddress
+from allauth.account.signals import email_confirmed, user_signed_up
+from django.conf import settings as s
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.messages import error, success
+from django.core.mail import send_mail
+from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
+from django.db import DatabaseError
+from django.db.models import Case, Count, IntegerField, Q, Sum, Value, When
+from django.dispatch import receiver
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+from django.utils.translation import gettext_lazy as _
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
-# from django_tables2.export import TableExport
-from allauth.account.signals import user_signed_up, email_confirmed
-from allauth.account.models import EmailAddress
-from django.dispatch import receiver
-from chat import signals
+
+# First party imports
+from obywatele.filters import UzytkownikFilter
+from obywatele.forms import EmailChangeForm, OnboardingDetailsForm, ProfileForm, SendEmailToAll, UserForm, UsernameChangeForm
+from obywatele.models import CitizenActivity, Rate, Uzytkownik
+from obywatele.tables import UzytkownikTable
 from zzz.utils import build_site_url, get_site_domain
 
 HOST = get_site_domain()
@@ -49,8 +42,19 @@ def is_email_confirmed_for_candidate(user: User, profile: Uzytkownik) -> bool:
 
 
 def get_onboarding_user_from_request(request: HttpRequest):
+    """
+    CRITICAL: Find user for onboarding form access.
+    
+    DESIGN NOTE: Three ways to access onboarding form:
+    1. Session (immediate after signup) - primary method
+    2. Email link with uid/token (backup after email confirmation)
+    3. Fallback for already active users with incomplete onboarding
+    
+    Without this logic, users get "Could not find your onboarding account" error.
+    """
     onboarding_user_id = request.session.get('onboarding_user_id')
 
+    # METHOD 2: Email link with signed token (backup method)
     uid = request.GET.get('uid')
     token = request.GET.get('token')
     if uid and token:
@@ -66,34 +70,62 @@ def get_onboarding_user_from_request(request: HttpRequest):
     if not onboarding_user_id:
         return None
 
-    return User.objects.filter(pk=onboarding_user_id, is_active=False).first()
+    # METHOD 1: Standard flow - inactive user (just signed up)
+    user = User.objects.filter(pk=onboarding_user_id, is_active=False).first()
+    if user:
+        return user
+    
+    # METHOD 3: Fallback - active user with incomplete onboarding
+    # This handles edge cases where user became active but didn't complete onboarding
+    user = User.objects.filter(pk=onboarding_user_id).first()
+    if user and hasattr(user, 'uzytkownik'):
+        profile = user.uzytkownik
+        if profile.onboarding_status in [
+            Uzytkownik.OnboardingStatus.EMAIL_ENTERED,
+            Uzytkownik.OnboardingStatus.EMAIL_CONFIRMED
+        ]:
+            return user
+    
+    return None
 
 
 def population():
     try:
         population = User.objects.filter(is_active=True).count()
         return population
-    except:
-        log.error(f"Population zero, I don't know what to do.")
+    except DatabaseError:
+        log.exception("Could not calculate population.")
         return 0
 
 
 def required_reputation():
-    if population() <= s.ACCEPTANCE*2:
-        return population()-s.ACCEPTANCE
-    if population() > s.ACCEPTANCE*2:
+    if population() <= s.ACCEPTANCE * 2:
+        return population() - s.ACCEPTANCE
+    if population() > s.ACCEPTANCE * 2:
         return s.ACCEPTANCE
     '''
-    Liczba Próg
-    L    L-P
+    Załóżmy, że próg akceptacji wynosi 3.
+    W grupie pojawiają się po kolei 1, 2, 3 osoby.
+    W takiej sytuacji nikt nie może osiągnąć progu akceptacji wynoszącego 3 bo w grupie są np. 2 osoby.
+    Musi więc istnieć mechanizm, który chwilowo obniża próg akceptacji.
+
+    Rozwiązanie:
+    populacja - docelowy_próg_akceptacji = chwilowy_próg_akceptacji
     1 -> 1-3=-2
     2 -> 2-3=-1
-    3 -> 3-3=+0
+    3 -> 3-3=0
     4 -> 4-3=+1
     5 -> 5-3=+2
     6 -> 6-3=+3
     7 -> 7-3=+3
     8 -> 8-3=+3
+
+    To rozwiązanie rodzi następny problem:
+    Ponieważ próg akceptacji rośnie,
+    ale pierwszej osobie w grupie nikt nie dał Akceptuję,
+    to po automatycznym podniesieniu progu - pierwsza osoba jest usuwana.
+
+    Stąd bierze się mechanizm automatycznego nadawania istniejącym osobom punktów reputacji.
     '''
 
 
@@ -106,10 +138,10 @@ def parameters(request: HttpRequest):
     })
 
 
-@login_required() 
+@login_required()
 def change_email(request: HttpRequest):
     form = EmailChangeForm(request.user)
-    if request.method=='POST':
+    if request.method == 'POST':
         form = EmailChangeForm(request.user, request.POST)
         if form.is_valid():
             form.save()
@@ -117,17 +149,19 @@ def change_email(request: HttpRequest):
             success(request, (message))
             return redirect('obywatele:my_profile')
         else:
-            message = form.errors
+            message = form.non_field_errors().as_text() or next(iter(form.errors.values()))
             error(request, (message))
             return redirect('obywatele:my_profile')
     else:
-        return render(request, 'obywatele/change_email.html', {'form':form})
+        return render(request, 'obywatele/change_email.html', {
+            'form': form
+        })
 
 
-@login_required() 
+@login_required()
 def change_username(request: HttpRequest):
     form = UsernameChangeForm(request.POST)
-    if request.method=='POST':
+    if request.method == 'POST':
         form = UsernameChangeForm(request.user, request.POST)
         if form.is_valid():
             form.save()
@@ -139,7 +173,9 @@ def change_username(request: HttpRequest):
             error(request, (message))
             return redirect('obywatele:my_profile')
     else:
-        return render(request, 'obywatele/change_username.html', {'form':form})
+        return render(request, 'obywatele/change_username.html', {
+            'form': form
+        })
 
 
 @login_required
@@ -182,53 +218,61 @@ def obywatele(request: HttpRequest):
     order_by_fields.append(f'{order_prefix}{sort_expression}')
     order_by_fields.append('id')
 
-    uid = (
-        User.objects.filter(is_active=True)
-        .select_related('uzytkownik')
-        .annotate(
-            username_is_blank=Case(
-                When(Q(username__isnull=True) | Q(username__exact=''), then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField(),
-            ),
-            email_is_blank=Case(
-                When(Q(email__isnull=True) | Q(email__exact=''), then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField(),
-            ),
-            phone_is_blank=Case(
-                When(Q(uzytkownik__phone__isnull=True) | Q(uzytkownik__phone__exact=''), then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField(),
-            ),
-            last_login_is_blank=Case(
-                When(last_login__isnull=True, then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField(),
-            ),
-            city_is_blank=Case(
-                When(Q(uzytkownik__city__isnull=True) | Q(uzytkownik__city__exact=''), then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField(),
-            ),
-            first_name_is_blank=Case(
-                When(Q(first_name__isnull=True) | Q(first_name__exact=''), then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField(),
-            ),
-            last_name_is_blank=Case(
-                When(Q(last_name__isnull=True) | Q(last_name__exact=''), then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField(),
-            ),
-            joined_is_blank=Case(
-                When(Q(uzytkownik__data_przyjecia__isnull=True), then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField(),
-            ),
-        )
-        .order_by(*order_by_fields)
-    )
+    uid = (User.objects.filter(is_active=True).select_related('uzytkownik').annotate(
+        username_is_blank=Case(
+            When(Q(username__isnull=True) | Q(username__exact=''), then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField(),
+        ),
+        email_is_blank=Case(
+            When(Q(email__isnull=True) | Q(email__exact=''), then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField(),
+        ),
+        phone_is_blank=Case(
+            When(Q(uzytkownik__phone__isnull=True) | Q(uzytkownik__phone__exact=''), then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField(),
+        ),
+        last_login_is_blank=Case(
+            When(last_login__isnull=True, then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField(),
+        ),
+        city_is_blank=Case(
+            When(Q(uzytkownik__city__isnull=True) | Q(uzytkownik__city__exact=''), then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField(),
+        ),
+        first_name_is_blank=Case(
+            When(Q(first_name__isnull=True) | Q(first_name__exact=''), then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField(),
+        ),
+        last_name_is_blank=Case(
+            When(Q(last_name__isnull=True) | Q(last_name__exact=''), then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField(),
+        ),
+        joined_is_blank=Case(
+            When(Q(uzytkownik__data_przyjecia__isnull=True), then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField(),
+        ),
+    ).order_by(*order_by_fields))
+
+    # Get required reputation threshold
+    req_rep = required_reputation()
+
+    # Add near-threshold data to users (only need to check if reputation <= threshold + 1)
+    users_with_reputation = []
+    for user in uid:
+        if hasattr(user, 'uzytkownik'):
+            reputation = Rate.objects.filter(kandydat_id=user.uzytkownik.id).aggregate(Sum('rate'))['rate__sum'] or 0
+            user.near_threshold = reputation <= (req_rep + 1)
+        else:
+            user.near_threshold = False
+        users_with_reputation.append(user)
 
     default_directions = {
         'username': 'asc',
@@ -258,50 +302,77 @@ def obywatele(request: HttpRequest):
             'next_param': next_param,
         }
 
-    return render(request, 'obywatele/start.html', {
-        'uid': uid,  # Don't change to 'user' - it will break menu
-        'sort_meta': sort_meta,
-        'current_sort': requested_sort,
-        })
+    return render(
+        request,
+        'obywatele/start.html',
+        {
+            'uid': users_with_reputation,  # Don't change to 'user' - it will break menu
+            'sort_meta': sort_meta,
+            'current_sort': requested_sort,
+        }
+    )
 
 
 @login_required
 def poczekalnia(request: HttpRequest):
     # zliczaj_obywateli(request)
-    uid = User.objects.filter(is_active=False)
-    verified_user_ids = set(
-        EmailAddress.objects.filter(user__in=uid, verified=True).values_list('user_id', flat=True)
-    )
-    
+    uid = User.objects.filter(is_active=False).select_related('uzytkownik')
+    verified_user_ids = set(EmailAddress.objects.filter(user__in=uid, verified=True).values_list('user_id', flat=True))
+
     # Get the current user's profile
     try:
-        citizen_profile = Uzytkownik.objects.get(uid=request.user)
+        citizen_profile = request.user.uzytkownik
     except Uzytkownik.DoesNotExist:
         error(request, _('Your profile does not exist. Please contact administrator.'))
         return redirect('home:index')
-    
+
+    candidate_profiles = {user.id: user.uzytkownik for user in uid if hasattr(user, 'uzytkownik')}
+    candidate_profile_ids = [profile.id for profile in candidate_profiles.values()]
+    existing_rates = {
+        rate.kandydat_id: rate
+        for rate in Rate.objects.filter(obywatel=citizen_profile, kandydat_id__in=candidate_profile_ids)
+    }
+    ratings_count_map = {
+        row['kandydat_id']: row['total']
+        for row in Rate.objects.filter(kandydat_id__in=candidate_profile_ids)
+        .values('kandydat_id')
+        .annotate(total=Count('id'))
+    }
+
     # Get ratings from the current user for all candidates
     # Process users and add rating directly to each user object for easy access in template
     users_with_ratings = []
     for user in uid:
-        try:
-            candidate_profile = Uzytkownik.objects.get(uid=user)
-        except Uzytkownik.DoesNotExist:
+        candidate_profile = candidate_profiles.get(user.id)
+        if not candidate_profile:
             continue
-        rate, created = Rate.objects.get_or_create(kandydat=candidate_profile, obywatel=citizen_profile)
+
+        rate = existing_rates.get(candidate_profile.id)
+        if rate is None:
+            rate, _ = Rate.objects.get_or_create(kandydat=candidate_profile, obywatel=citizen_profile)
+            existing_rates[candidate_profile.id] = rate
+
         # Add rating directly to user object as a custom attribute
         user.rating = rate.rate
+
+        # Count number of reputation votes from all citizens
+        user.ratings_count = ratings_count_map.get(candidate_profile.id, 0)
+
         user.email_confirmed = (user.id in verified_user_ids) or bool(candidate_profile.polecajacy)
         user.form_completed = candidate_profile.onboarding_status == Uzytkownik.OnboardingStatus.FORM_COMPLETED
         users_with_ratings.append(user)
-        
-    return render(request, 'obywatele/poczekalnia.html', {
-        'uid': users_with_ratings,  # Users with ratings attached
-        'population': population(),
-        'acceptance': s.ACCEPTANCE,
-        'delete_inactive_user_after': s.DELETE_INACTIVE_USER_AFTER,
-        'required_reputation': required_reputation(),
-        })
+
+    return render(
+        request,
+        'obywatele/poczekalnia.html',
+        {
+            'uid': users_with_ratings,  # Users with ratings attached
+            'population': population(),
+            'acceptance': s.ACCEPTANCE,
+            'delete_inactive_user_after': s.DELETE_INACTIVE_USER_AFTER,
+            'required_reputation': required_reputation(),
+        }
+    )
 
 
 def onboarding_details(request: HttpRequest):
@@ -326,13 +397,10 @@ def onboarding_details(request: HttpRequest):
             success(request, _('Your onboarding form has been saved.'))
             return redirect('obywatele:onboarding_waiting')
     else:
-        form = OnboardingDetailsForm(
-            instance=profile,
-            initial={
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-            }
-        )
+        form = OnboardingDetailsForm(instance=profile, initial={
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+        })
 
     return render(request, 'obywatele/onboarding_details.html', {
         'form': form,
@@ -346,7 +414,6 @@ def onboarding_waiting(request: HttpRequest):
         error(request, _('Could not find your onboarding account.'))
         return redirect('account_signup')
 
-    profile = user.uzytkownik
     return render(request, 'obywatele/onboarding_waiting.html', {
         'email_confirmed': EmailAddress.objects.filter(user=user, verified=True).exists(),
     })
@@ -359,11 +426,6 @@ def dodaj(request: HttpRequest):
         profile_form = ProfileForm(request.POST, request.FILES)
 
         if user_form.is_valid() and profile_form.is_valid():
-            
-            # USER
-            nick = user_form.cleaned_data['username']
-            first_name = user_form.cleaned_data['first_name']
-            last_name = user_form.cleaned_data['last_name']
 
             mail = user_form.cleaned_data['email']
             if User.objects.filter(email__iexact=mail).exists():
@@ -406,10 +468,7 @@ def dodaj(request: HttpRequest):
                 success(request, (message))
 
                 log.info(f'EMAIL_DIAG trigger=new_citizen_proposed source=obywatele.views.dodaj actor_user_id={request.user.id} actor_username={request.user.username} candidate_user_id={candidate.id} candidate_username={candidate.username} subject={_("New citizen has been proposed")}')
-                SendEmailToAll(
-                          _('New citizen has been proposed'),
-                          f'{request.user.username} ' + str(_('proposed new citizen\nYou can approve him/her here:')) + f' {build_site_url(f"/obywatele/poczekalnia/{candidate.id}")}'
-                )
+                SendEmailToAll(_('New citizen has been proposed'), f'{request.user.username} ' + str(_('proposed new citizen\nYou can approve him/her here:')) + f' {build_site_url(f"/obywatele/poczekalnia/{candidate.id}")}')
 
                 return redirect('obywatele:poczekalnia')
         else:
@@ -439,20 +498,93 @@ def dodaj(request: HttpRequest):
 
 @login_required
 def my_profile(request: HttpRequest):
-    pk=request.user.id
-    profile = Uzytkownik.objects.get(pk=pk)
-    user = User.objects.get(pk=pk)
-    return render(request, 'obywatele/my_profile.html', {'profile': profile,
-                                                         'user': user,
-                                                         'population': population(),
-                                                         'required_reputation': required_reputation(),})
+    user = request.user
+    profile = request.user.uzytkownik
+    
+    asset_fields = [
+        {'field': 'city', 'label': _('City')},
+        {'field': 'phone', 'label': _('Communicator / Phone')},
+        {'field': 'job', 'label': _('Job')},
+        {'field': 'responsibilities', 'label': _('Responsibilities')},
+        {'field': 'business', 'label': _('Business')},
+        {'field': 'hobby', 'label': _('Hobby')},
+        {'field': 'to_give_away', 'label': _('To give away')},
+        {'field': 'to_borrow', 'label': _('To borrow')},
+        {'field': 'for_sale', 'label': _('For sale')},
+        {'field': 'i_need', 'label': _('I need')},
+        {'field': 'want_to_learn', 'label': _('I want to learn')},
+        {'field': 'skills', 'label': _('Skills')},
+        {'field': 'knowledge', 'label': _('Knowledge')},
+        {'field': 'gift', 'label': _('Gift')},
+        {'field': 'other', 'label': _('Other')},
+        {'field': 'why', 'label': _('Why do you want to join?')},
+    ]
+    
+    notifications = [
+        {
+            'type': 'obywatele',
+            'title': _('Citizenship'),
+            'description': _('New citizens, membership requests'),
+            'enabled': profile.email_notifications_obywatele,
+        },
+        {
+            'type': 'glosowania',
+            'title': _('Voting'),
+            'description': _('Law proposals, voting reminders, results'),
+            'enabled': profile.email_notifications_glosowania,
+        },
+        {
+            'type': 'chat',
+            'title': _('Chat'),
+            'description': _('New messages in chat rooms'),
+            'enabled': profile.email_notifications_chat,
+        },
+    ]
+    
+    return render(request, 'obywatele/my_profile.html', {
+        'profile': profile,
+        'user': user,
+        'population': population(),
+        'required_reputation': required_reputation(),
+        'asset_fields': asset_fields,
+        'notifications': notifications,
+    })
+
+
+@login_required
+@require_POST
+def toggle_notification(request: HttpRequest):
+    import json
+    
+    NOTIFICATION_FIELDS = {
+        'obywatele': 'email_notifications_obywatele',
+        'glosowania': 'email_notifications_glosowania',
+        'chat': 'email_notifications_chat',
+    }
+    
+    try:
+        data = json.loads(request.body)
+        notification_type = request.GET.get('type')
+        enabled = data.get('enabled', False)
+        
+        field_name = NOTIFICATION_FIELDS.get(notification_type)
+        if not field_name:
+            return JsonResponse({'success': False, 'error': 'Invalid notification type'})
+        
+        profile = request.user.uzytkownik
+        setattr(profile, field_name, enabled)
+        profile.save()
+        
+        return JsonResponse({'success': True})
+        
+    except (json.JSONDecodeError, AttributeError) as e:
+        return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
 @login_required
 def my_assets(request: HttpRequest):
-    pk=request.user.id
-    profile = Uzytkownik.objects.get(pk=pk)
-    user = User.objects.get(pk=pk)
+    user = request.user
+    profile = request.user.uzytkownik
     form = ProfileForm(request.POST, request.FILES)
 
     if request.method == 'POST':
@@ -479,28 +611,20 @@ def my_assets(request: HttpRequest):
             profile.why = form.cleaned_data['why']
             profile.save()
 
-            return render(
-                request,
-                'obywatele/my_profile.html',
-                {
-                    'message': _('Changes was saved'),
-                    'profile': profile,
-                    'required_reputation': required_reputation(),
-                }
-            )
+            return render(request, 'obywatele/my_profile.html', {
+                'message': _('Changes was saved'),
+                'profile': profile,
+                'required_reputation': required_reputation(),
+            })
         else:  # form.is_NOT_valid():
             message = form.errors
             error(request, (message))
 
-            return render(
-                request,
-                'obywatele/my_profile.html',
-                {
-                    'message': _('Form is not valid!'),
-                    'profile': profile,
-                    'required_reputation': required_reputation(),
-                }
-            )
+            return render(request, 'obywatele/my_profile.html', {
+                'message': _('Form is not valid!'),
+                'profile': profile,
+                'required_reputation': required_reputation(),
+            })
     else:  # request.method != 'POST':
         form = ProfileForm(initial={  # pre-populate fields from database
             'first_name': user.first_name,
@@ -520,24 +644,19 @@ def my_assets(request: HttpRequest):
             'job': profile.job,
             'other': profile.other,
             'why': profile.why,
-            }
-        )
+        })
 
-        return render(
-            request,
-            'obywatele/my_assets.html',
-            {
-                'user': user,
-                'profile': profile,
-                'form': form,
-            }
-        )
+        return render(request, 'obywatele/my_assets.html', {
+            'user': user,
+            'profile': profile,
+            'form': form,
+        })
 
 
 # @login_required  # for some reason this decorator breaks urls.py
 class AssetListView(SingleTableMixin, FilterView):
     # https://stackoverflow.com/questions/59094917/employeefilterset-resolved-field-emp-photo-with-exact-lookup-to-an-unrecogni
-    
+
     table_class = UzytkownikTable
     model = Uzytkownik
     template_name = 'obywatele/assets.html'
@@ -572,26 +691,29 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
 
     rate = Rate.objects.get_or_create(kandydat=candidate_profile, obywatel=citizen_profile)[0]
 
+    if request.method == 'POST' and candidate_profile != citizen_profile:
+        action = request.POST.get('action')
+        if action == 'accept':
+            rate.rate = 1
+            rate.save(update_fields=['rate'])
+        elif action == 'reject':
+            rate.rate = -1
+            rate.save(update_fields=['rate'])
+        elif action == 'reset':
+            rate.rate = 0
+            rate.save(update_fields=['rate'])
+        return redirect(request.path)
+
     if rate.rate == 1:
         r1 = _('positive')
-    if request.GET.get('tak'):
-        rate.rate = 1
-        rate.save()
-        return redirect('obywatele:obywatele_szczegoly', pk)
 
     if rate.rate == -1:
         r1 = _('negative')
-    if request.GET.get('nie'):
-        rate.rate = -1
-        rate.save()
-        return redirect('obywatele:obywatele_szczegoly', pk)
 
     if rate.rate == 0:
         r1 = _('neutral')
-    if request.GET.get('reset'):
-        rate.rate = 0
-        rate.save()
-        return redirect('obywatele:obywatele_szczegoly', pk)
+
+    total_rate_count = Rate.objects.filter(kandydat=candidate_profile).count()
 
     # Previous and Next
     obj = get_object_or_404(User, pk=pk)
@@ -599,86 +721,32 @@ def obywatele_szczegoly(request: HttpRequest, pk: int):
     # TODO: Zrobić tak żeby przewijanie było tylko po Kandydatach albo tylko po Obywatelach
     prev = User.objects.filter(pk__lt=obj.pk, is_active=obj.is_active).order_by('-pk').first()
     next = User.objects.filter(pk__gt=obj.pk, is_active=obj.is_active).order_by('pk').first()
-  
-    return render(
-        request,
-        'obywatele/szczegoly.html',
-        {
-            'b': candidate_profile,
-            'd': citizen_profile,
-            'wr': required_reputation(),
-            'rate': r1,
-            'p': polecajacy,
-            'prev': prev,
-            'next': next,
-            'active': obj.is_active,
-            'email_confirmed': email_confirmed,
-            'form_completed': form_completed,
-        })
 
-
-@login_required
-def change_password(request: HttpRequest):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important!
-            success(request,
-                             'Your password was successfully updated!')
-            return redirect('change_password')
-        else:
-            error(request, 'Please correct the error below.')
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'obywatele/change_password.html', {'form': form})
-
-
-def password_generator(size=8, chars=ascii_letters + digits):
-    return ''.join(choice(chars) for i in range(size))
-
-
-def SendEmailToAll(subject, message):
-    # bcc: all active users
-    # subject: Custom
-    # message: Custom
-    translation.activate(s.LANGUAGE_CODE)
-
-    info_url = "https://wikikracja.pl/powiadomienia-email/"
-    email_footer = _("Why you received this email? Here is explanation: {url}").format(url=info_url)
-
-    recipients = list(User.objects.filter(is_active=True).values_list('email', flat=True))
-    email_message = EmailMessage(
-        from_email=str(s.DEFAULT_FROM_EMAIL),
-        bcc=recipients,
-        subject=f'[{HOST}] {subject}',
-        body=message + "\n\n" + email_footer,
-        )
-    log.info(f'Sending email to {len(recipients)} recipients; subject: {subject}')
-
-    def _send_with_delay():
-        try:
-            time.sleep(s.EMAIL_SEND_DELAY_SECONDS)
-            email_message.send(fail_silently=False)
-            log.info(f'Email sent successfully; subject: {subject}')
-        except Exception as e:
-            log.error(f'Failed to send email; subject: {subject}; error: {e}', exc_info=True)
-
-    t = threading.Thread(target=_send_with_delay)
-    t.setDaemon(True)
-    t.start()
+    return render(request, 'obywatele/szczegoly.html', {
+        'b': candidate_profile,
+        'd': citizen_profile,
+        'wr': required_reputation(),
+        'rate': r1,
+        'p': polecajacy,
+        'prev': prev,
+        'next': next,
+        'active': obj.is_active,
+        'email_confirmed': email_confirmed,
+        'form_completed': form_completed,
+        'total_rate_count': total_rate_count,
+    })
 
 
 @receiver(user_signed_up)
 def DeactivateNewUser(sender, **kwargs):
-    try:
-        u = User.objects.get(username=kwargs['user'])
-        u.is_active=False
-        u.save()
-    except User.DoesNotExist:
-        log.error(f"User {kwargs['user']} does not exist in DeactivateNewUser signal")
-    except User.MultipleObjectsReturned:
-        log.error(f"Multiple users found with username {kwargs['user']} in DeactivateNewUser signal")
+    user = kwargs.get('user')
+    if not user:
+        log.error('Missing user in DeactivateNewUser signal')
+        return
+
+    if user.is_active:
+        user.is_active = False
+        user.save(update_fields=['is_active'])
 
 
 @receiver(email_confirmed)
@@ -693,9 +761,9 @@ def set_onboarding_email_confirmed(sender, request, email_address, **kwargs):
     onboarding_token = signer.sign(str(user.id))
     onboarding_link = build_site_url(f'/obywatele/onboarding/?uid={user.id}&token={onboarding_token}')
     subject = f'[{HOST}] ' + _('Fill out your onboarding form')
-    message = _(
-        'Your email has been confirmed. Please fill out your onboarding form here: %(link)s'
-    ) % {'link': onboarding_link}
+    message = _('Your email has been confirmed. Please fill out your onboarding form here: %(link)s') % {
+        'link': onboarding_link
+    }
 
     try:
         time.sleep(s.EMAIL_SEND_DELAY_SECONDS)

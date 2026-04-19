@@ -1,8 +1,24 @@
-// Service Worker for WebPush notifications
+/**
+ * @file
+ * Service Worker for Chat WebPush Notifications
+ * Handles push notifications, caches static assets, and manages offline functionality.
+ *
+ * This service worker:
+ * - Caches static assets for offline use
+ * - Handles push notification events
+ * - Handles notification click events
+ * - Manages subscription changes
+ * - Communicates with main thread via postMessage
+ */
+
+// Cache names
 const CACHE_NAME = 'chat-push-v1';
 const STATIC_CACHE = 'chat-static-v1';
 
-// Install event - cache static assets
+/**
+ * Install event handler - caches static assets
+ * @param {ExtendableEvent} event - Install event object
+ */
 self.addEventListener('install', (event) => {
     console.log('Service Worker installing...');
     event.waitUntil(
@@ -19,15 +35,16 @@ self.addEventListener('install', (event) => {
                     // '/static/chat/js/ejs.min.js',
                     // '/static/chat/js/utility.js',
                     // '/favicon.ico',
-                    // '/static/chat/css/photoswipe/photoswipe.css',
-                    // '/static/chat/css/photoswipe/default-skin.css',
                 ]);
             })
     );
     self.skipWaiting();
 });
 
-// Activate event - clean up old caches
+/**
+ * Activate event handler - cleans up old caches
+ * @param {ExtendableEvent} event - Activate event object
+ */
 self.addEventListener('activate', (event) => {
     console.log('Service Worker activating...');
     event.waitUntil(
@@ -45,12 +62,16 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Push notification event
+/**
+ * Push notification event handler
+ * Shows notification when push message is received
+ * @param {PushEvent} event - Push event object
+ */
 self.addEventListener('push', (event) => {
     console.log('Push event received:', event);
-    
+
     let notificationData = {};
-    
+
     if (event.data) {
         try {
             notificationData = event.data.json();
@@ -61,7 +82,7 @@ self.addEventListener('push', (event) => {
             };
         }
     }
-    
+
     const title = notificationData.title || 'Chat Message';
     const options = {
         body: notificationData.body || '',
@@ -81,25 +102,29 @@ self.addEventListener('push', (event) => {
             }
         ]
     };
-    
+
     // Show notification
     const promiseChain = self.registration.showNotification(title, options);
     event.waitUntil(promiseChain);
 });
 
-// Notification click event
+/**
+ * Notification click event handler
+ * Opens or focuses the chat window when notification is clicked
+ * @param {NotificationEvent} event - Notification click event object
+ */
 self.addEventListener('notificationclick', (event) => {
     console.log('Notification click received:', event);
-    
+
     const action = event.action;
     const data = event.notification.data || {};
     const url = data.click_action || data.url || '/chat';
-    
+
     if (action === 'dismiss' || action === 'close') {
         event.notification.close();
         return;
     }
-    
+
     // Open or focus the window
     event.waitUntil(
         clients.matchAll({
@@ -123,14 +148,17 @@ self.addEventListener('notificationclick', (event) => {
     );
 });
 
-// Message event (for communication with main thread)
+/**
+ * Message event handler - communication with main thread
+ * @param {MessageEvent} event - Message event object
+ */
 self.addEventListener('message', (event) => {
     console.log('Service Worker message received:', event.data);
-    
+
     if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
     }
-    
+
     if (event.data && event.data.type === 'GET_SUBSCRIPTION') {
         self.registration.pushManager.getSubscription()
             .then((subscription) => {
@@ -141,10 +169,14 @@ self.addEventListener('message', (event) => {
     }
 });
 
-// Handle push subscription change
+/**
+ * Push subscription change event handler
+ * Automatically resubscribes when subscription expires/changes
+ * @param {PushSubscriptionChangeEvent} event - Subscription change event object
+ */
 self.addEventListener('pushsubscriptionchange', (event) => {
     console.log('Push subscription change detected:', event);
-    
+
     if (event.oldSubscription)
         event.waitUntil(
             self.registration.pushManager.subscribe(event.oldSubscription.options)

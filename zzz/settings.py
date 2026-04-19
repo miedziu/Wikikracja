@@ -1,11 +1,16 @@
+# Standard library imports
 import json
 import logging
 import mimetypes
 from os import getenv, path
+
+# Third party imports
 from dotenv import load_dotenv
-from django.utils.translation import gettext_lazy as _
 from firebase_admin import credentials
-from zzz.settings_base import *
+
+# First party imports
+from django.utils.translation import gettext_lazy as _
+from zzz.settings_base import BASE_DIR, DATABASES  # noqa: F401
 
 # Register additional MIME types not recognized by default
 mimetypes.add_type('image/webp', '.webp')
@@ -32,6 +37,7 @@ def env_list(name, default=None, sep=","):
     parts = [p.strip() for p in value.split(sep)]
     return [p for p in parts if p]
 
+
 STATIC_ROOT = path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -48,7 +54,9 @@ SITE_DESCRIPTION = getenv("SITE_DESCRIPTION", SITE_NAME)
 SECRET_KEY = getenv("SECRET_KEY")
 if not SECRET_KEY:
     if DEBUG:
-        SECRET_KEY = "dev-insecure-secret-key"
+        # Generate a random key for development
+        import secrets
+        SECRET_KEY = secrets.token_urlsafe(50)
     else:
         raise RuntimeError("SECRET_KEY is required when DEBUG is False")
 
@@ -70,7 +78,6 @@ SESSION_COOKIE_SAMESITE = "Lax"
 # Reverse proxy configuration (required when behind Traefik/nginx)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
-USE_X_FORWARDED_PORT = True
 
 TIME_ZONE = getenv("TIME_ZONE", "Europe/Warsaw")
 LANGUAGE_CODE = getenv("LANGUAGE_CODE", "pl")
@@ -88,6 +95,9 @@ ASGI_APPLICATION = 'zzz.routing.application'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ROOT_URLCONF = 'zzz.urls'
 FILEBROWSER_DIRECTORY = 'uploads/'
+
+if DEBUG:
+    ASGI_THREADS = 1
 
 gettext_lazy = lambda s: s
 LANGUAGES = (
@@ -110,8 +120,8 @@ CHANNEL_LAYERS = {
     },
 }
 
-CACHES={
-    'default':{
+CACHES = {
+    'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': REDIS_HOST
     }
@@ -134,14 +144,14 @@ DELETE_INACTIVE_USER_AFTER = env_int("DELETE_INACTIVE_USER_AFTER", 30)
 GROUP_IS_PUBLIC = env_bool("GROUP_IS_PUBLIC", True)
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-#X_FRAME_OPTIONS = 'ALLOW'
+# X_FRAME_OPTIONS = 'ALLOW'
 # TODO: Na produkcji jest:
 X_FRAME_OPTIONS = 'DENY'
 # Dlaczego?
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # above all other middleware apart from Django’s SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # above all other middleware apart from Django’s SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -239,16 +249,13 @@ if DEBUG:
         'django_browser_reload.middleware.BrowserReloadMiddleware',
     ]
 
-
 # LOGGING_DESTINATION: 'console' (default) or 'file'
 # When 'file', logs are written to LOG_FILE (default: /var/log/wiki.log)
 LOGGING_DESTINATION = getenv("LOGGING_DESTINATION", "console")
 LOG_FILE = getenv("LOG_FILE", "/var/log/wiki.log")
 LOG_LEVEL = getenv("LOG_LEVEL", "DEBUG" if DEBUG else "INFO").strip().upper()
 if LOG_LEVEL not in {"CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"}:
-    raise RuntimeError(
-        "LOG_LEVEL must be one of: CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET"
-    )
+    raise RuntimeError("LOG_LEVEL must be one of: CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET")
 _log_to_file = LOGGING_DESTINATION == "file"
 _active_handler = "file" if _log_to_file else "console"
 
@@ -320,7 +327,7 @@ if LOGGING_JSON:
     except json.JSONDecodeError as e:
         err = "LOGGING_JSON contains invalid JSON: " + LOGGING_JSON + " Stack: " + e.args[0]
         print(err)
-        raise RuntimeError(err)
+        raise RuntimeError(err) from None
 
 EMAIL_BACKEND = getenv(
     "EMAIL_BACKEND",
@@ -345,36 +352,47 @@ if not DEBUG and EMAIL_BACKEND == "django.core.mail.backends.smtp.EmailBackend":
     if not EMAIL_HOST_PASSWORD:
         missing.append("EMAIL_HOST_PASSWORD")
     if missing:
-        raise RuntimeError(
-            "SMTP email is enabled but required settings are missing: " + ", ".join(missing)
-        )
+        raise RuntimeError("SMTP email is enabled but required settings are missing: " + ", ".join(missing))
 
 #########################
 # AllAuth Configuration #
 #########################
+# CRITICAL: Custom signup form and adapter for Wikikracja onboarding flow
 ACCOUNT_FORMS = {
-    'signup': 'obywatele.forms.CustomSignupForm',  # disable signup form if spam bots
+    'signup': 'obywatele.forms.CustomSignupForm',  # Custom form: email + captcha only
 }
+ACCOUNT_ADAPTER = 'obywatele.adapter.CustomAccountAdapter'  # Handles session and redirects
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/board/'
+LOGOUT_REDIRECT_URL = '/login/'
+
+# CRITICAL: Redirect to onboarding form immediately after signup
+# Without this, users get stuck or redirected to wrong pages
 ACCOUNT_SIGNUP_REDIRECT_URL = '/obywatele/onboarding/'
+ACCOUNT_RATE_LIMITS = {
+    'login_failed': '5/m',
+    'confirm_email': '0/m',  # Disable cooldown (0 per minute = no cooldown)
+}
+ACCOUNT_INACTIVE_REDIRECT_URL = '/obywatele/onboarding/'
 ACCOUNT_LOGIN_METHODS = {'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*'] #, 'password2*'*/]
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*']  # , 'password2*'*/]
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/obywatele/onboarding/'
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/obywatele/onboarding/'
+# CRITICAL: Email verification settings for onboarding flow
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Must verify email to continue
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True  # Allow GET requests for email confirmation
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/obywatele/onboarding/'  # After email confirmation
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/obywatele/onboarding/'  # Same for logged in
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7  # IMPORTANT: Links valid for 7 days (prevents "expired" errors)
 ACCOUNT_PASSWORD_MIN_LENGTH = 8
 # ACCOUNT_RATE_LIMITS = True  # doesn't work despite documentation
 RATE_LIMITS = 5  # at least doesn't break signup
 ACCOUNT_SESSION_REMEMBER = True  # Controls the life time of the session. Set to None to ask the user ("Remember me?"), False to not remember, and True to always remember.
 ACCOUNT_SIGNUP_PASSWORD_VERIFICATION = False
+ACCOUNT_SIGNUP_PASSWORD_GENERATION = True  # Auto-generate passwords for signup
 
 # Captcha https://django-simple-captcha.readthedocs.io/en/latest/advanced.html
 CAPTCHA_FONT_SIZE = 40
-CAPTCHA_IMAGE_SIZE = (170,50)
+CAPTCHA_IMAGE_SIZE = (170, 50)
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
 # CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 
@@ -386,16 +404,16 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
 WHITENOISE_AUTOREFRESH = DEBUG
 WHITENOISE_USE_FINDERS = DEBUG
-WHITENOISE_MAX_AGE = 31536000
+WHITENOISE_MAX_AGE = 28800  # 8 hours
 # Don't let WhiteNoise handle /media/ URLs - Django will serve them
 WHITENOISE_STATIC_PREFIX = '/static/'
-
+WHITENOISE_KEEP_ONLY_HASHED_FILES = False
+WHITENOISE_MANIFEST_STRICT = False  # Allow missing manifest in dev mode
 
 DEBUG_SKIP_AUTH = env_bool("DEBUG_SKIP_AUTH", False)
 
@@ -442,6 +460,8 @@ PUSH_NOTIFICATIONS_SETTINGS = {
     # "APNS_TOPIC": getenv('APNS_TOPIC', ''),  # Bundle ID like "com.example.push_test",
     # "WNS_PACKAGE_SECURITY_ID": "[your package security id, e.g: 'ms-app://e-3-4-6234...']",
     # "WNS_SECRET_KEY": "[your app secret key, e.g.: 'KDiejnLKDUWodsjmewuSZkk']",
-    "WP_PRIVATE_KEY": getenv('VAPID_PRIVATE_KEY', ''),
-    "WP_CLAIMS": {'sub': f"mailto:{getenv('VAPID_ADMIN_EMAIL', 'admin@example.com')}"}
+    "WP_PRIVATE_KEY": getenv('VAPID_PRIVATE_KEY', ''),  #"/path/to/your/private.pem", # Absolute path to your private certificate file: os.path.join(BASE_DIR, “private_key.pem”)
+    "WP_CLAIMS": {
+        'sub': f"mailto:{getenv('VAPID_ADMIN_EMAIL', 'admin@example.com')}"
+    }
 }
