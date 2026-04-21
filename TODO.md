@@ -268,3 +268,4 @@ Do oddania / na sprzedaż / do wypożyczenia:
 - Chat: filtr tylko nieprzeczytane
 - Możliwość wyłączenia wszystkich powiadomień!
 - Głosowania: W emailu o głosowaniu - dodać tytuł propozycji
+
