@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count, Prefetch, Q
 from django.utils.html import escape
 from firebase_admin import messaging
-from push_notifications.models import APNSDevice, GCMDevice, WebPushDevice
+from push_notifications.models import GCMDevice, WebPushDevice
 
 # First party imports
 from zzz.utils import get_site_domain
@@ -24,6 +24,7 @@ from .models import Message, MessageAttachment, MessageHistory, MessageHistoryEn
 from .utils import HandledMessage, Handlers, OnlineUserRegistry, RoomRegistry, helper_method
 
 log = logging.getLogger(__name__)
+domain = get_site_domain()
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
@@ -358,7 +359,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             consumer = ChatConsumer.online_registry.get_consumer(member)
 
             # OFFLINE: Send push notification
-            if not consumer:
+            if not consumer and not prefs['muted']:
                 await self.send_push_notification_async(proxy, member, msg, room_id)
                 continue
 
@@ -629,7 +630,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             body = message.text[:100]
 
             # Build deep link to room (get_site_domain does DB query, needs async wrapper)
-            domain = await database_sync_to_async(get_site_domain)()
             site_url = f"https://{domain}"
             deep_link = f"{site_url}/chat#room_id={room_id}"
 
@@ -681,58 +681,33 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     message = json.dumps({
                         "title": title,
                         "body": body,
-                        "icon": '/static/favicon.ico',
-                        "badge": '/static/favicon.ico',
+                        "icon": '/favicon.ico',
+                        "badge": '/favicon.ico',
                         "data": {
                             'click_action': deep_link,
                             'room_id': room_id,
+                            'platform': 'webpush',  # 'webpush', 'fcm'
                         }
                     })
-                    # WebPush requires VAPID signing
                     webpush_devices.send_message(message)
                     any_sent = True
                 except Exception as e:
                     log.error(f"WebPush failed for user {user.id}: {e}")
 
-            # Send to FCM devices (Android)
-            # fcm_devices = GCMDevice.objects.filter(user=user, active=True)
-            # if fcm_devices.exists():
-            #     try:
-            #         message = json.dumps({
-            #             "title": title,
-            #             "body": body,
-            #             "icon":'/static/favicon.ico',
-            #             "data": {
-            #                 'click_action': deep_link,
-            #                 'room_id': room_id,
-            #                 }
-            #             }
-            #         )
-            #         fcm_devices.send_message(message)
-            #         any_sent = True
-            #     except Exception as e:
-            #         log.error(f"FCM failed for user {user.id}: {e}")
-
-            # # Send to APNS devices (iOS)
-            # apns_devices = APNSDevice.objects.filter(user=user, active=True)
-            # if apns_devices.exists():
-            #     try:
-            #         message = json.dumps({
-            #             "title": title,
-            #             "body": body,
-            #             "icon":'/favicon.ico',
-            #             "badge":1,
-            #             "sound":'default',
-            #             "data": {
-            #                 'click_action': deep_link,
-            #                 'room_id': room_id,
-            #                 }
-            #             }
-            #         )
-            #         apns_devices.send_message(message)
-            #         any_sent = True
-            #     except Exception as e:
-            #         log.error(f"APNS failed for user {user.id}: {e}")
+            fcm_devices = GCMDevice.objects.filter(user=user, active=True)
+            if fcm_devices.exists():
+                try:
+                    message = messaging.Message(notification=messaging.Notification(
+                        title=title,
+                        body=body,
+                    ), webpush=messaging.WebpushConfig(
+                        notification=messaging.WebpushNotification(icon=f"https://{domain}/favicon.ico"),
+                        fcm_options=messaging.WebpushFCMOptions(link=deep_link),
+                    ))
+                    fcm_devices.send_message(message)
+                    any_sent = True
+                except Exception as e:
+                    log.error(f"FCM failed for user {user.id}: {e}")
 
             return any_sent
 

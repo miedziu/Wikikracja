@@ -25,17 +25,7 @@ self.addEventListener('install', (event) => {
         caches.open(STATIC_CACHE)
             .then((cache) => {
                 console.log('Caching static assets');
-                return cache.addAll([
-                    './',
-                    // '/static/chat/js/jquery-4.0.0.min.js',
-                    // '/static/chat/js/notifications.js',
-                    // '/static/chat/js/push-notifications.js',
-                    // '/static/chat/js/reconnecting-websocket.js',
-                    // '/static/chat/js/chat.js',
-                    // '/static/chat/js/ejs.min.js',
-                    // '/static/chat/js/utility.js',
-                    // '/favicon.ico',
-                ]);
+                return cache.addAll(['./']);
             })
     );
     self.skipWaiting();
@@ -69,17 +59,12 @@ self.addEventListener('activate', (event) => {
  */
 self.addEventListener('push', (event) => {
     console.log('Push event received:', event);
-
     let notificationData = {};
-
     if (event.data) {
         try {
             notificationData = event.data.json();
         } catch (e) {
-            notificationData = {
-                title: 'Chat Message',
-                body: event.data.text(),
-            };
+            return;
         }
     }
 
@@ -190,8 +175,7 @@ self.addEventListener('pushsubscriptionchange', (event) => {
                         },
                         body: JSON.stringify({
                             platform: 'webpush',
-                            registration_id: newSubscription,
-                            device_type: 'service-worker'
+                            registration_id: newSubscription
                         })
                     });
                 })

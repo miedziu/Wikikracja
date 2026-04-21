@@ -433,14 +433,6 @@ DEBUG_SKIP_AUTH = env_bool("DEBUG_SKIP_AUTH", False)
 #########################
 
 PUSH_NOTIFICATIONS = {
-    # 'APNS': {
-    #     'USE_SANDBOX': env_bool('APNS_USE_SANDBOX', DEBUG),
-    #     'CERTIFICATE': getenv('APNS_CERTIFICATE', ''),  # Path to certificate file
-    #     'KEY_FILE': getenv('APNS_KEY_FILE', ''),  # Path to private key file
-    #     'TEAM_ID': getenv('APNS_TEAM_ID', ''),
-    #     'KEY_ID': getenv('APNS_KEY_ID', ''),
-    #     'TOPIC': getenv('APNS_TOPIC', ''),  # Bundle ID
-    # },
     'WEBPUSH': {
         'VAPID_PUBLIC_KEY': getenv('VAPID_PUBLIC_KEY', ''),
     }
@@ -465,11 +457,7 @@ if FIREBASE_CERT_PATH is not None:
     firebase_app = firebase_admin.initialize_app(credential=serviceAccount)
 
 PUSH_NOTIFICATIONS_SETTINGS = {
-    # "APNS_CERTIFICATE": getenv('APNS_CERTIFICATE', ''),  # Path to certificate file
-    # "APNS_TOPIC": getenv('APNS_TOPIC', ''),  # Bundle ID like "com.example.push_test",
-    # "WNS_PACKAGE_SECURITY_ID": "[your package security id, e.g: 'ms-app://e-3-4-6234...']",
-    # "WNS_SECRET_KEY": "[your app secret key, e.g.: 'KDiejnLKDUWodsjmewuSZkk']",
-    "WP_PRIVATE_KEY": getenv('VAPID_PRIVATE_KEY', ''),  #"/path/to/your/private.pem", # Absolute path to your private certificate file: os.path.join(BASE_DIR, “private_key.pem”)
+    "WP_PRIVATE_KEY": getenv('VAPID_PRIVATE_KEY', ''),
     "WP_CLAIMS": {
         'sub': f"mailto:{getenv('VAPID_ADMIN_EMAIL', 'admin@example.com')}"
     }

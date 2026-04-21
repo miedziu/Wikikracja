@@ -1,6 +1,6 @@
 """
 Push Notification API endpoints for device registration and management.
-Supports WebPush, FCM (Android), and APNS (iOS).
+Supports WebPush, FCM (Android)
 """
 # Standard library imports
 import json
@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
-from push_notifications.models import APNSDevice, GCMDevice, WebPushDevice
+from push_notifications.models import GCMDevice, WebPushDevice
 
 log = logging.getLogger(__name__)
 
@@ -21,11 +21,10 @@ class PushDeviceRegisterView(View):
     """
     Register a device for push notifications.
     POST parameters:
-    - platform: 'webpush', 'fcm', or 'apns'
+    - platform: 'webpush', 'fcm'
     - registration_id: device token / endpoint URL
     - p256dh: (WebPush only) p256dh public key
     - auth: (WebPush only) authentication secret
-    - device_type: (optional) e.g., 'Chrome', 'Firefox', 'Safari', 'Android', 'iOS'
     """
     def post(self, request: HttpRequest):
         try:
@@ -34,7 +33,6 @@ class PushDeviceRegisterView(View):
             registration_id = data.get('registration_id', '')
             p256dh = data.get('p256dh', '')
             auth = data.get('auth', '')
-            device_type = data.get('device_type', '')
 
             if not platform or not registration_id:
                 return JsonResponse({
@@ -56,32 +54,21 @@ class PushDeviceRegisterView(View):
                     device.auth = auth
                     device.active = True
                     device.save()
-
             elif platform == 'fcm':
                 device, created = GCMDevice.objects.get_or_create(user=user, registration_id=registration_id, defaults={
                     'active': True,
-                    'device_id': device_type,
+                    'device_id': "",
                 })
                 if not created:
                     device.active = True
-                    device.device_id = device_type
-                    device.save()
-
-            elif platform == 'apns':
-                device, created = APNSDevice.objects.get_or_create(user=user, registration_id=registration_id, defaults={
-                    'active': True,
-                    'device_id': device_type,
-                })
-                if not created:
-                    device.active = True
-                    device.device_id = device_type
+                    device.device_id = ""
                     device.save()
             else:
                 return JsonResponse({
                     'error': f'Unsupported platform: {platform}'
                 }, status=400)
 
-            log.info(f"User {user.id} registered push device: {platform} - {device_type}")
+            log.info(f"User {user.id} registered push device: {platform}")
 
             return JsonResponse({
                 'success': True,
@@ -106,7 +93,7 @@ class PushDeviceUnregisterView(View):
     """
     Unregister a device (deactivate it).
     POST parameters:
-    - platform: 'webpush', 'fcm', or 'apns'
+    - platform: 'webpush', 'fcm'
     - registration_id: device token / endpoint URL
     """
     def post(self, request: HttpRequest):
@@ -127,8 +114,6 @@ class PushDeviceUnregisterView(View):
                 devices = WebPushDevice.objects.filter(user=user, registration_id=registration_id)
             elif platform == 'fcm':
                 devices = GCMDevice.objects.filter(user=user, registration_id=registration_id)
-            elif platform == 'apns':
-                devices = APNSDevice.objects.filter(user=user, registration_id=registration_id)
             else:
                 return JsonResponse({
                     'error': f'Unsupported platform: {platform}'

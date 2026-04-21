@@ -8,9 +8,6 @@ from django.http import HttpRequest
 
 # First party imports
 from board.models import Post
-import subprocess
-import os
-from datetime import datetime
 
 log = logging.getLogger(__name__)
 
@@ -33,17 +30,9 @@ def vapid_public_key(request):
         'vapid_public_key': settings.PUSH_NOTIFICATIONS['WEBPUSH'].get('VAPID_PUBLIC_KEY', '')
     }
 
-    # Firebase configuration from settings
-    # firebase_config = {
-    #     'apiKey': s.PUSH_NOTIFICATIONS.get('FCM', {}).get('API_KEY', ''),
-    #     'authDomain': '',  # Will be constructed from project ID
-    #     'projectId': s.PUSH_NOTIFICATIONS.get('FCM', {}).get('PROJECT_ID', ''),
-    #     'storageBucket': '',  # Will be constructed from project ID
-    #     'messagingSenderId': s.PUSH_NOTIFICATIONS.get('FCM', {}).get('SERVER_KEY', '').split(':')[0] if s.PUSH_NOTIFICATIONS.get('FCM', {}).get('SERVER_KEY') else '',
-    #     'appId': s.PUSH_NOTIFICATIONS.get('FCM', {}).get('APP_ID', '')
-    # }
 
-    # # Construct authDomain and storageBucket if project ID is available
-    # if firebase_config['projectId']:
-    #     firebase_config['authDomain'] = f"{firebase_config['projectId']}.firebaseapp.com"
-    #     firebase_config['storageBucket'] = f"{firebase_config['projectId']}.appspot.com"
+def firebase_config(request):
+    # Convert Firebase config dict to JSON string for safe embedding in HTML
+    return {
+        'firebase_config': json.dumps(settings.FIREBASE_CONFIG or {})
+    }
