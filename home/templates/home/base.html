@@ -36,9 +36,6 @@
   <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-messaging-compat.js"></script>
 
   <script>
-    // Firebase configuration for FCM (Android)
-    window.FIREBASE_CONFIG = JSON.parse('{{ firebase_config|safe }}');
-
     // VAPID public key for WebPush
     window.VAPID_PUBLIC_KEY = "{{ vapid_public_key|default:'' }}";
   </script>

@@ -29,10 +29,3 @@ def vapid_public_key(request):
     return {
         'vapid_public_key': settings.PUSH_NOTIFICATIONS['WEBPUSH'].get('VAPID_PUBLIC_KEY', '')
     }
-
-
-def firebase_config(request):
-    # Convert Firebase config dict to JSON string for safe embedding in HTML
-    return {
-        'firebase_config': json.dumps(settings.FIREBASE_CONFIG or {})
-    }
