@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 from firebase_admin import credentials
 
 # First party imports
-from django.utils.translation import gettext_lazy as _
 from zzz.settings_base import BASE_DIR, DATABASES  # noqa: F401
 
 # Register additional MIME types not recognized by default
@@ -186,7 +185,6 @@ TEMPLATES = [
                 'zzz.context_processors.footer',
                 'zzz.context_processors.site_description',
                 'zzz.context_processors.vapid_public_key',
-                'zzz.context_processors.firebase_config',
             ],
             'debug': False
         },
@@ -436,17 +434,6 @@ PUSH_NOTIFICATIONS = {
     'WEBPUSH': {
         'VAPID_PUBLIC_KEY': getenv('VAPID_PUBLIC_KEY', ''),
     }
-}
-
-APP_ID = getenv('FIREBASE_APP_ID', ''),
-FIREBASE_PROJECT_ID = getenv('FIREBASE_PROJECT_ID', ''),
-FIREBASE_CONFIG = {
-    'apiKey': getenv('FIREBASE_API_KEY', ''),
-    'authDomain': f"{FIREBASE_PROJECT_ID[0]}.firebaseapp.com",  # Will be constructed from project ID
-    'projectId': FIREBASE_PROJECT_ID[0],
-    'storageBucket': f"{FIREBASE_PROJECT_ID[0]}.appspot.com",  # Will be constructed from project ID
-    'messagingSenderId': APP_ID[0].split(':')[1] if APP_ID else '',
-    'appId': APP_ID[0]
 }
 
 # Initialize the default app (either use `GOOGLE_APPLICATION_CREDENTIALS` environment variable, or pass a firebase_admin.credentials.Certificate instance)

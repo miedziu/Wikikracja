@@ -564,11 +564,6 @@ def firebase_messaging_sw(request):
     with open(sw_path, 'r', encoding='utf-8') as f:
         sw_content = f.read()
 
-    # Replace placeholder with actual Firebase config from settings
-    firebase_config = settings.FIREBASE_CONFIG or {}
-    if firebase_config and 'apiKey' in firebase_config:
-        sw_content = sw_content.replace('const firebaseConfig = typeof firebaseConfig !== \'undefined\' ? firebaseConfig : {};', f'const firebaseConfig = {json.dumps(firebase_config)};')
-
     response = HttpResponse(sw_content, content_type='application/javascript')
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response['Pragma'] = 'no-cache'

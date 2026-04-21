@@ -48,7 +48,15 @@ const PushNotificationManager = {
 
     async initFCM() {
         try {
-            const app = firebase.initializeApp(window.FIREBASE_CONFIG);
+            const firebaseConfig = {
+                apiKey: "AIzaSyCJkEiqWunGmb48IKtvW4SoGdOfPnee1t8",
+                authDomain: "push-notif-demo-c3d86.firebaseapp.com",
+                projectId: "push-notif-demo-c3d86",
+                storageBucket: "push-notif-demo-c3d86.appspot.com",
+                messagingSenderId: "1076973263661",
+                appId: "1:1076973263661:web:84dc765e6b92c65ab9d1a4",
+            }
+            const app = firebase.initializeApp(firebaseConfig);
             const messaging = firebase.messaging();
             const token = await messaging.getToken();
             // console.log('FCM token obtained:', token);
