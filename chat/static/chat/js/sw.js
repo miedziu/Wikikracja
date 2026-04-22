@@ -2,7 +2,7 @@
  * @file
  * Service Worker for Chat WebPush Notifications
  * Handles push notifications, caches static assets, and manages offline functionality.
- * 
+ *
  * This service worker:
  * - Caches static assets for offline use
  * - Handles push notification events
@@ -25,17 +25,7 @@ self.addEventListener('install', (event) => {
         caches.open(STATIC_CACHE)
             .then((cache) => {
                 console.log('Caching static assets');
-                return cache.addAll([
-                    './',
-                    // '/static/chat/js/jquery-4.0.0.min.js',
-                    // '/static/chat/js/notifications.js',
-                    // '/static/chat/js/push-notifications.js',
-                    // '/static/chat/js/reconnecting-websocket.js',
-                    // '/static/chat/js/chat.js',
-                    // '/static/chat/js/ejs.min.js',
-                    // '/static/chat/js/utility.js',
-                    // '/favicon.ico',
-                ]);
+                return cache.addAll(['./']);
             })
     );
     self.skipWaiting();
@@ -69,20 +59,15 @@ self.addEventListener('activate', (event) => {
  */
 self.addEventListener('push', (event) => {
     console.log('Push event received:', event);
-    
     let notificationData = {};
-    
     if (event.data) {
         try {
             notificationData = event.data.json();
         } catch (e) {
-            notificationData = {
-                title: 'Chat Message',
-                body: event.data.text(),
-            };
+            return;
         }
     }
-    
+
     const title = notificationData.title || 'Chat Message';
     const options = {
         body: notificationData.body || '',
@@ -91,7 +76,7 @@ self.addEventListener('push', (event) => {
         vibrate: [200, 100, 200],
         requireInteraction: true,
         data: {
-            room_id: notificationData.data?.room_id,
+            room_id: notificationData.data?.room_id ?? 0,
             click_action: notificationData.data?.click_action || '/chat',
             url: notificationData.data?.click_action || '/chat'
         },
@@ -102,7 +87,7 @@ self.addEventListener('push', (event) => {
             }
         ]
     };
-    
+
     // Show notification
     const promiseChain = self.registration.showNotification(title, options);
     event.waitUntil(promiseChain);
@@ -115,16 +100,16 @@ self.addEventListener('push', (event) => {
  */
 self.addEventListener('notificationclick', (event) => {
     console.log('Notification click received:', event);
-    
+
     const action = event.action;
     const data = event.notification.data || {};
     const url = data.click_action || data.url || '/chat';
-    
+
     if (action === 'dismiss' || action === 'close') {
         event.notification.close();
         return;
     }
-    
+
     // Open or focus the window
     event.waitUntil(
         clients.matchAll({
@@ -154,11 +139,11 @@ self.addEventListener('notificationclick', (event) => {
  */
 self.addEventListener('message', (event) => {
     console.log('Service Worker message received:', event.data);
-    
+
     if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
     }
-    
+
     if (event.data && event.data.type === 'GET_SUBSCRIPTION') {
         self.registration.pushManager.getSubscription()
             .then((subscription) => {
@@ -176,7 +161,7 @@ self.addEventListener('message', (event) => {
  */
 self.addEventListener('pushsubscriptionchange', (event) => {
     console.log('Push subscription change detected:', event);
-    
+
     if (event.oldSubscription)
         event.waitUntil(
             self.registration.pushManager.subscribe(event.oldSubscription.options)
@@ -190,8 +175,7 @@ self.addEventListener('pushsubscriptionchange', (event) => {
                         },
                         body: JSON.stringify({
                             platform: 'webpush',
-                            registration_id: newSubscription,
-                            device_type: 'service-worker'
+                            registration_id: newSubscription
                         })
                     });
                 })

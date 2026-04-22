@@ -1,4 +1,5 @@
 # Standard library imports
+import json
 import logging
 import os
 from datetime import datetime as dt
@@ -39,11 +40,7 @@ log = logging.getLogger(__name__)
 
 def build_read_status_map(user):
     return {
-        content_type: set(object_ids)
-        for content_type, object_ids in (
-            (content_type, ReadStatus.objects.filter(user=user, content_type=content_type).values_list('object_id', flat=True))
-            for content_type in ReadStatus.ContentType.values
-        )
+        content_type: set(object_ids) for content_type, object_ids in ((content_type, ReadStatus.objects.filter(user=user, content_type=content_type).values_list('object_id', flat=True)) for content_type in ReadStatus.ContentType.values)
     }
 
 
@@ -53,11 +50,13 @@ def home(request: HttpRequest):
         if not start:
             log.info('Add Board Message title Start.')
             start = ''
-        return render(request, 'home/home.html', {'start': start})
-    
+        return render(request, 'home/home.html', {
+            'start': start
+        })
+
     # Generate unified feed
     feed_items = generate_feed_items(request.user)
-    
+
     # Find first unread item for jump functionality
     first_unread = None
     unread_items = [item for item in feed_items if not item['is_read']]
@@ -68,11 +67,11 @@ def home(request: HttpRequest):
             if item == first_unread:
                 feed_items[i]['is_first_unread'] = True
                 break
-    
+
     # Check if we should filter to show only unread items
     # Priority: URL parameter > session (synced from localStorage)
     url_filter = request.GET.get('filter')
-    
+
     if url_filter is not None:
         # URL parameter takes precedence
         filter_unread = url_filter == 'unread'
@@ -84,15 +83,15 @@ def home(request: HttpRequest):
     else:
         # Default: show all items
         filter_unread = False
-    
+
     if filter_unread:
         feed_items = unread_items
-    
+
     # Get counts for each section
     ongoing_count = Decyzja.objects.filter(status=3).count()
     upcoming_count = Decyzja.objects.filter(status=2).count()
     signatures_count = Decyzja.objects.filter(status=1).count()
-    
+
     return render(request, 'home/home.html', {
         'feed_items': feed_items,
         'first_unread': first_unread,
@@ -110,10 +109,8 @@ def generate_feed_items(user):
     read_status_map = build_read_status_map(user)
 
     # Get recent posts
-    posts = Post.objects.filter(
-        updated__gte=timezone.now() - td(days=30)
-    ).select_related('author').order_by('-updated')
-    
+    posts = Post.objects.filter(updated__gte=timezone.now() - td(days=30)).select_related('author').order_by('-updated')
+
     for post in posts:
         clean_text = strip_tags(post.text)
         feed_items.append({
@@ -126,12 +123,10 @@ def generate_feed_items(user):
             'is_read': post.pk in read_status_map[ReadStatus.ContentType.POST],
             'object_id': post.pk,
         })
-    
+
     # Get recent tasks
-    tasks = Task.objects.filter(
-        updated_at__gte=timezone.now() - td(days=30)
-    ).select_related('created_by', 'assigned_to').order_by('-updated_at')
-    
+    tasks = Task.objects.filter(updated_at__gte=timezone.now() - td(days=30)).select_related('created_by', 'assigned_to').order_by('-updated_at')
+
     for task in tasks:
         clean_description = strip_tags(task.description)
         feed_items.append({
@@ -144,12 +139,10 @@ def generate_feed_items(user):
             'is_read': task.pk in read_status_map[ReadStatus.ContentType.TASK],
             'object_id': task.pk,
         })
-    
+
     # Get recent books
-    books = Book.objects.filter(
-        uploaded__gte=timezone.now() - td(days=30)
-    ).select_related('uploader').order_by('-uploaded')
-    
+    books = Book.objects.filter(uploaded__gte=timezone.now() - td(days=30)).select_related('uploader').order_by('-uploaded')
+
     for book in books:
         clean_abstract = strip_tags(book.abstract) if book.abstract else ''
         feed_items.append({
@@ -162,20 +155,20 @@ def generate_feed_items(user):
             'is_read': book.pk in read_status_map[ReadStatus.ContentType.BOOK],
             'object_id': book.pk,
         })
-    
+
     # Get upcoming events (including periodic events)
     events = Event.objects.filter(is_active=True).select_related()
-    
+
     # Filter events that have upcoming occurrences and get their next occurrence
     upcoming_events = []
     for event in events:
         next_occurrence = event.get_next_occurrence()
         if next_occurrence and next_occurrence >= timezone.now() - td(days=1):
             upcoming_events.append((event, next_occurrence))
-    
+
     # Sort by next occurrence date (nearest first)
     upcoming_events.sort(key=lambda x: x[1])
-    
+
     for event, next_occurrence in upcoming_events:
         clean_description = strip_tags(event.description) if event.description else ''
         feed_items.append({
@@ -192,23 +185,18 @@ def generate_feed_items(user):
     # Get recent messages from rooms user has access to, grouped by room
     rooms = Room.objects.filter(allowed=user).prefetch_related('messages', 'messages__sender')
     # Use ReadStatus for room messages consistency
-    seen_room_ids = set(ReadStatus.objects.filter(
-        user=user, 
-        content_type=ReadStatus.ContentType.MESSAGE
-    ).values_list('object_id', flat=True))
-    
+    seen_room_ids = set(ReadStatus.objects.filter(user=user, content_type=ReadStatus.ContentType.MESSAGE).values_list('object_id', flat=True))
+
     for room in rooms:
-        messages = room.messages.filter(
-            time__gte=timezone.now() - td(days=30)
-        ).order_by('-time')[:5]  # Get newest messages first
-        
+        messages = room.messages.filter(time__gte=timezone.now() - td(days=30)).order_by('-time')[:5]  # Get newest messages first
+
         if messages:  # Only add room if it has recent messages
             # Use first message (newest) for timestamp and author
             latest_message = messages[0]
-            
+
             # Reverse messages for chronological display (oldest to newest)
             messages_reversed = list(reversed(messages))
-            
+
             # Create description showing all messages with authors
             message_list = []
             for message in messages_reversed:
@@ -218,13 +206,15 @@ def generate_feed_items(user):
                 else:
                     author_name = 'System'
                 message_list.append(f"- <strong>{author_name}:</strong> {clean_text}")
-            
+
             # Join messages with newlines for better readability
             description = '\n'.join(message_list)
-            
+
             feed_items.append({
                 'content_type': 'room_messages',
-                'title': _("Messages in %(room_title)s") % {'room_title': room.title},
+                'title': _("Messages in %(room_title)s") % {
+                    'room_title': room.title
+                },
                 'description': description,
                 'author': latest_message.sender,
                 'timestamp': latest_message.time,
@@ -234,12 +224,10 @@ def generate_feed_items(user):
                 'room_id': room.id,
                 'message_count': len(messages),
             })
-    
+
     # Get recent decisions
-    decisions = Decyzja.objects.filter(
-        data_ostatniej_modyfikacji__gte=timezone.now() - td(days=30)
-    ).order_by('-data_ostatniej_modyfikacji')
-    
+    decisions = Decyzja.objects.filter(data_ostatniej_modyfikacji__gte=timezone.now() - td(days=30)).order_by('-data_ostatniej_modyfikacji')
+
     for decision in decisions:
         clean_tresc = strip_tags(decision.tresc) if decision.tresc else ''
         feed_items.append({
@@ -252,12 +240,10 @@ def generate_feed_items(user):
             'is_read': decision.pk in read_status_map[ReadStatus.ContentType.DECISION],
             'object_id': decision.pk,
         })
-    
+
     # Get recent citizen activities
-    citizen_activities = CitizenActivity.objects.filter(
-        timestamp__gte=timezone.now() - td(days=30)
-    ).select_related('uzytkownik', 'uzytkownik__uid').order_by('-timestamp')
-    
+    citizen_activities = CitizenActivity.objects.filter(timestamp__gte=timezone.now() - td(days=30)).select_related('uzytkownik', 'uzytkownik__uid').order_by('-timestamp')
+
     for activity in citizen_activities:
         feed_items.append({
             'content_type': 'citizen',
@@ -269,19 +255,19 @@ def generate_feed_items(user):
             'is_read': activity.pk in read_status_map[ReadStatus.ContentType.CITIZEN],
             'object_id': activity.pk,
         })
-    
+
     # Sort all items by timestamp, but events should be in ascending order (nearest first)
     events_items = [item for item in feed_items if item['content_type'] == 'event']
     other_items = [item for item in feed_items if item['content_type'] != 'event']
-    
+
     # Sort events by timestamp ascending (nearest first)
     events_items.sort(key=lambda x: x['timestamp'])
     # Sort other items by timestamp descending (newest first)
     other_items.sort(key=lambda x: x['timestamp'], reverse=True)
-    
+
     # Combine: events first (nearest to most distant), then other items (newest to oldest)
     feed_items = events_items + other_items
-    
+
     return feed_items
 
 
@@ -291,10 +277,13 @@ def mark_as_read(request):
     """Mark a feed item as read"""
     content_type = request.POST.get('content_type')
     object_id = request.POST.get('object_id')
-    
+
     if not content_type or not object_id:
-        return JsonResponse({'success': False, 'error': 'Missing parameters'})
-    
+        return JsonResponse({
+            'success': False,
+            'error': 'Missing parameters'
+        })
+
     try:
         object_id = int(object_id)
         # Map content types to ReadStatus content types
@@ -308,18 +297,17 @@ def mark_as_read(request):
             'decision': ReadStatus.ContentType.DECISION,
             'citizen': ReadStatus.ContentType.CITIZEN,
         }
-        
+
         read_status_content_type = content_type_map.get(content_type)
         if not read_status_content_type:
-            return JsonResponse({'success': False, 'error': 'Invalid content type'})
-        
+            return JsonResponse({
+                'success': False,
+                'error': 'Invalid content type'
+            })
+
         # Create or update read status
-        read_status, created = ReadStatus.objects.get_or_create(
-            user=request.user,
-            content_type=read_status_content_type,
-            object_id=object_id
-        )
-        
+        read_status, created = ReadStatus.objects.get_or_create(user=request.user, content_type=read_status_content_type, object_id=object_id)
+
         # For room messages, also update room.seen_by for chat consistency
         if content_type in ['message', 'room_messages'] and read_status_content_type == ReadStatus.ContentType.MESSAGE:
             try:
@@ -328,11 +316,16 @@ def mark_as_read(request):
                 room.seen_by.add(request.user)
             except Room.DoesNotExist:
                 pass  # Room might not exist, ignore
-        
-        return JsonResponse({'success': True})
-        
+
+        return JsonResponse({
+            'success': True
+        })
+
     except (ValueError, KeyError):
-        return JsonResponse({'success': False, 'error': 'Invalid parameters'})
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid parameters'
+        })
 
 
 @login_required
@@ -341,15 +334,15 @@ def mark_all_read(request):
     """Mark all feed items as read for the current user"""
     try:
         user = request.user
-        
+
         # Get all current feed items and mark them as read
         feed_items = generate_feed_items(user)
         read_status_map = build_read_status_map(user)
-        
+
         # Create read statuses for all unread items
         created_count = 0
         room_ids_to_mark = []  # Collect room IDs for batch update
-        
+
         for item in feed_items:
             if not item['is_read']:
                 content_type_map = {
@@ -362,21 +355,17 @@ def mark_all_read(request):
                     'decision': ReadStatus.ContentType.DECISION,
                     'citizen': ReadStatus.ContentType.CITIZEN,
                 }
-                
+
                 read_status_content_type = content_type_map.get(item['content_type'])
                 if read_status_content_type:
-                    read_status, created = ReadStatus.objects.get_or_create(
-                        user=user,
-                        content_type=read_status_content_type,
-                        object_id=item['object_id']
-                    )
+                    read_status, created = ReadStatus.objects.get_or_create(user=user, content_type=read_status_content_type, object_id=item['object_id'])
                     if created:
                         created_count += 1
-                    
+
                     # Collect room IDs for batch seen_by update
                     if item['content_type'] in ['message', 'room_messages'] and read_status_content_type == ReadStatus.ContentType.MESSAGE:
                         room_ids_to_mark.append(item['object_id'])
-        
+
         # Batch update room.seen_by for all rooms
         if room_ids_to_mark:
             try:
@@ -386,12 +375,18 @@ def mark_all_read(request):
                     room.seen_by.add(user)
             except Exception as e:
                 log.warning(f"Could not update room.seen_by: {e}")
-        
-        return JsonResponse({'success': True, 'marked_count': created_count})
-        
+
+        return JsonResponse({
+            'success': True,
+            'marked_count': created_count
+        })
+
     except Exception as e:
         log.error(f"Error marking all as read for user {request.user.id}: {e}")
-        return JsonResponse({'success': False, 'error': str(e)})
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
 
 
 @login_required
@@ -402,10 +397,15 @@ def save_filter_state(request):
         filter_state = request.POST.get('show_unread_only', 'false').lower() == 'true'
         request.session['show_unread_only'] = filter_state
         request.session.modified = True
-        return JsonResponse({'success': True})
+        return JsonResponse({
+            'success': True
+        })
     except Exception as e:
         log.error(f"Error saving filter state: {e}")
-        return JsonResponse({'success': False, 'error': str(e)})
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
 
 
 @login_required
@@ -414,10 +414,13 @@ def mark_unread(request):
     """Mark a feed item as unread"""
     content_type = request.POST.get('content_type')
     object_id = request.POST.get('object_id')
-    
+
     if not content_type or not object_id:
-        return JsonResponse({'success': False, 'error': 'Missing parameters'})
-    
+        return JsonResponse({
+            'success': False,
+            'error': 'Missing parameters'
+        })
+
     try:
         object_id = int(object_id)
         # Map content types to ReadStatus content types
@@ -431,18 +434,17 @@ def mark_unread(request):
             'decision': ReadStatus.ContentType.DECISION,
             'citizen': ReadStatus.ContentType.CITIZEN,
         }
-        
+
         read_status_content_type = content_type_map.get(content_type)
         if not read_status_content_type:
-            return JsonResponse({'success': False, 'error': 'Invalid content type'})
-        
+            return JsonResponse({
+                'success': False,
+                'error': 'Invalid content type'
+            })
+
         # Delete read status to mark as unread
-        deleted_count, _ = ReadStatus.objects.filter(
-            user=request.user,
-            content_type=read_status_content_type,
-            object_id=object_id
-        ).delete()
-        
+        deleted_count, _ = ReadStatus.objects.filter(user=request.user, content_type=read_status_content_type, object_id=object_id).delete()
+
         # For room messages, also remove from room.seen_by for chat consistency
         if content_type in ['message', 'room_messages'] and read_status_content_type == ReadStatus.ContentType.MESSAGE:
             try:
@@ -451,11 +453,16 @@ def mark_unread(request):
                 room.seen_by.remove(request.user)
             except Room.DoesNotExist:
                 pass  # Room might not exist, ignore
-        
-        return JsonResponse({'success': True})
-        
+
+        return JsonResponse({
+            'success': True
+        })
+
     except (ValueError, KeyError):
-        return JsonResponse({'success': False, 'error': 'Invalid parameters'})
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid parameters'
+        })
 
 
 class RememberLoginView(LoginView):
@@ -536,10 +543,30 @@ def service_worker(request):
         if not sw_path:
             return HttpResponse("Service Worker not found", status=404)
 
-    with open(sw_path, 'rb') as f:
-        response = HttpResponse(f.read(), content_type='application/javascript')
-        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-        response['Pragma'] = 'no-cache'
-        response['Expires'] = '0'
-        response['Service-Worker-Allowed'] = "/"
-        return response
+    with open(sw_path, 'r', encoding='utf-8') as f:
+        sw_content = f.read()
+
+    response = HttpResponse(sw_content, content_type='application/javascript')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    response['Service-Worker-Allowed'] = "/"
+    return response
+
+
+def firebase_messaging_sw(request):
+    """Serve the Firebase Messaging service worker JavaScript file with injected Firebase config"""
+    sw_path = os.path.join(settings.BASE_DIR, 'chat', 'static', 'chat', 'js', 'firebase-messaging-sw.js')
+
+    if not os.path.exists(sw_path):
+        return HttpResponse("Firebase Messaging Service Worker not found", status=404)
+
+    with open(sw_path, 'r', encoding='utf-8') as f:
+        sw_content = f.read()
+
+    response = HttpResponse(sw_content, content_type='application/javascript')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    response['Service-Worker-Allowed'] = "/"
+    return response

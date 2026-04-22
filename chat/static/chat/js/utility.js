@@ -40,9 +40,10 @@ export function makeNotification(notif) {
 
     if (Notification?.permission === 'granted') {
         let notification = new Notification(notif.title, {
-            icon: notif.link ?? '/favicon.ico',
             body: notif.body,
-            requireInteraction: true
+            icon: notif.link ?? '/favicon.ico',
+            badge: notif.badge ?? '/favicon.ico',
+            requireInteraction: true,
         });
         notification.onclick = function() {
             if (window.location.pathname !== "/chat/") {

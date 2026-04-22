@@ -121,48 +121,44 @@ def run_meeting_notification():
     from datetime import timedelta
     from django.conf import settings
     from django.utils.translation import gettext_lazy as _
-    
+
     # Get events that are starting now (within the current minute)
     now = timezone.now()
     start_of_minute = now.replace(second=0, microsecond=0)
     end_of_minute = start_of_minute + timedelta(minutes=1)
-    
-    starting_events = Event.objects.filter(
-        is_active=True,
-        start_date__gte=start_of_minute,
-        start_date__lt=end_of_minute
-    ).order_by('start_date')
-    
+
+    starting_events = Event.objects.filter(is_active=True, start_date__gte=start_of_minute, start_date__lt=end_of_minute).order_by('start_date')
+
     if not starting_events.exists():
         return  # Silent return - no events starting this minute
-    
+
     webpush_devices = WebPushDevice.objects.filter(active=True)
     if not webpush_devices.exists():
         log.info("No active webpush devices found")
         return
-    
+
     for event in starting_events:
         try:
             # Format event time for display
             event_time = event.start_date.strftime('%H:%M')
-            
+
             # Build detailed notification message
             body_parts = [event.title]
-            
+
             # Add time
             body_parts.append(f"{_('Time')}: {event_time}")
-            
+
             # Add place if available
             if event.place:
                 body_parts.append(f"{_('Place')}: {event.place}")
-            
+
             # Add description (truncated if too long)
             if event.description:
                 description = event.description.strip()
                 if len(description) > 200:
                     description = description[:200] + "..."
                 body_parts.append(f"{_('Description')}: {description}")
-            
+
             # Build notification message
             message = json.dumps({
                 "title": f"{settings.SITE_NAME} {_('Reminder')}",
@@ -174,11 +170,11 @@ def run_meeting_notification():
                     'event_id': event.id,
                 }
             })
-            
+
             # WebPush requires VAPID signing
             webpush_devices.send_message(message)
             log.info(f"Push notification sent for event: {event.title}")
-            
+
         except Exception as e:
             log.error(f"WebPush failed for event {event.id}: {e}")
 

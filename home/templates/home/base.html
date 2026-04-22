@@ -31,20 +31,18 @@
 	<!-- Chat rooms engine: -->
 	<script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
 
-	<!-- Firebase SDK (for FCM on Android) -->
-  {% comment %} <script type="module" src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js"></script>
-  <script type="module" src="https://www.gstatic.com/firebasejs/12.10.0/firebase-messaging.js"></script> {% endcomment %}
-
-  <!-- Push notifications manager -->
-  <script src="{% static 'chat/js/push-notifications.js' %}" type="module"></script>
+	<!-- Firebase SDK (for FCM on Android) , needed for initFCM -->
+  <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-messaging-compat.js"></script>
 
   <script>
-    // Firebase configuration for FCM (Android)
-    // window.FIREBASE_CONFIG = {{ firebase_config|safe }};
-
     // VAPID public key for WebPush
     window.VAPID_PUBLIC_KEY = "{{ vapid_public_key|default:'' }}";
   </script>
+
+  <!-- Push notifications manager must be after window.VAPID_PUBLIC_KEY -->
+  <script src="{% static 'chat/js/push-notifications.js' %}" type="module"></script>
+
   {% block extra_css %}{% endblock %}
   {% bootstrap_messages %}
   {% bootstrap_javascript %}

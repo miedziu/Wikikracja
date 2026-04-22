@@ -6,6 +6,7 @@ from os import getenv, path
 
 # Third party imports
 from dotenv import load_dotenv
+from firebase_admin import credentials
 
 # First party imports
 from zzz.settings_base import BASE_DIR, DATABASES  # noqa: F401
@@ -430,38 +431,19 @@ DEBUG_SKIP_AUTH = env_bool("DEBUG_SKIP_AUTH", False)
 #########################
 
 PUSH_NOTIFICATIONS = {
-    # 'APNS': {
-    #     'USE_SANDBOX': env_bool('APNS_USE_SANDBOX', DEBUG),
-    #     'CERTIFICATE': getenv('APNS_CERTIFICATE', ''),  # Path to certificate file
-    #     'KEY_FILE': getenv('APNS_KEY_FILE', ''),  # Path to private key file
-    #     'TEAM_ID': getenv('APNS_TEAM_ID', ''),
-    #     'KEY_ID': getenv('APNS_KEY_ID', ''),
-    #     'TOPIC': getenv('APNS_TOPIC', ''),  # Bundle ID
-    # },
-    # 'FCM': {
-    #     'API_KEY': getenv('FCM_API_KEY', ''),
-    #     'SERVER_KEY': getenv('FCM_SERVER_KEY', ''),
-    #     'PROJECT_ID': getenv('FCM_PROJECT_ID', ''),
-    # },
     'WEBPUSH': {
         'VAPID_PUBLIC_KEY': getenv('VAPID_PUBLIC_KEY', ''),
     }
 }
 
-# Import the firebase service
-# from firebase_admin import auth
-
 # Initialize the default app (either use `GOOGLE_APPLICATION_CREDENTIALS` environment variable, or pass a firebase_admin.credentials.Certificate instance)
-# You can also pass options. One of them is httpTimeout: This sets the timeout (in seconds) for outgoing HTTP connections initiated by the SDK.
-# import firebase_admin
-# default_app = firebase_admin.initialize_app()
+FIREBASE_CERT_PATH = getenv('FIREBASE_CERT_PATH')
+if FIREBASE_CERT_PATH is not None:
+    serviceAccount = credentials.Certificate(FIREBASE_CERT_PATH)
+    import firebase_admin
+    firebase_app = firebase_admin.initialize_app(credential=serviceAccount)
 
-# FIREBASE_APP: Firebase app instance that is used to send the push notification. If not provided, the app will be using the default app instance that you’ve instantiated with firebase_admin.initialize_app().
 PUSH_NOTIFICATIONS_SETTINGS = {
-    # "APNS_CERTIFICATE": getenv('APNS_CERTIFICATE', ''),  # Path to certificate file
-    # "APNS_TOPIC": getenv('APNS_TOPIC', ''),  # Bundle ID like "com.example.push_test",
-    # "WNS_PACKAGE_SECURITY_ID": "[your package security id, e.g: 'ms-app://e-3-4-6234...']",
-    # "WNS_SECRET_KEY": "[your app secret key, e.g.: 'KDiejnLKDUWodsjmewuSZkk']",
     "WP_PRIVATE_KEY": getenv('VAPID_PRIVATE_KEY', ''),
     "WP_CLAIMS": {
         'sub': f"mailto:{getenv('VAPID_ADMIN_EMAIL', 'admin@example.com')}"
